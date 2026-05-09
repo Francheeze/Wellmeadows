@@ -6,27 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('staff_qualifications', function (Blueprint $table) {
-    $table->id('qualificationID');
-    // Foreign Key linking to Staff
-    $table->foreignId('staffNumber')->constrained('staff', 'staffNumber')->onDelete('cascade');
-    $table->string('type');
-    $table->date('date');
-    $table->string('institution');
-    $table->timestamps();
-});
+        Schema::create('qualifications', function (Blueprint $table) {
+            $table->id('qualificationID');
+            $table->unsignedBigInteger('staffNumber');
+            $table->string('type'); // Degree, Diploma, Certificate, etc.
+            $table->date('date'); // Date awarded/completed
+            $table->string('institution');
+            $table->timestamps();
+            
+            // Foreign key constraint
+            $table->foreign('staffNumber')
+                  ->references('staffNumber')
+                  ->on('staff')
+                  ->onDelete('cascade');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('staff_qualifications');
+        Schema::dropIfExists('qualifications');
     }
 };

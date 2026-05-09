@@ -6,25 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-       Schema::create('work_experiences', function (Blueprint $table) {
-    $table->id('workExperienceID');
-    $table->foreignId('staffNumber')->constrained('staff', 'staffNumber')->onDelete('cascade');
-    $table->string('position');
-    $table->string('organization');
-    $table->date('startDate');
-    $table->date('finishDate');
-    $table->timestamps();
-});
+        Schema::create('work_experiences', function (Blueprint $table) {
+            $table->id('workExperienceID');
+            $table->unsignedBigInteger('staffNumber');
+            $table->string('position');
+            $table->string('organization');
+            $table->date('startDate');
+            $table->date('finishDate')->nullable(); // Nullable for current job
+            $table->timestamps();
+            
+            // Foreign key constraint
+            $table->foreign('staffNumber')
+                  ->references('staffNumber')
+                  ->on('staff')
+                  ->onDelete('cascade');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('work_experiences');

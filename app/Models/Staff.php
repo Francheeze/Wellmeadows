@@ -2,18 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Staff extends Model {
-    protected $table = 'staff';
-    protected $primaryKey = 'staffNumber';
-    protected $guarded = []; // Allows all fields to be saved
+class Staff extends Model
+{
+    use HasFactory;
 
-    public function qualifications() {
-        return $this->hasMany(StaffQualification::class, 'staffNumber', 'staffNumber');
+    protected $primaryKey = 'staffNumber';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
+    protected $fillable = [
+        'firstName',
+        'lastName',
+        'address',
+        'telephoneNumber',
+        'dateOfBirth',
+        'sex',
+        'NIN',
+        'position',
+        'currentSalary',
+        'salaryScale',
+        'hoursPerWeek',
+        'contractType',
+        'paymentType'
+    ];
+
+    // Relationship with Qualifications
+    public function qualifications()
+    {
+        return $this->hasMany(Qualification::class, 'staffNumber', 'staffNumber');
     }
 
-    public function experiences() {
+    // Relationship with Work Experiences
+    public function workExperiences()
+    {
         return $this->hasMany(WorkExperience::class, 'staffNumber', 'staffNumber');
     }
 }
