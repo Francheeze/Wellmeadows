@@ -9,7 +9,7 @@ class Requisition extends Model
 {
     protected $primaryKey = 'requisition_number';
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     protected $fillable = [
         'requisition_number',
@@ -37,10 +37,10 @@ class Requisition extends Model
     // }
 
     // This requisition includes many surgical/non-medical items
-    public function supplyItems(): BelongsToMany
+    public function requisitionSupplyItems(): BelongsToMany
     {
         return $this->belongsToMany(
-            SurgicalNoneItem::class,
+            SupplyItem::class,
             'requisition_supply_items',
             'requisition_number',
             'item_number'
@@ -48,7 +48,7 @@ class Requisition extends Model
     }
 
     // This requisition includes many pharmaceutical/drug items
-    public function drugItems(): BelongsToMany
+    public function requisitionDrugItems(): BelongsToMany
     {
         return $this->belongsToMany(
             PharmaceuticalItem::class,

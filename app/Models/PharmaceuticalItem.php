@@ -11,7 +11,7 @@ class PharmaceuticalItem extends Model
 {
     protected $primaryKey = 'drug_number';
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     protected $fillable = [
         'drug_number',

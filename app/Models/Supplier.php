@@ -9,7 +9,7 @@ class Supplier extends Model
 {
     protected $primaryKey = 'supplier_number';
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     protected $fillable = [
         'supplier_number',
@@ -22,7 +22,7 @@ class Supplier extends Model
     // A supplier can supply many surgical/non-medical items
     public function surgicalItems(): HasMany
     {
-        return $this->hasMany(Item::class, 'supplier_number', 'supplier_number');
+        return $this->hasMany(SupplyItem::class, 'supplier_number', 'supplier_number');
     }
 
     // A supplier can supply many pharmaceutical items

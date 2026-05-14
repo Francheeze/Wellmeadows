@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('patient_medications', function (Blueprint $table) {
             // Composite PK: patientNumber + drugNumber + startDate
             $table->string('patient_number');
-            $table->string('drug_number');
+            $table->integer('drug_number');
             $table->date('start_date');
             $table->integer('units_per_day');
             $table->date('finish_date')->nullable();

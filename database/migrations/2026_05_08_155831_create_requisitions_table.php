@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('requisitions', function (Blueprint $table) {
-            $table->string('requisition_number')->primary();
+            $table->integer('requisition_number')->primary();
             $table->string('staff_number');
             $table->string('ward_number');
             $table->date('date_ordered');

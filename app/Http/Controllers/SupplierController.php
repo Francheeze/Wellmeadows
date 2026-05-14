@@ -2,63 +2,114 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class SupplierController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all suppliers.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $suppliers = Supplier::orderBy('supplier_name')->paginate(10);
+
+        return view('suppliers.index', compact('suppliers'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new supplier.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('suppliers.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created supplier in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'supplier_number' => ['required', 'integer', 'unique:suppliers,supplier_number'],
+            'supplier_name'   => ['required', 'string', 'max:100'],
+            'address'        => ['required', 'string', 'max:255'],
+            'telephone'      => ['required', 'string', 'max:20'],
+            'fax_number'      => ['nullable', 'string', 'max:20'],
+        ]);
+
+        Supplier::create([
+            'supplier_number' => $validated['supplier_number'],
+            'supplier_name'   => $validated['supplier_name'],
+            'address'         => $validated['address'],
+            'telephone'       => $validated['telephone'],
+            'fax_number'      => $validated['fax_number'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified supplier.
      */
-    public function show(string $id)
+    public function show(Supplier $supplier): View
     {
-        //
+        // Eager-load related supply items and pharmaceutical items via the supplier FK
+        $supplier->load([
+            'surgicalItems',
+            'pharmaceuticalItems',
+        ]);
+
+        return view('suppliers.show', compact('supplier'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified supplier.
      */
-    public function edit(string $id)
+    public function edit(Supplier $supplier): View
     {
-        //
+        return view('suppliers.edit', compact('supplier'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified supplier in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Supplier $supplier): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'supplier_name' => ['required', 'string', 'max:100'],
+            'address'      => ['required', 'string', 'max:255'],
+            'telephone'    => ['required', 'string', 'max:20'],
+            'fax_number'    => ['nullable', 'string', 'max:20'],
+        ]);
+
+        $supplier->update($validated);
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified supplier from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Supplier $supplier): RedirectResponse
     {
-        //
+        // Guard: prevent deletion if supplier still has linked items
+        if ($supplier->surgicalItems()->exists() || $supplier->pharmaceuticalItems()->exists()) {
+            return redirect()
+                ->route('suppliers.index')
+                ->with('error', 'Cannot delete supplier. It still has linked items.');
+        }
+
+        $supplier->delete();
+
+        return redirect()
+            ->route('suppliers.index')
+            ->with('success', 'Supplier deleted successfully.');
     }
 }

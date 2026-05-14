@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pharmaceutical_items', function (Blueprint $table) {
-            $table->string('drug_number')->primary();
+            $table->integer('drug_number')->primary();
             $table->string('drug_name');
             $table->text('description')->nullable();
             $table->string('dosage');
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('quantity_in_stock')->default(0);
             $table->integer('reorder_level');
             $table->decimal('cost_per_unit', 10, 2);
-            $table->string('supplier_number');
+            $table->integer('supplier_number');
             $table->timestamps();
 
             $table->foreign('supplier_number')

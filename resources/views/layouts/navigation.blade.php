@@ -15,6 +15,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
+                        {{ __('Suppliers') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('pharmaceutical_items.index')" :active="request()->routeIs('pharmaceutical_items.*')">
+                        {{ __('Pharmaceutical Items') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('supply_items.index')" :active="request()->routeIs('supply_items.*')">
+                        {{ __('Supply Items') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('requisitions.index')" :active="request()->routeIs('requisitions.*')">
+                        {{ __('Requisitions') }}
+                    </x-nav-link>
                 </div>
             </div>
 
