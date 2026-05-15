@@ -26,7 +26,19 @@ Route::middleware('auth')->group(function () {
     Route::resource('pharmaceutical_items', PharmaceuticalItemController::class);
     Route::resource('supply_items', SupplyItemController::class);
     Route::resource('requisitions', RequisitionController::class);
-    Route::resource('patient_medications', PatientMedicationController::class);
+    
+    Route::prefix('patient_medications')->name('patient_medications.')->group(function () {
+        Route::get('/',        [PatientMedicationController::class, 'index'])->name('index');
+        Route::get('/create',  [PatientMedicationController::class, 'create'])->name('create');
+        Route::post('/',       [PatientMedicationController::class, 'store'])->name('store');
+
+    // These three use ?patient_number=&drug_number=&start_date= query params
+    // instead of a route segment, because the PK is composite.
+        Route::get('/show',    [PatientMedicationController::class, 'show'])->name('show');
+        Route::get('/edit',    [PatientMedicationController::class, 'edit'])->name('edit');
+        Route::put('/update',  [PatientMedicationController::class, 'update'])->name('update');
+        Route::delete('/destroy', [PatientMedicationController::class, 'destroy'])->name('destroy');
+    });
 });
 
 require __DIR__.'/auth.php';
