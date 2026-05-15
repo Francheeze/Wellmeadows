@@ -90,7 +90,7 @@ class PatientMedicationController extends Controller
         PatientMedication::create($validated);
 
         return redirect()
-            ->route('patient-medications.index')
+            ->route('patient_medications.index')
             ->with('success', 'Medication record created successfully.');
     }
 
@@ -149,7 +149,7 @@ class PatientMedicationController extends Controller
         }
 
         return redirect()
-            ->route('patient-medications.index')
+            ->route('patient_medications.index')
             ->with('success', 'Medication record updated successfully.');
     }
 
@@ -168,7 +168,7 @@ class PatientMedicationController extends Controller
         }
 
         return redirect()
-            ->route('patient-medications.index')
+            ->route('patient_medications.index')
             ->with('success', 'Medication record deleted successfully.');
     }
 
