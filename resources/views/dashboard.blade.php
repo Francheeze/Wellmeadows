@@ -39,12 +39,14 @@
     <div class="bg-[#1f3b5c] text-white flex items-center justify-between px-6 py-3">
         <div class="flex gap-6 font-medium">
             <a href="{{ route('staff.index') }}" class="hover:underline">All Staff</a>
-            <a href="{{ route('department') }}" class="hover:underline">Department</a>
+            <a href="{{ route('department.index') }}" class="hover:underline">Department</a>
             <a href="{{ route('schedules') }}" class="hover:underline">Schedules</a>
             <a href="{{ route('reports') }}" class="hover:underline">Reports</a>
+<a href="{{ route('dashboard') }}" class="hover:underline font-bold bg-[#2a4d7a] px-3 py-1 rounded">Dashboard</a>
         </div>
-        <div class="flex items-center gap-3">
-            <input type="text" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+        <div class="relative flex items-center gap-3">
+            <input type="text" id="search-input" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+            <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden" style="right: 0;"></div>
         </div>
     </div>
 </header>
@@ -68,7 +70,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Cardiology</h3>
                     <p class="text-sm mt-1">Heart and cardiovascular care</p>
-                    <p class="text-2xl font-bold mt-3">12 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Cardiology'] }} Staff</p>
                 </div>
                 <div class="text-4xl">❤️</div>
             </div>
@@ -79,7 +81,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Neurology</h3>
                     <p class="text-sm mt-1">Brain and nervous system</p>
-                    <p class="text-2xl font-bold mt-3">8 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Neurology'] }} Staff</p>
                 </div>
                 <div class="text-4xl">🧠</div>
             </div>
@@ -90,7 +92,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Pediatrics</h3>
                     <p class="text-sm mt-1">Child healthcare</p>
-                    <p class="text-2xl font-bold mt-3">10 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Pediatrics'] }} Staff</p>
                 </div>
                 <div class="text-4xl">👶</div>
             </div>
@@ -101,7 +103,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Orthopedics</h3>
                     <p class="text-sm mt-1">Bone and joint care</p>
-                    <p class="text-2xl font-bold mt-3">9 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Orthopedics'] }} Staff</p>
                 </div>
                 <div class="text-4xl">🦴</div>
             </div>
@@ -112,7 +114,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Emergency</h3>
                     <p class="text-sm mt-1">24/7 emergency care</p>
-                    <p class="text-2xl font-bold mt-3">15 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Emergency'] }} Staff</p>
                 </div>
                 <div class="text-4xl">🚑</div>
             </div>
@@ -123,7 +125,7 @@
                 <div>
                     <h3 class="text-lg font-semibold">Radiology</h3>
                     <p class="text-sm mt-1">Medical imaging</p>
-                    <p class="text-2xl font-bold mt-3">7 Staff</p>
+                    <p class="text-2xl font-bold mt-3">{{ $departments['Radiology'] }} Staff</p>
                 </div>
                 <div class="text-4xl">📊</div>
             </div>
@@ -136,7 +138,7 @@
             <div class="text-center">
                 <div class="text-4xl mb-3">👥</div>
                 <h3 class="font-semibold text-lg text-[#1f3b5c]">Total Staff</h3>
-                <p class="text-3xl font-bold text-gray-700 mt-2">{{ \App\Models\Staff::count() }}</p>
+                <p class="text-3xl font-bold text-gray-700 mt-2">{{ $totalStaff }}</p>
                 <a href="{{ route('staff.index') }}" class="inline-block mt-4 text-blue-600 hover:text-blue-800">View All Staff →</a>
             </div>
         </div>
@@ -177,6 +179,82 @@
             document.addEventListener('click', function(event) {
                 if (!avatarBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
                     dropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        if (searchInput && searchResults) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+
+                fetch(`/search?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = '';
+                        searchResults.classList.remove('hidden');
+
+                        if (data.staff.length === 0 && data.departments.length === 0) {
+                            const noResults = document.createElement('div');
+                            noResults.className = 'p-2 text-gray-500';
+                            noResults.textContent = 'No results found';
+                            searchResults.appendChild(noResults);
+                            return;
+                        }
+
+                        if (data.staff.length > 0) {
+                            const staffHeader = document.createElement('div');
+                            staffHeader.className = 'p-2 font-bold text-gray-600';
+                            staffHeader.textContent = 'Staff';
+                            searchResults.appendChild(staffHeader);
+
+                            data.staff.forEach(staff => {
+                                const staffLink = document.createElement('a');
+                                staffLink.href = `/staff/${staff.staffNumber}`;
+                                staffLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                                staffLink.textContent = `${staff.firstName} ${staff.lastName}`;
+                                searchResults.appendChild(staffLink);
+                            });
+                        }
+
+                        if (data.departments.length > 0) {
+                            const departmentsHeader = document.createElement('div');
+                            departmentsHeader.className = 'p-2 font-bold text-gray-600';
+                            departmentsHeader.textContent = 'Departments';
+                            searchResults.appendChild(departmentsHeader);
+
+                            data.departments.forEach(department => {
+                                const departmentLink = document.createElement('a');
+                                departmentLink.href = `/department/${department.department}`;
+                                departmentLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                                departmentLink.textContent = department.department;
+                                searchResults.appendChild(departmentLink);
+                            });
+                        }
+                    });
+            });
+
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const firstResult = searchResults.querySelector('a');
+                    if (firstResult) {
+                        window.location.href = firstResult.href;
+                    }
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                    searchResults.classList.add('hidden');
                 }
             });
         }

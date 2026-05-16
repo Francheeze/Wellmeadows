@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StaffQualification;
+use App\Models\WorkExperience;
 
 class Staff extends Model
 {
@@ -21,6 +23,7 @@ class Staff extends Model
         'dateOfBirth',
         'sex',
         'NIN',
+        'department',
         'position',
         'currentSalary',
         'salaryScale',
@@ -29,10 +32,14 @@ class Staff extends Model
         'paymentType'
     ];
 
+    protected $casts = [
+        'dateOfBirth' => 'date',
+    ];
+
     // Relationship with Qualifications
     public function qualifications()
     {
-        return $this->hasMany(Qualification::class, 'staffNumber', 'staffNumber');
+        return $this->hasMany(StaffQualification::class, 'staffNumber', 'staffNumber');
     }
 
     // Relationship with Work Experiences

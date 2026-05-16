@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Qualification extends Model
+class StaffQualification extends Model
 {
     use HasFactory;
 
@@ -17,6 +17,10 @@ class Qualification extends Model
         'type',
         'date',
         'institution'
+    ];
+
+    protected $casts = [
+        'date' => 'date',
     ];
 
     // Relationship with Staff

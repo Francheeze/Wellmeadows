@@ -8,7 +8,7 @@
 
 <body class="bg-[#d9edf1]">
 
-<!-- HEADER (same as dashboard) -->
+<!-- HEADER -->
 <header class="bg-[#cfe6eb] shadow-md">
     <div class="flex items-center justify-between px-6 py-4">
         <div class="flex items-center gap-3">
@@ -34,16 +34,14 @@
     <div class="bg-[#1f3b5c] text-white flex items-center justify-between px-6 py-3">
         <div class="flex gap-6 font-medium">
             <a href="{{ route('staff.index') }}" class="hover:underline">All Staff</a>
-            <a href="{{ route('department') }}" class="hover:underline font-bold">Department</a>
+            <a href="{{ route('department.index') }}" class="hover:underline font-bold bg-[#2a4d7a] px-3 py-1 rounded">Department</a>
             <a href="{{ route('schedules') }}" class="hover:underline">Schedules</a>
             <a href="{{ route('reports') }}" class="hover:underline">Reports</a>
-               <a href="{{ route('dashboard') }}"
-                    class="hover:underline">
-                    Dashboard
-                </a>
+            <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
         </div>
-        <div class="flex items-center gap-3">
-            <input type="text" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+        <div class="relative flex items-center gap-3">
+            <input type="text" id="search-input" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+            <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden"></div>
         </div>
     </div>
 </header>
@@ -52,85 +50,20 @@
     <h2 class="text-[#1f3b5c] font-semibold mb-4 text-2xl"> Departments</h2>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Department Cards -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-blue-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">❤️</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Cardiology</h3>
-                <p class="text-gray-600 mb-4">Comprehensive heart care including diagnosis, treatment, and prevention of cardiovascular diseases.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 12 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
+        @foreach ($departments as $name => $details)
+        <a href="{{ route('department.show', ['name' => $name]) }}" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+            <div class="{{ $details['color'] }} h-2"></div>
+            <div class="p-6 flex flex-col flex-grow">
+                <div class="text-4xl mb-3">{{ $details['emoji'] }}</div>
+                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">{{ $name }}</h3>
+                <p class="text-gray-600 mb-4">{{ $details['description'] }}</p>
+                <div class="flex justify-between items-center mt-auto">
+                    <span class="text-sm text-gray-500">👥 {{ $departmentCounts[strtolower($name)] ?? 0 }} Staff Members</span>
+                    <span class="text-blue-600 hover:text-blue-800">View Details →</span>
                 </div>
             </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-green-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">🧠</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Neurology</h3>
-                <p class="text-gray-600 mb-4">Specialized care for disorders of the nervous system including brain, spinal cord, and nerves.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 8 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-purple-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">👶</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Pediatrics</h3>
-                <p class="text-gray-600 mb-4">Medical care for infants, children, and adolescents from birth to young adulthood.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 10 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-yellow-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">🦴</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Orthopedics</h3>
-                <p class="text-gray-600 mb-4">Treatment of musculoskeletal system including bones, joints, ligaments, tendons, and muscles.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 9 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-red-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">🚑</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Emergency</h3>
-                <p class="text-gray-600 mb-4">24/7 emergency care for acute illnesses and injuries requiring immediate medical attention.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 15 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-indigo-500 h-2"></div>
-            <div class="p-6">
-                <div class="text-4xl mb-3">📊</div>
-                <h3 class="text-xl font-bold text-[#1f3b5c] mb-2">Radiology</h3>
-                <p class="text-gray-600 mb-4">Medical imaging techniques including X-rays, CT scans, MRI, and ultrasound for diagnosis.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-500">👥 7 Staff Members</span>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View Details →</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        </a>
+        @endforeach
 </main>
 
 <script>
@@ -150,6 +83,75 @@
                 }
             });
         }
+
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value;
+
+            if (query.length < 2) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            fetch(`/search?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.remove('hidden');
+
+                    if (data.staff.length === 0 && data.departments.length === 0) {
+                        searchResults.innerHTML = '<div class="p-2 text-gray-500">No results found</div>';
+                        return;
+                    }
+
+                    if (data.staff.length > 0) {
+                        const staffHeader = document.createElement('div');
+                        staffHeader.className = 'p-2 font-bold text-gray-600';
+                        staffHeader.textContent = 'Staff';
+                        searchResults.appendChild(staffHeader);
+
+                        data.staff.forEach(staff => {
+                            const staffLink = document.createElement('a');
+                            staffLink.href = `/staff/${staff.staffNumber}`;
+                            staffLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                            staffLink.textContent = `${staff.firstName} ${staff.lastName}`;
+                            searchResults.appendChild(staffLink);
+                        });
+                    }
+
+                    if (data.departments.length > 0) {
+                        const departmentsHeader = document.createElement('div');
+                        departmentsHeader.className = 'p-2 font-bold text-gray-600';
+                        departmentsHeader.textContent = 'Departments';
+                        searchResults.appendChild(departmentsHeader);
+
+                        data.departments.forEach(department => {
+                            const departmentLink = document.createElement('a');
+                            departmentLink.href = `/department/${department.department}`;
+                            departmentLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                            departmentLink.textContent = department.department;
+                            searchResults.appendChild(departmentLink);
+                        });
+                    }
+                });
+        });
+
+        searchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const firstResult = searchResults.querySelector('a');
+                if (firstResult) {
+                    window.location.href = firstResult.href;
+                }
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
     });
 </script>
 

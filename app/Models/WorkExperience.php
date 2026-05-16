@@ -20,6 +20,11 @@ class WorkExperience extends Model
         'finishDate'
     ];
 
+    protected $casts = [
+        'startDate' => 'date',
+        'finishDate' => 'date',
+    ];
+
     // Relationship with Staff
     public function staff()
     {

@@ -10,41 +10,83 @@
 
 <!-- HEADER -->
 <header class="bg-[#cfe6eb] shadow-md">
+
+    <!-- TOP BAR -->
     <div class="flex items-center justify-between px-6 py-4">
+
         <div class="flex items-center gap-3">
             <div class="text-2xl font-bold text-[#1f3b5c]">
                 🏥 WELLMEADOWS HOSPITAL
             </div>
         </div>
 
+        <!-- PROFILE DROPDOWN -->
         <div class="relative" id="profile-dropdown">
-            <button id="avatar-btn" class="text-2xl focus:outline-none cursor-pointer">
+
+            <button id="avatar-btn"
+                class="text-2xl focus:outline-none cursor-pointer">
                 👤
             </button>
-            <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50">
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+
+            <div id="dropdown-menu"
+                class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50">
+
+                <a href="{{ route('profile.edit') }}"
+                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    Profile
+                </a>
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Logout</button>
+
+                    <button type="submit"
+                        class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                        Logout
+                    </button>
                 </form>
+
             </div>
         </div>
     </div>
 
-    <!-- NAVBAR -->
+    <!-- NAVIGATION -->
     <div class="bg-[#1f3b5c] text-white flex items-center justify-between px-6 py-3">
+
         <div class="flex gap-6 font-medium">
-            <a href="{{ route('staff.index') }}" class="hover:underline">All Staff</a>
-            <a href="{{ route('department') }}" class="hover:underline">Department</a>
-            <a href="{{ route('schedules') }}" class="hover:underline">Schedules</a>
-            <a href="{{ route('reports') }}" class="hover:underline font-bold bg-[#2a4d7a] px-3 py-1 rounded">Reports</a>
-               <a href="{{ route('dashboard') }}"
-                    class="hover:underline">
-                    Dashboard
-                </a>
+
+            <a href="{{ route('staff.index') }}"
+                class="hover:underline">
+                All Staff
+            </a>
+
+            <a href="{{ route('department.index') }}"
+                class="hover:underline">
+                Department
+            </a>
+
+            <a href="{{ route('schedules') }}"
+                class="hover:underline">
+                Schedules
+            </a>
+
+            <a href="{{ route('reports') }}"
+                class="hover:underline font-bold bg-[#3c5a82] px-3 py-1 rounded">
+                Reports
+            </a>
+            <a href="{{ route('dashboard') }}"
+                class="hover:underline">
+                Dashboard
+            </a>
+
         </div>
-        <div class="flex items-center gap-3">
-            <input type="text" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+
+        <div class="relative flex items-center gap-3">
+
+            <input type="text" id="search-input"
+                placeholder="Search staff or Department"
+                class="px-3 py-1 rounded text-black text-sm w-64" />
+            <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden" style="right: 0;"></div>
+
         </div>
     </div>
 </header>
@@ -52,13 +94,47 @@
 <!-- MAIN CONTENT -->
 <main class="p-6">
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold text-[#1f3b5c] mb-6">Hospital Reports</h1>
-        
-        <!-- Reports content goes here -->
-        <div class="text-center py-12">
-            <div class="text-6xl mb-4">📊</div>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">Reports Dashboard</h3>
-            <p class="text-gray-500">Reports feature coming soon. This page will display staff statistics, department analytics, and other hospital reports.</p>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-[#1f3b5c]">Incident Reports</h1>
+            <a href="{{ route('reports.create') }}" class="bg-[#1f3b5c] text-white px-4 py-2 rounded-lg hover:bg-[#2a4d7a] transition-colors">
+                + Create Report
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-[#1f3b5c] text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Report Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Filed By</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Incident Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($incidents as $incident)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $incident->incident_date->format('Y-m-d') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $incident->staff->firstName ?? 'N/A' }} {{ $incident->staff->lastName ?? '' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $incident->incident_type }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ Str::limit($incident->description, 50) }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="#" class="text-blue-600 hover:underline mr-3">View</a>
+                                <form action="{{ route('reports.destroy', $incident->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this report?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No incident reports found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </main>
@@ -78,6 +154,82 @@
             document.addEventListener('click', function(event) {
                 if (!avatarBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
                     dropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        if (searchInput && searchResults) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+
+                fetch(`/search?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = '';
+                        searchResults.classList.remove('hidden');
+
+                        if (data.staff.length === 0 && data.departments.length === 0) {
+                            const noResults = document.createElement('div');
+                            noResults.className = 'p-2 text-gray-500';
+                            noResults.textContent = 'No results found';
+                            searchResults.appendChild(noResults);
+                            return;
+                        }
+
+                        if (data.staff.length > 0) {
+                            const staffHeader = document.createElement('div');
+                            staffHeader.className = 'p-2 font-bold text-gray-600';
+                            staffHeader.textContent = 'Staff';
+                            searchResults.appendChild(staffHeader);
+
+                            data.staff.forEach(staff => {
+                                const staffLink = document.createElement('a');
+                                staffLink.href = `/staff/${staff.staffNumber}`;
+                                staffLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                                staffLink.textContent = `${staff.firstName} ${staff.lastName}`;
+                                searchResults.appendChild(staffLink);
+                            });
+                        }
+
+                        if (data.departments.length > 0) {
+                            const departmentsHeader = document.createElement('div');
+                            departmentsHeader.className = 'p-2 font-bold text-gray-600';
+                            departmentsHeader.textContent = 'Departments';
+                            searchResults.appendChild(departmentsHeader);
+
+                            data.departments.forEach(department => {
+                                const departmentLink = document.createElement('a');
+                                departmentLink.href = `/department/${department.department}`;
+                                departmentLink.className = 'block p-2 text-gray-700 hover:bg-gray-100';
+                                departmentLink.textContent = department.department;
+                                searchResults.appendChild(departmentLink);
+                            });
+                        }
+                    });
+            });
+
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const firstResult = searchResults.querySelector('a');
+                    if (firstResult) {
+                        window.location.href = firstResult.href;
+                    }
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!searchInput.contains(event.target)) {
+                    searchResults.classList.add('hidden');
                 }
             });
         }

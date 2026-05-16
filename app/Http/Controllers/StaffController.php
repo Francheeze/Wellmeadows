@@ -3,24 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Staff;
-use App\Models\Qualification;
+use App\Models\StaffQualification;
 use App\Models\WorkExperience;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    // Display all staff
-    public function index()
+       // Display all staff
+    public function index(Request $request, $department = null)
     {
-        $staff = Staff::with(['qualifications', 'workExperiences'])->get();
+        $query = Staff::with(['qualifications', 'workExperiences']);
 
-        return view('staffs.index', compact('staff'));
+        if ($department) {
+            $query->where('department', $department);
+        }
+
+        $staff = $query->get();
+
+        return view('staffs.index', compact('staff', 'department'));
     }
-
+    
     // Show create form
     public function create()
     {
-        return view('staffs.create');
+        $departments = [
+            'Cardiology',
+            'Neurology',
+            'Pediatrics',
+            'Orthopedics',
+            'Emergency',
+            'Radiology'
+        ];
+
+        $salaryScales = ['Band 1', 'Band 2', 'Band 3', 'Band 4', 'Band 5'];
+        $paymentTypes = ['Monthly', 'Weekly', 'Bi-Weekly'];
+        $contractTypes = ['Full-time', 'Part-time'];
+
+        return view('staffs.create', compact('departments', 'salaryScales', 'paymentTypes', 'contractTypes'));
     }
 
     // Store new staff
@@ -34,12 +53,13 @@ class StaffController extends Controller
             'dateOfBirth' => 'required|date',
             'sex' => 'required|in:M,F',
             'NIN' => 'required|string|unique:staff,NIN|max:20',
+            'department' => 'required|string|in:Cardiology,Neurology,Pediatrics,Orthopedics,Emergency,Radiology',
             'position' => 'required|string|max:255',
             'currentSalary' => 'required|numeric|min:0',
-            'salaryScale' => 'required|string|max:50',
+            'salaryScale' => 'required|string|in:Band 1,Band 2,Band 3,Band 4,Band 5',
             'hoursPerWeek' => 'required|integer|min:1|max:168',
-            'contractType' => 'required|string|max:50',
-            'paymentType' => 'required|string|max:50',
+            'contractType' => 'required|string|in:Full-time,Part-time,Temporary,Contractor',
+            'paymentType' => 'required|string|in:Monthly,Weekly,Bi-Weekly',
 
             'qualifications.*.type' => 'required|string|max:255',
             'qualifications.*.date' => 'required|date',
@@ -85,7 +105,12 @@ class StaffController extends Controller
     {
         $staff->load(['qualifications', 'workExperiences']);
 
-        return view('staffs.edit', compact('staff'));
+        $departments = ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'Emergency', 'Radiology'];
+        $salaryScales = ['Band 1', 'Band 2', 'Band 3', 'Band 4', 'Band 5'];
+        $paymentTypes = ['Monthly', 'Weekly', 'Bi-Weekly'];
+        $contractTypes = ['Full-time', 'Part-time', 'Temporary', 'Contractor'];
+
+        return view('staffs.edit', compact('staff', 'departments', 'salaryScales', 'paymentTypes', 'contractTypes'));
     }
 
     // Update staff
@@ -99,6 +124,7 @@ class StaffController extends Controller
             'dateOfBirth' => 'required|date',
             'sex' => 'required|in:M,F',
             'NIN' => 'required|string|unique:staff,NIN,' . $staff->staffNumber . ',staffNumber|max:20',
+            'department' => 'required|string|in:Cardiology,Neurology,Pediatrics,Orthopedics,Emergency,Radiology',
             'position' => 'required|string|max:255',
             'currentSalary' => 'required|numeric|min:0',
             'salaryScale' => 'required|string|max:50',
@@ -108,6 +134,24 @@ class StaffController extends Controller
         ]);
 
         $staff->update($validated);
+$staff->department = $request->input('department');
+$staff->save();
+
+        // Sync qualifications
+        $staff->qualifications()->delete();
+        if ($request->has('qualifications')) {
+            foreach ($request->qualifications as $qualification) {
+                $staff->qualifications()->create($qualification);
+            }
+        }
+
+        // Sync work experiences
+        $staff->workExperiences()->delete();
+        if ($request->has('workExperiences')) {
+            foreach ($request->workExperiences as $experience) {
+                $staff->workExperiences()->create($experience);
+            }
+        }
 
         return redirect()->route('staff.index')
             ->with('success', 'Staff member updated successfully!');
@@ -120,5 +164,12 @@ class StaffController extends Controller
 
         return redirect()->route('staff.index')
             ->with('success', 'Staff member deleted successfully!');
+    }
+
+    // Show a single staff member
+    public function show(Staff $staff)
+    {
+        $staff->load(['qualifications', 'workExperiences']);
+        return view('staffs.show', compact('staff'));
     }
 }
