@@ -3,6 +3,13 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PatientMedicationController;
+use App\Http\Controllers\InPatientController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ExamResultController;
+use App\Http\Controllers\OutPatientController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\NextOfKinController;
+use App\Http\Controllers\LocalDoctorController;
 use App\Http\Controllers\PharmaceuticalItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequisitionController;
@@ -10,7 +17,11 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplyItemController;
+use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\ReportController;
+
 use Illuminate\Support\Facades\Route;
+
 
 // Public routes
 use App\Http\Controllers\SearchController;
@@ -70,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('pharmaceutical_items', PharmaceuticalItemController::class);
     Route::resource('supply_items', SupplyItemController::class);
     Route::resource('requisitions', RequisitionController::class);
-    
     Route::prefix('patient_medications')->name('patient_medications.')->group(function () {
         Route::get('/',        [PatientMedicationController::class, 'index'])->name('index');
         Route::get('/create',  [PatientMedicationController::class, 'create'])->name('create');
@@ -84,10 +94,25 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/destroy', [PatientMedicationController::class, 'destroy'])->name('destroy');
     });
 
+    // Patient Management Module
+    Route::resource('patients',       PatientController::class);
+    Route::resource('local_doctors',  LocalDoctorController::class);
+    Route::resource('appointments',   AppointmentController::class);
+    Route::resource('exam_results',   ExamResultController::class);
+    Route::resource('in_patients',    InPatientController::class);
+    Route::resource('out_patients',   OutPatientController::class);
+
+    // Nested resource
+    Route::resource('patients.next_of_kins', NextOfKinController::class);
+
+    // Custom actions
+    Route::post('appointments/{appointment}/result',      [AppointmentController::class, 'recordResult'])->name('appointments.record_result');
+    Route::patch('in_patients/{in_patient}/discharge',    [InPatientController::class,   'discharge'])->name('in_patients.discharge');
+
     // 7. SHOW STAFF - Shows a single staff member's details
     Route::get('/staff/{staff}', [StaffController::class, 'show'])->name('staff.show');
 
-        // Department routes
+    // Department routes
     Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/department/{name}', [DepartmentController::class, 'show'])->name('department.show');
 
@@ -99,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
     // ==========================
     // REPORT MANAGEMENT ROUTES
     // ==========================
+     Route::resource('incidents', IncidentController::class);
     Route::get('/reports', [\App\Http\Controllers\IncidentController::class, 'index'])->name('reports');
     Route::get('reports/create', [\App\Http\Controllers\IncidentController::class, 'create'])->name('reports.create');
     Route::post('reports', [\App\Http\Controllers\IncidentController::class, 'store'])->name('reports.store');

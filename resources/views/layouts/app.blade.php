@@ -57,7 +57,17 @@
 
     /*
     |----------------------------------------------------------
-    | Determine which sidebar module is active
+    | MODULE DETECTION
+    |
+    | Each module claims its route prefixes here.
+    |
+    | Nested resources are automatically covered by their
+    | parent prefix — e.g. patients.next_of_kins.* starts
+    | with 'patients.' so no separate entry is needed.
+    |
+    | Custom named actions are also auto-covered — e.g.
+    | 'appointments.record_result' starts with 'appointments.'
+    | and 'in_patients.discharge' starts with 'in_patients.'
     |----------------------------------------------------------
     */
     $isApptTreatment = str_starts_with($route, 'suppliers.')
@@ -66,9 +76,12 @@
                     || str_starts_with($route, 'patient_medications.')
                     || str_starts_with($route, 'requisitions.');
 
-    $isPatientMgmt   = str_starts_with($route, 'patients.')
-                    || str_starts_with($route, 'next_of_kin.')
-                    || str_starts_with($route, 'doctor.');          // adjust to your teammates' routes
+    $isPatientMgmt   = str_starts_with($route, 'patients.')      // also covers patients.next_of_kins.*
+                    || str_starts_with($route, 'local_doctors.')
+                    || str_starts_with($route, 'appointments.')   // also covers appointments.record_result
+                    || str_starts_with($route, 'exam_results.')
+                    || str_starts_with($route, 'in_patients.')    // also covers in_patients.discharge
+                    || str_starts_with($route, 'out_patients.');
 
     $isStaffDept     = str_starts_with($route, 'staff.')
                     || str_starts_with($route, 'department.')
@@ -77,14 +90,18 @@
 
     $isSchedules     = str_starts_with($route, 'schedules.');
 
-    $isWardBed       = str_starts_with($route, 'wards.')
-                    || str_starts_with($route, 'beds.');             // adjust to your teammates' routes
+    // Ward teammate — replace false with your str_starts_with() checks
+    $isWardBed = false;
+    // Example:
+    // $isWardBed = str_starts_with($route, 'wards.')
+    //           || str_starts_with($route, 'beds.');
 
-    $isDashboard     = $route === 'dashboard' || (!$isApptTreatment && !$isPatientMgmt && !$isStaffDept && !$isWardBed);
+    $isDashboard = $route === 'dashboard'
+                || (!$isApptTreatment && !$isPatientMgmt && !$isStaffDept && !$isWardBed);
 
     /*
     |----------------------------------------------------------
-    | Module title shown in the main header
+    | MODULE TITLE
     |----------------------------------------------------------
     */
     $moduleTitle = $module ?? match(true) {
@@ -98,22 +115,40 @@
 
     /*
     |----------------------------------------------------------
-    | Tab definitions per module
-    | Each tab: ['label' => '...', 'route' => '...', 'matches' => '...']
-    | 'matches' is a wildcard pattern for routeIs()
+    | TAB DEFINITIONS
+    |
+    | label   — text shown on the tab
+    | route   — named route for the link (standalone index only,
+    |           never a nested resource index)
+    | matches — routeIs() wildcard pattern; the tab stays
+    |           highlighted for all CRUD pages of that entity
+    |
+    | IMPORTANT: Do NOT add nested resources as tabs.
+    |   patients.next_of_kins has no standalone index — link
+    |   to it from inside the patient show/detail page instead.
     |----------------------------------------------------------
     */
+
+    // ── Appointment and Treatment ──────────────────────────
     $apptTabs = [
-        ['label' => 'Supplier',            'route' => 'suppliers.index',           'matches' => 'suppliers.*'],
+        ['label' => 'Supplier',            'route' => 'suppliers.index',            'matches' => 'suppliers.*'],
         ['label' => 'Pharmaceutical Item', 'route' => 'pharmaceutical_items.index', 'matches' => 'pharmaceutical_items.*'],
         ['label' => 'Supply Item',         'route' => 'supply_items.index',         'matches' => 'supply_items.*'],
         ['label' => 'Patient Medication',  'route' => 'patient_medications.index',  'matches' => 'patient_medications.*'],
         ['label' => 'Requisition',         'route' => 'requisitions.index',         'matches' => 'requisitions.*'],
     ];
 
-    // Teammates fill in their own tab definitions when they integrate their modules
+    // ── Patient Management ────────────────────────────────
+    // NOTE: next_of_kins is excluded — it is a nested resource
+    // (patients.next_of_kins.*) with no standalone index.
+    // Access next-of-kin from inside the patient show page.
     $patientTabs = [
-        // e.g. ['label' => 'Patients', 'route' => 'patients.index', 'matches' => 'patients.*'],
+        ['label' => 'Patients',      'route' => 'patients.index',      'matches' => 'patients.*'],
+        ['label' => 'Local Doctors', 'route' => 'local_doctors.index', 'matches' => 'local_doctors.*'],
+        ['label' => 'Appointments',  'route' => 'appointments.index',  'matches' => 'appointments.*'],
+        ['label' => 'Exam Results',  'route' => 'exam_results.index',  'matches' => 'exam_results.*'],
+        ['label' => 'In-Patients',   'route' => 'in_patients.index',   'matches' => 'in_patients.*'],
+        ['label' => 'Out-Patients',  'route' => 'out_patients.index',  'matches' => 'out_patients.*'],
     ];
     $staffTabs = [
         ['label' => 'Departments', 'route' => 'department.index', 'matches' => 'department.*'],
@@ -123,7 +158,15 @@
     ];
     $wardTabs  = [];
 
-    // Pick the correct tabs for the active module
+    // ── Staff and Department ──────────────────────────────
+    // Teammate: fill in your tabs following the same pattern.
+    $staffTabs = [];
+
+    // ── Ward and Bed ──────────────────────────────────────
+    // Teammate: fill in your tabs following the same pattern.
+    $wardTabs = [];
+
+    // Resolve active tab set for current module
     $activeTabs = match(true) {
         $isApptTreatment => $apptTabs,
         $isPatientMgmt   => $patientTabs,
@@ -143,28 +186,24 @@
         {{-- Logo / Seal --}}
         <div class="flex flex-col items-center pt-6 pb-5 px-4 border-b border-white/10">
             {{--
-                Replace the SVG below with an <img> tag pointing to your actual
-                hospital seal once you have the asset:
-                <img src="{{ asset('images/seal.png') }}" alt="Wellmeadows" class="w-14 h-14">
+                Once you have the hospital seal asset, replace this div with:
+                <img src="{{ asset('images/seal.png') }}" alt="Wellmeadows" class="w-14 h-14 rounded-full">
             --}}
             <div class="w-14 h-14 rounded-full border-2 border-white/25 bg-white/10
                         flex items-center justify-center relative overflow-hidden">
-                {{-- Outer ring decoration --}}
-                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 56 56" fill="none">
                     <circle cx="28" cy="28" r="27" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
                     <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.15)" stroke-width="0.75"/>
                 </svg>
-                {{-- Cross / plus symbol --}}
                 <svg class="w-7 h-7 text-white relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/>
                 </svg>
             </div>
         </div>
 
-        {{-- Navigation items --}}
+        {{-- Navigation --}}
         <nav class="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
 
-            {{-- Dashboard --}}
             <a href="{{ route('dashboard') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
@@ -172,13 +211,7 @@
                 Dashboard
             </a>
 
-            {{-- ── Module Nav Items ──
-                 Your teammates: replace # with your module's landing route.
-                 e.g. route('patients.index')
-            --}}
-
-            {{-- Patient Management (placeholder) --}}
-            <a href="#"
+            <a href="{{ route('patients.index') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
                       {{ $isPatientMgmt ? 'nav-pill-active' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
@@ -193,9 +226,7 @@
                 Staff and Department
             </a>
 
-
-
-            {{-- Ward and Bed (placeholder) --}}
+            {{-- Ward teammate: replace href="#" with route('your.landing.route') --}}
             <a href="#"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
@@ -203,7 +234,6 @@
                 Ward and Bed
             </a>
 
-            {{-- Appointment and Treatment (your module) --}}
             <a href="{{ route('supply_items.index') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
@@ -213,7 +243,7 @@
 
         </nav>
 
-        {{-- Sidebar footer (optional: user info / logout) --}}
+        {{-- Sign out --}}
         <div class="border-t border-white/10 px-4 py-4">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -232,7 +262,7 @@
     ════════════════════════════════════════════════ --}}
     <div class="flex-1 flex flex-col overflow-hidden">
 
-        {{-- ── Module Header: Title + Tab Bar ── --}}
+        {{-- Module header: title + tab bar --}}
         <div class="bg-wm-cyan px-8 pt-7 pb-0 shrink-0">
 
             <div class="flex justify-between items-center">
@@ -249,7 +279,6 @@
                 </div>
             </div>
 
-            {{-- Tab navigation --}}
             @if (count($activeTabs) > 0)
                 <nav class="flex items-end gap-0 border-b border-wm-navy/20" role="tablist">
                     @foreach ($activeTabs as $tab)
@@ -262,10 +291,7 @@
                         </a>
                     @endforeach
                 </nav>
-            @elseif ($isDashboard)
-                {{-- No tabs on dashboard --}}
-            @else
-                {{-- Placeholder tab bar for modules not yet integrated --}}
+            @elseif (!$isDashboard)
                 <div class="border-b border-wm-navy/20 pb-px">
                     <span class="px-5 py-2 text-sm font-semibold text-wm-navy/30 inline-block">
                         — tabs coming soon —
@@ -274,8 +300,8 @@
             @endif
         </div>
 
-        {{-- ── Page Content ── --}}
-        <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark p-8">
+        {{-- Page content — all blade files yield here --}}
+        <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark">
             @yield('content')
         </div>
 
@@ -283,14 +309,13 @@
 
 </div>
 
-{{-- Flash / toast messages (global) --}}
+{{-- Global flash toast --}}
 @if (session('success') || session('error'))
     <div id="globalToast"
          class="fixed bottom-6 right-6 z-50 flex items-center gap-3
                 {{ session('success') ? 'bg-emerald-600' : 'bg-red-600' }}
                 text-white text-sm font-semibold px-5 py-3.5 rounded-2xl
-                shadow-[0_8px_30px_rgba(0,0,0,.3)]
-                transition-all duration-300"
+                shadow-[0_8px_30px_rgba(0,0,0,.3)]"
          style="animation: slideInToast .35s ease both;">
         @if (session('success'))
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -317,7 +342,6 @@
         }
     </style>
     <script>
-        // Auto-dismiss after 4 seconds
         setTimeout(() => {
             const t = document.getElementById('globalToast');
             if (t) {
