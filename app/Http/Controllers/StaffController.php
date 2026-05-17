@@ -10,9 +10,10 @@ use Illuminate\Http\Request;
 class StaffController extends Controller
 {
        // Display all staff
-    public function index(Request $request, $department = null)
+    public function index(Request $request)
     {
         $query = Staff::with(['qualifications', 'workExperiences']);
+        $department = $request->query('department');
 
         if ($department) {
             $query->where('department', $department);

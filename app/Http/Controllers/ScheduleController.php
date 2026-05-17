@@ -15,6 +15,13 @@ class ScheduleController extends Controller
         return view('schedules', compact('schedules', 'staff'));
     }
 
+    public function create()
+    {
+        $staff = Staff::all();
+        $departments = ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'Emergency', 'Radiology'];
+        return view('schedules.create', compact('staff', 'departments'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -26,6 +33,6 @@ class ScheduleController extends Controller
 
         Schedule::create($request->all());
 
-        return redirect()->route('schedules')->with('success', 'Schedule added successfully.');
+        return redirect()->route('schedules.index')->with('success', 'Schedule added successfully.');
     }
 }

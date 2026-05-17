@@ -14,7 +14,7 @@ class IncidentController extends Controller
     public function index()
     {
         $incidents = Incident::with('staff')->latest()->get();
-        return view('reports', compact('incidents'));
+        return view('reports.index', compact('incidents'));
     }
 
     /**

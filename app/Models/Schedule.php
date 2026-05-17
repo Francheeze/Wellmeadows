@@ -9,6 +9,11 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'staff_id',
         'department',
@@ -16,6 +21,9 @@ class Schedule extends Model
         'end_time',
     ];
 
+    /**
+     * Get the staff member associated with the schedule.
+     */
     public function staff()
     {
         return $this->belongsTo(Staff::class, 'staff_id', 'staffNumber');

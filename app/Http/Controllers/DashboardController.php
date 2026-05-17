@@ -10,33 +10,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalStaff = Staff::count();
-
-        $departmentCounts = Staff::query()
-            ->select('department', DB::raw('count(*) as count'))
-            ->groupBy('department')
-            ->get()
-            ->pluck('count', 'department');
-
-        $departments = [
-            'Cardiology' => 0,
-            'Neurology' => 0,
-            'Pediatrics' => 0,
-            'Orthopedics' => 0,
-            'Emergency' => 0,
-            'Radiology' => 0,
-        ];
-
-        foreach ($departmentCounts as $department => $count) {
-            if (array_key_exists($department, $departments)) {
-                $departments[$department] = $count;
-            }
-        }
-
-        return view('dashboard', [
-            'totalStaff' => $totalStaff,
-            'departments' => $departments,
-            'debugDepartmentCounts' => $departmentCounts, // Add this for debugging
-        ]);
+        return view('dashboard');
     }
 }

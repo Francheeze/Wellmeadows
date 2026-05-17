@@ -6,6 +6,7 @@ use App\Http\Controllers\PatientMedicationController;
 use App\Http\Controllers\PharmaceuticalItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequisitionController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplyItemController;
@@ -90,9 +91,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
     Route::get('/department/{name}', [DepartmentController::class, 'show'])->name('department.show');
 
-    Route::get('/schedules', function () {
-        return view('schedules');
-    })->name('schedules');
+    // Schedule routes
+    Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
+    Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
     
     // ==========================
     // REPORT MANAGEMENT ROUTES
