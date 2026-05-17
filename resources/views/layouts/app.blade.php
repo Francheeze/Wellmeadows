@@ -71,8 +71,11 @@
                     || str_starts_with($route, 'doctor.');          // adjust to your teammates' routes
 
     $isStaffDept     = str_starts_with($route, 'staff.')
-                    || str_starts_with($route, 'departments.')
-                    || str_starts_with($route, 'qualifications.');   // adjust to your teammates' routes
+                    || str_starts_with($route, 'department.')
+                    || str_starts_with($route, 'schedules.')
+                    || str_starts_with($route, 'reports');
+
+    $isSchedules     = str_starts_with($route, 'schedules.');
 
     $isWardBed       = str_starts_with($route, 'wards.')
                     || str_starts_with($route, 'beds.');             // adjust to your teammates' routes
@@ -84,10 +87,11 @@
     | Module title shown in the main header
     |----------------------------------------------------------
     */
-    $moduleTitle = match(true) {
+    $moduleTitle = $module ?? match(true) {
         $isApptTreatment => 'Appointment and Treatment',
         $isPatientMgmt   => 'Patient Management',
         $isStaffDept     => 'Staff and Department',
+        $isSchedules     => 'Schedules',
         $isWardBed       => 'Ward and Bed',
         default          => 'Dashboard',
     };
@@ -111,7 +115,12 @@
     $patientTabs = [
         // e.g. ['label' => 'Patients', 'route' => 'patients.index', 'matches' => 'patients.*'],
     ];
-    $staffTabs = [];
+    $staffTabs = [
+        ['label' => 'Departments', 'route' => 'department.index', 'matches' => 'department.*'],
+        ['label' => 'All Staff',   'route' => 'staff.index',      'matches' => 'staff.*'],
+        ['label' => 'Schedules',   'route' => 'schedules.index',  'matches' => 'schedules.*'],
+        ['label' => 'Reports',     'route' => 'reports',          'matches' => 'reports'],
+    ];
     $wardTabs  = [];
 
     // Pick the correct tabs for the active module
@@ -177,12 +186,14 @@
             </a>
 
             {{-- Staff and Department (placeholder) --}}
-            <a href="#"
+            <a href="{{ route('department.index') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
                       {{ $isStaffDept ? 'nav-pill-active' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
                 Staff and Department
             </a>
+
+
 
             {{-- Ward and Bed (placeholder) --}}
             <a href="#"
@@ -224,10 +235,19 @@
         {{-- ── Module Header: Title + Tab Bar ── --}}
         <div class="bg-wm-cyan px-8 pt-7 pb-0 shrink-0">
 
-            {{-- Module title --}}
-            <h1 class="text-2xl font-bold text-wm-navy tracking-tight mb-5">
-                {{ $moduleTitle }}
-            </h1>
+            <div class="flex justify-between items-center">
+                {{-- Module title --}}
+                <h1 class="text-2xl font-bold text-wm-navy tracking-tight mb-5">
+                    {{ $moduleTitle }}
+                </h1>
+
+                {{-- Search Bar --}}
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search staff or Department"
+                           class="px-3 py-1 rounded text-black text-sm w-64" />
+                    <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden" style="right: 0;"></div>
+                </div>
+            </div>
 
             {{-- Tab navigation --}}
             @if (count($activeTabs) > 0)
@@ -255,7 +275,7 @@
         </div>
 
         {{-- ── Page Content ── --}}
-        <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark">
+        <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark p-8">
             @yield('content')
         </div>
 
@@ -311,5 +331,64 @@
 @endif
 
 @stack('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        searchInput.addEventListener('keyup', function() {
+            const query = this.value;
+
+            if (query.length > 2) {
+                fetch(`{{ route('search') }}?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = '';
+                        let hasResults = false;
+
+                        // Process staff results
+                        if (data.staff && data.staff.length > 0) {
+                            hasResults = true;
+                            data.staff.forEach(item => {
+                                const a = document.createElement('a');
+                                a.href = `{{ url('staff') }}/${item.staffNumber}`;
+                                a.className = 'block px-4 py-2 text-gray-800 hover:bg-gray-200';
+                                a.textContent = `${item.firstName} ${item.lastName}`;
+                                searchResults.appendChild(a);
+                            });
+                        }
+
+                        // Process department results
+                        if (data.departments && data.departments.length > 0) {
+                            hasResults = true;
+                            data.departments.forEach(item => {
+                                const a = document.createElement('a');
+                                const departmentUrl = new URL('{{ route("staff.index") }}');
+                                departmentUrl.searchParams.append('department', item.department);
+                                a.href = departmentUrl.toString();
+                                a.className = 'block px-4 py-2 text-gray-800 hover:bg-gray-200';
+                                a.textContent = `${item.department} (Department)`;
+                                searchResults.appendChild(a);
+                            });
+                        }
+
+                        if (hasResults) {
+                            searchResults.classList.remove('hidden');
+                        } else {
+                            searchResults.classList.add('hidden');
+                        }
+                    });
+            } else {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!searchResults.contains(e.target) && e.target !== searchInput) {
+                searchResults.classList.add('hidden');
+            }
+        });
+    });
+</script>
 </body>
 </html>

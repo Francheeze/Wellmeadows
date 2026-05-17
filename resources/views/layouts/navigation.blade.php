@@ -109,4 +109,71 @@
             </div>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchBar = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+
+        searchBar.addEventListener('keyup', function () {
+            const query = searchBar.value;
+
+            if (query.length < 2) {
+                searchResults.innerHTML = '';
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            fetch(`{{ route('search') }}?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.remove('hidden');
+
+                    if (data.staff.length === 0 && data.departments.length === 0) {
+                        const noResults = document.createElement('div');
+                        noResults.classList.add('px-4', 'py-2', 'text-gray-700');
+                        noResults.textContent = 'No results found';
+                        searchResults.appendChild(noResults);
+                        return;
+                    }
+
+                    if (data.staff.length > 0) {
+                        const staffHeader = document.createElement('div');
+                        staffHeader.classList.add('px-4', 'py-2', 'text-gray-500', 'text-sm', 'font-bold');
+                        staffHeader.textContent = 'Staff';
+                        searchResults.appendChild(staffHeader);
+
+                        data.staff.forEach(staff => {
+                            const staffLink = document.createElement('a');
+                            staffLink.href = `{{ url('staff') }}/${staff.staffNumber}/edit`;
+                            staffLink.classList.add('block', 'px-4', 'py-2', 'text-gray-700', 'hover:bg-gray-100');
+                            staffLink.textContent = `${staff.firstName} ${staff.lastName}`;
+                            searchResults.appendChild(staffLink);
+                        });
+                    }
+
+                    if (data.departments.length > 0) {
+                        const departmentsHeader = document.createElement('div');
+                        departmentsHeader.classList.add('px-4', 'py-2', 'text-gray-500', 'text-sm', 'font-bold');
+                        departmentsHeader.textContent = 'Departments';
+                        searchResults.appendChild(departmentsHeader);
+
+                        data.departments.forEach(department => {
+                            const departmentLink = document.createElement('a');
+                            departmentLink.href = `{{ url('departments') }}/${department.department}`;
+                            departmentLink.classList.add('block', 'px-4', 'py-2', 'text-gray-700', 'hover:bg-gray-100');
+                            departmentLink.textContent = department.department;
+                            searchResults.appendChild(departmentLink);
+                        });
+                    }
+                });
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!searchBar.contains(event.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
+    });
+</script>
 </nav>
