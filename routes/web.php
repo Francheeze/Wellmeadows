@@ -1,9 +1,14 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StaffController;
-use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PatientMedicationController;
+use App\Http\Controllers\PharmaceuticalItemController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequisitionController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplyItemController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -28,7 +33,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
     // Logout route
     Route::post('/logout', function () {
         auth()->logout();
@@ -60,6 +64,24 @@ Route::middleware(['auth'])->group(function () {
     
     // 6. DELETE STAFF - Removes staff
     Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
+
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('pharmaceutical_items', PharmaceuticalItemController::class);
+    Route::resource('supply_items', SupplyItemController::class);
+    Route::resource('requisitions', RequisitionController::class);
+    
+    Route::prefix('patient_medications')->name('patient_medications.')->group(function () {
+        Route::get('/',        [PatientMedicationController::class, 'index'])->name('index');
+        Route::get('/create',  [PatientMedicationController::class, 'create'])->name('create');
+        Route::post('/',       [PatientMedicationController::class, 'store'])->name('store');
+
+    // These three use ?patient_number=&drug_number=&start_date= query params
+    // instead of a route segment, because the PK is composite.
+        Route::get('/show',    [PatientMedicationController::class, 'show'])->name('show');
+        Route::get('/edit',    [PatientMedicationController::class, 'edit'])->name('edit');
+        Route::put('/update',  [PatientMedicationController::class, 'update'])->name('update');
+        Route::delete('/destroy', [PatientMedicationController::class, 'destroy'])->name('destroy');
+    });
 
     // 7. SHOW STAFF - Shows a single staff member's details
     Route::get('/staff/{staff}', [StaffController::class, 'show'])->name('staff.show');
