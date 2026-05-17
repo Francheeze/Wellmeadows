@@ -29,7 +29,7 @@
                 <select name="staff_id" id="staff_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">Select a staff member</option>
                     @foreach($staff as $staffMember)
-                        <option value="{{ $staffMember->staffNumber }}">{{ $staffMember->firstName }} {{ $staffMember->lastName }}</option>
+                        <option value="{{ $staffMember->staffNumber }}" data-department="{{ $staffMember->department }}">{{ $staffMember->firstName }} {{ $staffMember->lastName }}</option>
                     @endforeach
                 </select>
             </div>
@@ -67,4 +67,17 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.getElementById('staff_id').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        var department = selectedOption.getAttribute('data-department');
+        if (department) {
+            document.getElementById('department').value = department;
+        }
+    });
+</script>
+@endpush
+
 @endsection

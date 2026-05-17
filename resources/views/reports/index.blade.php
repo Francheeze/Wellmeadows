@@ -24,6 +24,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report ID</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff Member</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Incident</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Incident Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -34,6 +35,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $incident->id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $incident->staff->firstName }} {{ $incident->staff->lastName }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($incident->incident_date)->format('F d, Y') }}</td>
+                        <td class="px-6 py-4">{{ $incident->incident_type }}</td>
                         <td class="px-6 py-4">{{ Str::limit($incident->description, 70) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <form action="{{ route('reports.destroy', $incident->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this incident report?');">
@@ -45,7 +47,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">No incidents reported yet.</td>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No incidents reported yet.</td>
                     </tr>
                 @endforelse
             </tbody>
