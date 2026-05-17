@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class NextOfKin extends Model
+{
+    protected $primaryKey = 'next_of_kin_id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
+    protected $fillable = [
+        'next_of_kin_id',
+        'patient_number',
+        'full_name',
+        'relationship',
+        'address',
+        'telephone_number',
+    ];
+
+    // Belongs to a patient
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class, 'patient_number', 'patient_number');
+    }
+}
