@@ -158,10 +158,6 @@
     ];
     $wardTabs  = [];
 
-    // ── Staff and Department ──────────────────────────────
-    // Teammate: fill in your tabs following the same pattern.
-    $staffTabs = [];
-
     // ── Ward and Bed ──────────────────────────────────────
     // Teammate: fill in your tabs following the same pattern.
     $wardTabs = [];
