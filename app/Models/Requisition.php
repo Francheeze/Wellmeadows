@@ -13,8 +13,8 @@ class Requisition extends Model
 
     protected $fillable = [
         'requisition_number',
-        'staffNumber',
-        'wardnumber',
+        'staff_number',
+        'ward_number',
         'date_ordered',
     ];
 
@@ -25,12 +25,12 @@ class Requisition extends Model
 
     public function staff(): BelongsTo
         {
-            return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+            return $this->belongsTo(Staff::class, 'staffNumber', 'staff_number');
         }
 
     public function ward(): BelongsTo
         {
-            return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
+            return $this->belongsTo(Ward::class, 'wardnumber', 'ward_number');
         }
 
     // This requisition includes many surgical/non-medical items
