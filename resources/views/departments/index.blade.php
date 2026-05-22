@@ -2,8 +2,15 @@
 
 @section('title', 'Departments')
 
+@push('styles')
+<style>
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .anim-fade-up { animation: fadeUp .35s ease both; }
+</style>
+@endpush
+
 @section('content')
-<div class="p-6">
+<div class="p-6 anim-fade-up">
     
     <!-- Welcome Message -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">

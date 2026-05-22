@@ -21,6 +21,13 @@ export default {
                     cyan:    '#CCECEE',
                     'cyan-dim': '#a8dde0',
                 },
+                'dark-theme': {
+                    'bg': '#0d253f',
+                    'card': '#1a3a5d',
+                    'text': '#ffffff',
+                    'accent': '#36a9e1',
+                    'muted': '#8caabe',
+                },
             },
             fontFamily: {
                 sans: ['DM Sans', ...defaultTheme.fontFamily.sans],

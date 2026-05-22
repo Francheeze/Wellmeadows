@@ -48,8 +48,6 @@
     @stack('styles')
 </head>
 
-<body class="bg-wm-cyan font-sans antialiased overflow-hidden h-screen">
-
 @php
     use Illuminate\Support\Facades\Route;
 
@@ -172,6 +170,8 @@
     };
 @endphp
 
+<body class="bg-wm-cyan font-sans antialiased overflow-hidden h-screen">
+
 <div class="flex h-screen w-screen overflow-hidden">
 
     {{-- ════════════════════════════════════════════════
@@ -268,11 +268,13 @@
                 </h1>
 
                 {{-- Search Bar --}}
+                @if ($isStaffDept)
                 <div class="relative">
                     <input type="text" id="search-input" placeholder="Search staff or Department"
                            class="px-3 py-1 rounded text-black text-sm w-64" />
                     <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden" style="right: 0;"></div>
                 </div>
+                @endif
             </div>
 
             @if (count($activeTabs) > 0)
