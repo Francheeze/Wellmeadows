@@ -42,19 +42,15 @@ class InPatient extends Model
         return $this->belongsTo(Patient::class, 'patient_number', 'patient_number');
     }
 
-    // Belongs to a ward (another module)
-    // Uncomment once Ward model is available:
-    // public function ward(): BelongsTo
-    // {
-    //     return $this->belongsTo(Ward::class, 'ward_number', 'ward_number');
-    // }
+    public function ward(): BelongsTo
+        {
+            return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
+        }
 
-    // Belongs to a bed (another module)
-    // Uncomment once Bed model is available:
-    // public function bed(): BelongsTo
-    // {
-    //     return $this->belongsTo(Bed::class, 'bed_number', 'bed_number');
-    // }
+    public function bed(): BelongsTo
+        {
+            return $this->belongsTo(Bed::class, 'bednumber', 'bednumber');
+        }
 
     // Helper: check if patient is currently admitted
     public function isCurrentlyAdmitted(): bool

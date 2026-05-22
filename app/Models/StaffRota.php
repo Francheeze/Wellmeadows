@@ -14,4 +14,9 @@ class StaffRota extends Model
     {
         return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
     }
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+    }
 }
