@@ -26,12 +26,11 @@ class PatientMedication extends Model
         'units_per_day' => 'integer',
     ];
 
-    // Belongs to a patient (another module's table)
-    // Uncomment once the Patient model is available from that module:
-    // public function patient(): BelongsTo
-    // {
-    //     return $this->belongsTo(Patient::class, 'patient_number', 'patient_number');
-    // }
+    
+    public function patient(): BelongsTo
+        {
+            return $this->belongsTo(Patient::class, 'patient_number', 'patient_number');
+        }
 
     // Belongs to a pharmaceutical item
     public function pharmaceuticalItem(): BelongsTo

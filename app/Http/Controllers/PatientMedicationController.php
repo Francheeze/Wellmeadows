@@ -54,10 +54,10 @@ class PatientMedicationController extends Controller
         $drugs = PharmaceuticalItem::orderBy('drug_name')
             ->get(['drug_number', 'drug_name', 'dosage']);
 
-        // Uncomment once Patient model is available from teammate's module:
-        // $patients = \App\Models\Patient::orderBy('last_name')->get(['patient_number', 'first_name', 'last_name']);
+        
+        $patients = \App\Models\Patient::orderBy('last_name')->get(['patient_number', 'first_name', 'last_name']);
 
-        return view('patient_medications.create', compact('drugs'));
+        return view('patient_medications.create', compact('drugs', 'patients'));
     }
 
     // ──────────────────────────────────────────────
@@ -66,7 +66,7 @@ class PatientMedicationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'patient_number' => 'required|string|max:20',
+            'patient_number' => 'required|string|exists:patients,patient_number',
             'drug_number'    => 'required|string|exists:pharmaceutical_items,drug_number',
             'units_per_day'  => 'required|integer|min:1',
             'start_date'     => 'required|date',
@@ -117,7 +117,9 @@ class PatientMedicationController extends Controller
         $drugs = PharmaceuticalItem::orderBy('drug_name')
             ->get(['drug_number', 'drug_name', 'dosage']);
 
-        return view('patient_medications.edit', compact('medication', 'drugs'));
+        $patients = \App\Models\Patient::orderBy('last_name')->get(['patient_number', 'first_name', 'last_name']);
+
+        return view('patient_medications.edit', compact('medication', 'drugs', 'patients'));
     }
 
     // ──────────────────────────────────────────────
@@ -129,7 +131,7 @@ class PatientMedicationController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'patient_number' => 'required|string|max:20',
+            'patient_number' => 'required|string|exists:patients,patient_number',
             'drug_number'    => 'required|string|exists:pharmaceutical_items,drug_number',
             'start_date'     => 'required|date',
             'units_per_day'  => 'required|integer|min:1',

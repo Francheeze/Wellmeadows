@@ -72,4 +72,9 @@ class Patient extends Model
     {
         return $this->date_of_birth->age;
     }
+
+    public function medications(): HasMany
+    {
+        return $this->hasMany(PatientMedication::class, 'patient_number', 'patient_number');
+    }
 }

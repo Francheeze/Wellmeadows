@@ -55,8 +55,8 @@ class RequisitionController extends Controller
     {
         $validated = $request->validate([
             'requisition_number' => ['required', 'integer', 'unique:requisitions,requisition_number'],
-            'staff_number'       => ['required', 'string', 'max:50'],
-            'ward_number'        => ['required', 'string', 'max:50'],
+            'staff_number'       => ['required', 'string', 'max:50', 'exists:staff,staffNumber'],
+            'ward_number'        => ['required', 'string', 'max:50', 'exists:wards,wardnumber'],
             'date_ordered'       => ['required', 'date'],
 
             // Drug items (optional — requisition may have only supply items)
@@ -147,8 +147,8 @@ class RequisitionController extends Controller
     public function update(Request $request, Requisition $requisition): RedirectResponse
     {
         $validated = $request->validate([
-            'staff_number'  => ['required', 'string', 'max:50'],
-            'ward_number'   => ['required', 'string', 'max:50'],
+            'staff_number'  => ['required', 'string', 'max:50', 'exists:staff,staffNumber'],
+            'ward_number'   => ['required', 'string', 'max:50', 'exists:wards,wardnumber'],
             'date_ordered'  => ['required', 'date'],
 
             'drug_items'                       => ['nullable', 'array'],
