@@ -33,11 +33,11 @@ return new class extends Migration
 
             // FK to patients table — owned by another module.
             // Uncomment once the patients table exists in the project:
-            // $table->foreign('patient_number')
-            //       ->references('patient_number')
-            //       ->on('patients')
-            //       ->onUpdate('cascade')
-            //       ->onDelete('cascade');
+            $table->foreign('patient_number')
+                ->references('patient_number')
+                ->on('patients')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
