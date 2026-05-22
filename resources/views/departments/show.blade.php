@@ -40,7 +40,7 @@
             <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
         </div>
         <div class="flex items-center gap-3">
-            <input type="text" placeholder="Search staff or Department" class="px-3 py-1 rounded text-black text-sm w-64" />
+            {{-- Search bar removed as it is now in the main navigation --}}
         </div>
     </div>
 </header>

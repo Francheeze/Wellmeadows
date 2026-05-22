@@ -3,7 +3,7 @@
 @section('title', 'Report New Incident')
 
 @section('content')
-    <div class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto my-8">
         <h1 class="text-2xl font-bold text-[#1f3b5c] mb-6">Report a New Incident</h1>
 
         @if ($errors->any())

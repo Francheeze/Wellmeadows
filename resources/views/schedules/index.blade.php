@@ -2,8 +2,15 @@
 
 @section('title', 'Staff Schedules')
 
+@push('styles')
+<style>
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .anim-fade-up { animation: fadeUp .35s ease both; }
+</style>
+@endpush
+
 @section('content')
-<div class="p-8">
+<div class="p-8 anim-fade-up">
     <div class="flex justify-between items-center mb-6">
        <h1 class="text-2xl font-bold !text-white">Staff Schedules</h1>
         <a href="{{ route('schedules.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
