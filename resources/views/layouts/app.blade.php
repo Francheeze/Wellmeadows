@@ -14,6 +14,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        /* Sidebar nav item active state — pill effect */
         .nav-pill-active {
             background: rgba(255,255,255,0.18);
             color: #ffffff;
@@ -22,6 +23,7 @@
             background: rgba(255,255,255,0.22);
         }
 
+        /* Tab underline active state */
         .tab-active {
             color: #03416E;
             border-bottom-color: #03416E;
@@ -36,6 +38,7 @@
             border-bottom-color: rgba(3,65,110,0.35);
         }
 
+        /* Scrollbar styling for main content */
         .main-scroll::-webkit-scrollbar { width: 5px; }
         .main-scroll::-webkit-scrollbar-track { background: transparent; }
         .main-scroll::-webkit-scrollbar-thumb { background: rgba(3,65,110,0.2); border-radius: 999px; }
@@ -52,17 +55,32 @@
 
     $route = Route::currentRouteName() ?? '';
 
+    /*
+    |----------------------------------------------------------
+    | MODULE DETECTION
+    |
+    | Each module claims its route prefixes here.
+    |
+    | Nested resources are automatically covered by their
+    | parent prefix — e.g. patients.next_of_kins.* starts
+    | with 'patients.' so no separate entry is needed.
+    |
+    | Custom named actions are also auto-covered — e.g.
+    | 'appointments.record_result' starts with 'appointments.'
+    | and 'in_patients.discharge' starts with 'in_patients.'
+    |----------------------------------------------------------
+    */
     $isApptTreatment = str_starts_with($route, 'suppliers.')
                     || str_starts_with($route, 'pharmaceutical_items.')
                     || str_starts_with($route, 'supply_items.')
                     || str_starts_with($route, 'patient_medications.')
                     || str_starts_with($route, 'requisitions.');
 
-    $isPatientMgmt   = str_starts_with($route, 'patients.')
+    $isPatientMgmt   = str_starts_with($route, 'patients.')      // also covers patients.next_of_kins.*
                     || str_starts_with($route, 'local_doctors.')
-                    || str_starts_with($route, 'appointments.')
+                    || str_starts_with($route, 'appointments.')   // also covers appointments.record_result
                     || str_starts_with($route, 'exam_results.')
-                    || str_starts_with($route, 'in_patients.')
+                    || str_starts_with($route, 'in_patients.')    // also covers in_patients.discharge
                     || str_starts_with($route, 'out_patients.');
 
     $isStaffDept     = str_starts_with($route, 'staff.')
@@ -80,15 +98,37 @@
     $isDashboard = $route === 'dashboard'
                 || (!$isApptTreatment && !$isPatientMgmt && !$isStaffDept && !$isWardBed);
 
+    /*
+    |----------------------------------------------------------
+    | MODULE TITLE
+    |----------------------------------------------------------
+    */
     $moduleTitle = $module ?? match(true) {
         $isApptTreatment => 'Appointment and Treatment',
         $isPatientMgmt   => 'Patient Management',
         $isStaffDept     => 'Staff and Department',
         $isSchedules     => 'Schedules',
-        $isWardBed       => 'Ward and Bed Management',
+        $isWardBed       => 'Ward and Bed',
         default          => 'Dashboard',
     };
 
+    /*
+    |----------------------------------------------------------
+    | TAB DEFINITIONS
+    |
+    | label   — text shown on the tab
+    | route   — named route for the link (standalone index only,
+    |           never a nested resource index)
+    | matches — routeIs() wildcard pattern; the tab stays
+    |           highlighted for all CRUD pages of that entity
+    |
+    | IMPORTANT: Do NOT add nested resources as tabs.
+    |   patients.next_of_kins has no standalone index — link
+    |   to it from inside the patient show/detail page instead.
+    |----------------------------------------------------------
+    */
+
+    // ── Appointment and Treatment ──────────────────────────
     $apptTabs = [
         ['label' => 'Supplier',            'route' => 'suppliers.index',            'matches' => 'suppliers.*'],
         ['label' => 'Pharmaceutical Item', 'route' => 'pharmaceutical_items.index', 'matches' => 'pharmaceutical_items.*'],
@@ -97,6 +137,10 @@
         ['label' => 'Requisition',         'route' => 'requisitions.index',         'matches' => 'requisitions.*'],
     ];
 
+    // ── Patient Management ────────────────────────────────
+    // NOTE: next_of_kins is excluded — it is a nested resource
+    // (patients.next_of_kins.*) with no standalone index.
+    // Access next-of-kin from inside the patient show page.
     $patientTabs = [
         ['label' => 'Patients',      'route' => 'patients.index',      'matches' => 'patients.*'],
         ['label' => 'Local Doctors', 'route' => 'local_doctors.index', 'matches' => 'local_doctors.*'],
@@ -105,7 +149,6 @@
         ['label' => 'In-Patients',   'route' => 'in_patients.index',   'matches' => 'in_patients.*'],
         ['label' => 'Out-Patients',  'route' => 'out_patients.index',  'matches' => 'out_patients.*'],
     ];
-
     $staffTabs = [
         ['label' => 'Departments', 'route' => 'department.index', 'matches' => 'department.*'],
         ['label' => 'All Staff',   'route' => 'staff.index',      'matches' => 'staff.*'],
@@ -131,9 +174,17 @@
 
 <div class="flex h-screen w-screen overflow-hidden">
 
+    {{-- ════════════════════════════════════════════════
+         SIDEBAR
+    ════════════════════════════════════════════════ --}}
     <aside class="w-48 bg-wm-navy flex flex-col shrink-0 h-full">
 
+        {{-- Logo / Seal --}}
         <div class="flex flex-col items-center pt-6 pb-5 px-4 border-b border-white/10">
+            {{--
+                Once you have the hospital seal asset, replace this div with:
+                <img src="{{ asset('images/seal.png') }}" alt="Wellmeadows" class="w-14 h-14 rounded-full">
+            --}}
             <div class="w-14 h-14 rounded-full border-2 border-white/25 bg-white/10
                         flex items-center justify-center relative overflow-hidden">
                 <svg class="absolute inset-0 w-full h-full" viewBox="0 0 56 56" fill="none">
@@ -146,6 +197,7 @@
             </div>
         </div>
 
+        {{-- Navigation --}}
         <nav class="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
 
             <a href="{{ route('dashboard') }}"
@@ -162,6 +214,7 @@
                 Patient Management
             </a>
 
+            {{-- Staff and Department (placeholder) --}}
             <a href="{{ route('department.index') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
@@ -186,6 +239,7 @@
 
         </nav>
 
+        {{-- Sign out --}}
         <div class="border-t border-white/10 px-4 py-4">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -199,15 +253,21 @@
 
     </aside>
 
+    {{-- ════════════════════════════════════════════════
+         MAIN AREA
+    ════════════════════════════════════════════════ --}}
     <div class="flex-1 flex flex-col overflow-hidden">
 
+        {{-- Module header: title + tab bar --}}
         <div class="bg-wm-cyan px-8 pt-7 pb-0 shrink-0">
 
             <div class="flex justify-between items-center">
+                {{-- Module title --}}
                 <h1 class="text-2xl font-bold text-wm-navy tracking-tight mb-5">
                     {{ $moduleTitle }}
                 </h1>
 
+                {{-- Search Bar --}}
                 <div class="relative">
                     <input type="text" id="search-input" placeholder="Search staff or Department"
                            class="px-3 py-1 rounded text-black text-sm w-64" />
@@ -236,6 +296,7 @@
             @endif
         </div>
 
+        {{-- Page content — all blade files yield here --}}
         <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark">
             @yield('content')
         </div>
@@ -305,6 +366,7 @@
                         searchResults.innerHTML = '';
                         let hasResults = false;
 
+                        // Process staff results
                         if (data.staff && data.staff.length > 0) {
                             hasResults = true;
                             data.staff.forEach(item => {
@@ -316,6 +378,7 @@
                             });
                         }
 
+                        // Process department results
                         if (data.departments && data.departments.length > 0) {
                             hasResults = true;
                             data.departments.forEach(item => {
