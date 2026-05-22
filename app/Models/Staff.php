@@ -47,4 +47,14 @@ class Staff extends Model
     {
         return $this->hasMany(WorkExperience::class, 'staffNumber', 'staffNumber');
     }
+
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class, 'staffNumber', 'staffNumber');
+    }
+    
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'staffNumber', 'staffNumber');
+    }
 }

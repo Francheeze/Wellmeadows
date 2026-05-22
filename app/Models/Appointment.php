@@ -15,7 +15,7 @@ class Appointment extends Model
     protected $fillable = [
         'appointment_number',
         'patient_number',
-        'staff_number',
+        'staffNumber',
         'date_time',
         'examination_room',
     ];
@@ -30,12 +30,10 @@ class Appointment extends Model
         return $this->belongsTo(Patient::class, 'patient_number', 'patient_number');
     }
 
-    // Belongs to a staff member (another module)
-    // Uncomment once Staff model is available:
-    // public function staff(): BelongsTo
-    // {
-    //     return $this->belongsTo(Staff::class, 'staff_number', 'staff_number');
-    // }
+     public function staff(): BelongsTo
+     {
+         return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+     }
 
     // An appointment has one exam result
     public function examResult(): HasOne

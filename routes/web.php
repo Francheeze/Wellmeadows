@@ -25,13 +25,9 @@ use App\Http\Controllers\WardController;
 use App\Http\Controllers\BedController;
 use App\Http\Controllers\StaffRotaController;
 
-
 Route::resource('beds', BedController::class);
-
 Route::resource('staff-rota', StaffRotaController::class);
-
 Route::resource('wards', WardController::class);
-
 
 // Public routes
 use App\Http\Controllers\SearchController;

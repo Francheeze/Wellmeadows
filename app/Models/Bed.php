@@ -16,4 +16,9 @@ class Bed extends Model
     {
         return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
     }
+    
+    public function inPatient()
+    {
+        return $this->hasOne(InPatient::class, 'bednumber', 'bednumber');
+    }
 }

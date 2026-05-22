@@ -10,7 +10,7 @@ class Ward extends Model
 
     protected $fillable = [
         'wardnumber', 'wardname', 'location',
-        'totalbeds', 'telephoneextention', 'chargenursenumber'
+        'total_beds', 'telephone_extension', 'chargeursery_number'
     ];
 
     public function beds()
@@ -21,5 +21,15 @@ class Ward extends Model
     public function staffRota()
     {
         return $this->hasMany(StaffRota::class, 'wardnumber', 'wardnumber');
+    }
+
+    public function requisitions()
+    {
+        return $this->hasMany(Requisition::class, 'wardnumber', 'wardnumber');
+    }
+
+    public function inPatients()
+    {
+        return $this->hasMany(InPatient::class, 'wardnumber', 'wardnumber');
     }
 }

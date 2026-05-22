@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
 {
-    Schema::create('staff_rota', function (Blueprint $table) {
+    Schema::create('staff_rotas', function (Blueprint $table) {
         $table->string('wardnumber');
         $table->string('staffnumber');
         $table->enum('shift', ['Early', 'Late', 'Night']);
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff_rota');
+        Schema::dropIfExists('staff_rotas');
     }
 };
