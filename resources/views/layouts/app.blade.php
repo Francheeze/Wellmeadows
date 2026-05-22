@@ -90,11 +90,10 @@
 
     $isSchedules     = str_starts_with($route, 'schedules.');
 
-    // Ward teammate — replace false with your str_starts_with() checks
-    $isWardBed = false;
-    // Example:
-    // $isWardBed = str_starts_with($route, 'wards.')
-    //           || str_starts_with($route, 'beds.');
+    // ── CHANGED: Ward and Bed detection ──
+    $isWardBed = str_starts_with($route, 'wards.')
+              || str_starts_with($route, 'beds.')
+              || str_starts_with($route, 'staff-rota.');
 
     $isDashboard = $route === 'dashboard'
                 || (!$isApptTreatment && !$isPatientMgmt && !$isStaffDept && !$isWardBed);
@@ -156,13 +155,14 @@
         ['label' => 'Schedules',   'route' => 'schedules.index',  'matches' => 'schedules.*'],
         ['label' => 'Reports',     'route' => 'reports',          'matches' => 'reports'],
     ];
-    $wardTabs  = [];
 
-    // ── Ward and Bed ──────────────────────────────────────
-    // Teammate: fill in your tabs following the same pattern.
-    $wardTabs = [];
+    // ── CHANGED: Ward tabs filled in ──
+    $wardTabs = [
+        ['label' => 'Ward',             'route' => 'wards.index',      'matches' => 'wards.*'],
+        ['label' => 'Bed',              'route' => 'beds.index',       'matches' => 'beds.*'],
+        ['label' => 'Staff Allocation', 'route' => 'staff-rota.index', 'matches' => 'staff-rota.*'],
+    ];
 
-    // Resolve active tab set for current module
     $activeTabs = match(true) {
         $isApptTreatment => $apptTabs,
         $isPatientMgmt   => $patientTabs,
@@ -222,8 +222,8 @@
                 Staff and Department
             </a>
 
-            {{-- Ward teammate: replace href="#" with route('your.landing.route') --}}
-            <a href="#"
+            {{-- CHANGED: href updated to wards.index --}}
+            <a href="{{ route('wards.index') }}"
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
                       {{ $isWardBed ? 'nav-pill-active' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">

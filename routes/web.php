@@ -21,6 +21,16 @@ use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\ReportController;
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WardController;
+use App\Http\Controllers\BedController;
+use App\Http\Controllers\StaffRotaController;
+
+
+Route::resource('beds', BedController::class);
+
+Route::resource('staff-rota', StaffRotaController::class);
+
+Route::resource('wards', WardController::class);
 
 
 // Public routes
@@ -29,7 +39,7 @@ use App\Http\Controllers\SearchController;
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Authentication routes
