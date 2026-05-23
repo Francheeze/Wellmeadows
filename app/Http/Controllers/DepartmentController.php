@@ -21,14 +21,20 @@ class DepartmentController extends Controller
         }
 
         $departments = $query->paginate(10);
-        $all_departments = Department::all(); // Fetch all departments for the cards
+        $all_departments = Department::all();
         $totalStaff = Staff::count();
 
-        $departmentCounts = Staff::query()
+        // FIX: Group by department ID, then key the result by department name
+        $countById = Staff::query()
             ->select('department', DB::raw('count(*) as count'))
             ->groupBy('department')
             ->get()
             ->pluck('count', 'department');
+
+        // Map department ID -> name so the view can look up by name
+        $departmentCounts = Department::all()->mapWithKeys(function ($dept) use ($countById) {
+            return [$dept->name => $countById->get($dept->id, 0)];
+        });
 
         $departmentIcons = [
             'Cardiology' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />',
@@ -55,7 +61,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $validatedData = $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255|unique:departments,name',
             'address' => 'required|string|max:255',
         ]);
@@ -71,7 +77,8 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        $staff = Staff::where('department', $department->name)->paginate(10);
+        // FIX: filter by department ID not name
+        $staff = Staff::where('department', $department->id)->paginate(10);
         return view('departments.show', compact('department', 'staff'));
     }
 
