@@ -12,7 +12,7 @@ class ScheduleController extends Controller
     {
         $schedules = Schedule::with('staff')->get();
         $staff = Staff::all();
-        return view('schedules', compact('schedules', 'staff'));
+        return view('schedules.index', compact('schedules', 'staff'));
     }
 
     public function create()

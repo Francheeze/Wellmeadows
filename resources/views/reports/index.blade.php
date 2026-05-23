@@ -10,55 +10,57 @@
 @endpush
 
 @section('content')
-<div class="p-8 anim-fade-up">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 anim-fade-up">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-white">Incident Reports</h1>
-        <a href="{{ route('reports.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            + Add New Report
-        </a>
+        <a href="{{ route('reports.create') }}" class="bg-wm-cyan hover:bg-wm-cyan-dim text-wm-dark font-bold py-2 px-4 rounded-lg transition-colors">
+                + Add New Report
+            </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-wm-card border border-wm-navy/60 rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,.4)]">
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded m-6" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
 
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report ID</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff Member</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Incident</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Incident Type</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($incidents as $incident)
+        <div class="overflow-x-auto px-8 pb-8 pt-8">
+            <table class="min-w-full">
+                <thead class="bg-gray-800/50">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $incident->id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $incident->staff->firstName }} {{ $incident->staff->lastName }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($incident->incident_date)->format('F d, Y') }}</td>
-                        <td class="px-6 py-4">{{ $incident->incident_type }}</td>
-                        <td class="px-6 py-4">{{ Str::limit($incident->description, 70) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <form action="{{ route('reports.destroy', $incident->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this incident report?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                            </form>
-                        </td>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Report ID</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Staff Member</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Date of Incident</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Incident Type</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Description</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Actions</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No incidents reported yet.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="text-gray-300">
+                    @forelse($incidents as $incident)
+                        <tr class="hover:bg-wm-dark border-b border-gray-800/50">
+                            <td class="py-3 px-4">{{ $incident->id }}</td>
+                            <td class="py-3 px-4">{{ $incident->staff->firstName }} {{ $incident->staff->lastName }}</td>
+                            <td class="py-3 px-4">{{ \Carbon\Carbon::parse($incident->incident_date)->format('F d, Y') }}</td>
+                            <td class="py-3 px-4">{{ $incident->incident_type }}</td>
+                            <td class="py-3 px-4">{{ Str::limit($incident->description, 70) }}</td>
+                            <td class="py-3 px-4">
+                                <form action="{{ route('reports.destroy', $incident->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this incident report?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:text-red-400 font-semibold">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-16 text-gray-400">No incidents reported yet.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-    </div>
+</div>
 @endsection

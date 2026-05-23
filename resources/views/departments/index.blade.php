@@ -1,134 +1,117 @@
 @extends('layouts.app')
 
-@section('title', 'Departments')
-
-@push('styles')
-<style>
-    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .anim-fade-up { animation: fadeUp .35s ease both; }
-</style>
-@endpush
-
 @section('content')
-<div class="p-6 anim-fade-up">
-    
-    <!-- Welcome Message -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h1 class="text-2xl font-bold text-[#1f3b5c]">Welcome to Wellmeadows Hospital</h1>
-        <p class="text-gray-600 mt-2">Manage your staff, departments, schedules, and reports from this dashboard.</p>
+<div class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8 animate-fade-in">
+        <div class="flex justify-between items-center mb-8">
+        <div>
+            <p class="text-cyan-300 uppercase tracking-wider text-sm">Wellmeadows Hospital</p>
+            <h1 class="text-3xl font-bold text-white">Departments</h1>
+        </div>
+        <a href="{{ route('department.create') }}" class="bg-wm-cyan hover:bg-wm-cyan-dim text-wm-dark font-bold py-2 px-4 rounded-lg transition-colors">
+            + Add New Department
+        </a>
     </div>
 
-    <!-- Departments Section -->
-    <h2 class="text-white font-semibold mb-4 text-xl">Hospital Departments</h2>
-    
-    <!-- Department Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Cardiology']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Cardiology</h3>
-                        <p class="text-sm mt-1">Heart and cardiovascular care</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Cardiology'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">❤️</div>
-                </div>
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Total Staff Card -->
+            <a href="{{ route('staff.index') }}" class="bg-wm-card shadow-lg rounded-xl p-4 flex flex-col items-center justify-center hover:bg-wm-dark transition-colors">
+                <h3 class="text-lg font-semibold text-gray-300">Total Staff</h3>
+                <p class="text-3xl font-bold text-white">{{ $totalStaff }}</p>
+                <svg class="h-8 w-8 text-blue-500 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.28-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.28.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
             </a>
-        </div>
-        
-        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Neurology']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Neurology</h3>
-                        <p class="text-sm mt-1">Brain and nervous system</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Neurology'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">🧠</div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Pediatrics']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Pediatrics</h3>
-                        <p class="text-sm mt-1">Child healthcare</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Pediatrics'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">👶</div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Orthopedics']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Orthopedics</h3>
-                        <p class="text-sm mt-1">Bone and joint care</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Orthopedics'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">🦴</div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Emergency']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Emergency</h3>
-                        <p class="text-sm mt-1">24/7 emergency care</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Emergency'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">🚑</div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg shadow-md p-6 text-white">
-            <a href="{{ route('staff.index', ['department' => 'Radiology']) }}" class="block hover:shadow-lg transition-shadow duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-semibold">Radiology</h3>
-                        <p class="text-sm mt-1">Medical imaging</p>
-                        <p class="text-2xl font-bold mt-3">{{ $departments['Radiology'] }} Staff</p>
-                    </div>
-                    <div class="text-4xl">📊</div>
-                </div>
-            </a>
-        </div>
-    </div>
 
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-center">
-                <div class="text-4xl mb-3">👥</div>
-                <h3 class="font-semibold text-lg text-[#1f3b5c]">Total Staff</h3>
-                <p class="text-3xl font-bold text-gray-700 mt-2">{{ $totalStaff }}</p>
-                <a href="{{ route('staff.index') }}" class="inline-block mt-4 text-blue-600 hover:text-blue-800">View All Staff →</a>
-            </div>
+            <!-- Department Cards -->
+            @foreach ($all_departments as $dept)
+                <a href="{{ route('department.show', $dept->id) }}" class="bg-wm-card shadow-lg rounded-xl p-4 flex flex-col items-center justify-center hover:bg-wm-dark transition-colors">
+                    <h3 class="text-lg font-semibold text-gray-300">{{ $dept->name }}</h3>
+                    <p class="text-3xl font-bold text-white">{{ $departmentCounts[Str::ucfirst($dept->name)] ?? 0 }}</p>
+                    <svg class="h-8 w-8 text-blue-500 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        {!! $departmentIcons[$dept->name] ?? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />' !!}
+                    </svg>
+                </a>
+            @endforeach
         </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-center">
-                <div class="text-4xl mb-3">📅</div>
-                <h3 class="font-semibold text-lg text-[#1f3b5c]">Today's Schedule</h3>
-                <p class="text-gray-600 mt-2">View and manage schedules</p>
-                <a href="{{ route('schedules.index') }}" class="inline-block mt-4 text-blue-600 hover:text-blue-800">View Schedule →</a>
+
+        <div class="bg-gray-800 shadow-lg rounded-lg p-6">
+            <!-- Action Bar -->
+            <div class="flex justify-between items-center mb-4">
+                <form action="{{ route('department.index') }}" method="GET" class="flex items-center space-x-4 w-1/2">
+                    <input type="text" name="search" placeholder="Search departments by name..." class="w-full bg-gray-700 text-white px-4 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+                </form>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+                        Total: {{ $departments->total() }}
+                    </div>
+
+                </div>
             </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="text-center">
-                <div class="text-4xl mb-3">📊</div>
-                <h3 class="font-semibold text-lg text-[#1f3b5c]">Reports</h3>
-                <p class="text-gray-600 mt-2">Generate and view reports</p>
-                <a href="{{ route('reports') }}" class="inline-block mt-4 text-blue-600 hover:text-blue-800">View Reports →</a>
+
+            @if (session('success'))
+                <div class="bg-green-500 bg-opacity-25 border border-green-500 text-green-300 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <!-- Departments Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full leading-normal">
+                    <thead>
+                        <tr>
+                            <th class="px-5 py-3 border-b-2 border-gray-700 bg-gray-800 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Name</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-700 bg-gray-800 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Address</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-700 bg-gray-800 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($departments as $department)
+                            <tr class="hover:bg-gray-700">
+                                <td class="px-5 py-5 border-b border-gray-700 text-sm">
+                                    <p class="text-gray-200 whitespace-no-wrap">{{ $department->name }}</p>
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-700 text-sm">
+                                    <p class="text-gray-200 whitespace-no-wrap">{{ $department->address }}</p>
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-700 text-sm text-right">
+                                    <div class="flex items-center justify-end space-x-4">
+                                        <a href="{{ route('department.edit', $department) }}" class="text-blue-400 hover:text-blue-300">Edit</a>
+                                        <form action="{{ route('department.destroy', $department) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-16">
+                                    <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6" />
+                                    </svg>
+                                    <h3 class="mt-2 text-lg font-medium text-gray-300">No departments registered yet.</h3>
+                                    <div class="mt-6">
+                                        <a href="{{ route('department.create') }}" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-sm font-bold rounded-md text-gray-800 bg-cyan-300 hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-cyan-500">
+                                            + Register First Department
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+
+            <!-- Pagination -->
+            @if(isset($departments) && $departments instanceof \Illuminate\Pagination\LengthAwarePaginator && $departments->hasPages())
+                <div class="mt-6">
+                    {{ $departments->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </div>
