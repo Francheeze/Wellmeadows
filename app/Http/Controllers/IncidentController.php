@@ -13,7 +13,7 @@ class IncidentController extends Controller
      */
     public function index()
     {
-        $incidents = Incident::with('staff')->latest()->get();
+        $incidents = Incident::with('staff')->latest()->paginate(10);
         return view('reports.index', compact('incidents'));
     }
 

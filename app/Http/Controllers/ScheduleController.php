@@ -10,7 +10,7 @@ class ScheduleController extends Controller
 {
     public function index()
     {
-        $schedules = Schedule::with('staff')->get();
+        $schedules = Schedule::with('staff')->paginate(10);
         $staff = Staff::all();
         return view('schedules.index', compact('schedules', 'staff'));
     }
