@@ -28,7 +28,7 @@
             @foreach ($all_departments as $dept)
                 <a href="{{ route('department.show', $dept->id) }}" class="bg-wm-card shadow-lg rounded-xl p-4 flex flex-col items-center justify-center hover:bg-wm-dark transition-colors">
                     <h3 class="text-lg font-semibold text-gray-300">{{ $dept->name }}</h3>
-                    <p class="text-3xl font-bold text-white">{{ $departmentCounts[Str::ucfirst($dept->name)] ?? 0 }}</p>
+                    <p class="text-3xl font-bold text-white">{{ $departmentCounts[$dept->name] ?? 0 }}</p>
                     <svg class="h-8 w-8 text-blue-500 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         {!! $departmentIcons[$dept->name] ?? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />' !!}
                     </svg>
