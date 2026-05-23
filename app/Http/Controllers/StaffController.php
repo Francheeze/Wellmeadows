@@ -9,34 +9,38 @@ use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-       // Display all staff
+    // Display all staff
     public function index(Request $request)
-{
-    $query = Staff::with(['qualifications', 'workExperiences']);
-    $department = $request->query('department');
-    $search = $request->query('search');
+    {
+        $department = $request->query('department');
+        $search = $request->query('search');
 
-    if ($department) {
-        $query->where('department', $department);
-    }
+        $query = Staff::with(['qualifications', 'workExperiences']);
 
-    if ($search) {
-        $query->where(function($q) use ($search) {
-            $q->where('firstName', 'like', "%{$search}%")
-              ->orWhere('lastName', 'like', "%{$search}%");
-        });
-
-        // Check BEFORE paginating
-        $result = $query->get();
-        if ($result->count() === 1) {
-            return redirect()->route('staff.show', $result->first());
+        if ($department) {
+            $query->where('department', $department);
         }
+
+        if ($search) {
+            // Use ILIKE for case-insensitive search, which is crucial for PostgreSQL on production.
+            $query->where(function($q) use ($search) {
+                $q->where('firstName', 'ilike', "%{$search}%")
+                  ->orWhere('lastName', 'ilike', "%{$search}%");
+            });
+        }
+
+        // Paginate the results first for efficiency.
+        $staff = $query->paginate(10);
+
+        // If the search found exactly one result, redirect to that staff member's page.
+        if ($search && $staff->total() === 1) {
+            // Use the first item from the paginator's collection for the redirect.
+            return redirect()->route('staff.show', $staff->items()[0]);
+        }
+
+        return view('staffs.index', compact('staff', 'department', 'search'));
     }
 
-    $staff = $query->paginate(10);
-
-    return view('staffs.index', compact('staff', 'department', 'search'));
-}
     // Show create form
     public function create()
     {
@@ -148,8 +152,8 @@ class StaffController extends Controller
         ]);
 
         $staff->update($validated);
-$staff->department = $request->input('department');
-$staff->save();
+        $staff->department = $request->input('department');
+        $staff->save();
 
         // Sync qualifications
         $staff->qualifications()->delete();
