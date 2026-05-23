@@ -27,7 +27,7 @@ class StaffController extends Controller
             });
         }
 
-        $staff = $query->get();
+        $staff = $query->paginate(10);
 
         // If the search returns exactly one result, redirect to the show page
         if ($search && $staff->count() === 1) {

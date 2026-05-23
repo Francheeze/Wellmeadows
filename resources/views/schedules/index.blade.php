@@ -52,6 +52,9 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="mt-6">
+                 {{ $schedules->links() }}
+            </div>
         </div>
     </div>
 </div>
