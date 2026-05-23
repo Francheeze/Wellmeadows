@@ -11,32 +11,32 @@ class StaffController extends Controller
 {
        // Display all staff
     public function index(Request $request)
-    {
-        $query = Staff::with(['qualifications', 'workExperiences']);
-        $department = $request->query('department');
-        $search = $request->query('search');
+{
+    $query = Staff::with(['qualifications', 'workExperiences']);
+    $department = $request->query('department');
+    $search = $request->query('search');
 
-        if ($department) {
-            $query->where('department', $department);
-        }
-
-        if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->where('firstName', 'like', "%{$search}%")
-                  ->orWhere('lastName', 'like', "%{$search}%");
-            });
-        }
-
-        $staff = $query->paginate(10);
-
-        // If the search returns exactly one result, redirect to the show page
-        if ($search && $staff->count() === 1) {
-            return redirect()->route('staff.show', $staff->first());
-        }
-
-        return view('staffs.index', compact('staff', 'department', 'search'));
+    if ($department) {
+        $query->where('department', $department);
     }
-    
+
+    if ($search) {
+        $query->where(function($q) use ($search) {
+            $q->where('firstName', 'like', "%{$search}%")
+              ->orWhere('lastName', 'like', "%{$search}%");
+        });
+
+        // Check BEFORE paginating
+        $result = $query->get();
+        if ($result->count() === 1) {
+            return redirect()->route('staff.show', $result->first());
+        }
+    }
+
+    $staff = $query->paginate(10);
+
+    return view('staffs.index', compact('staff', 'department', 'search'));
+}
     // Show create form
     public function create()
     {
