@@ -102,7 +102,7 @@
     |----------------------------------------------------------
     */
     $moduleTitle = $module ?? match(true) {
-        $isApptTreatment => 'Appointment and Treatment',
+        $isApptTreatment => 'Treatment and Requisition',
         $isPatientMgmt   => 'Patient Management',
         $isStaffDept     => 'Staff and Department',
         $isSchedules     => 'Schedules',
@@ -126,7 +126,7 @@
     |----------------------------------------------------------
     */
 
-    // ── Appointment and Treatment ──────────────────────────
+    // ── Treatment and Requisition ──────────────────────────
     $apptTabs = [
         ['label' => 'Supplier',            'route' => 'suppliers.index',            'matches' => 'suppliers.*'],
         ['label' => 'Pharmaceutical Item', 'route' => 'pharmaceutical_items.index', 'matches' => 'pharmaceutical_items.*'],
@@ -234,7 +234,7 @@
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
                       {{ $isApptTreatment ? 'nav-pill-active' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
-                Appointment and treatment
+                Treatment and Requisition
             </a>
 
         </nav>

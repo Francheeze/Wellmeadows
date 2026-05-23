@@ -39,9 +39,12 @@ class SupplyItemController extends Controller
         $query->orderBy(...$sort);
 
         $supplyItems   = $query->paginate(15)->withQueryString();
-        $lowStockCount = SupplyItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')->count();
+        $lowStockCount = SupplyItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')
+        ->where('quantity_in_stock', '>', 0)->count();
+        $inStockCount  = SupplyItem::whereColumn('quantity_in_stock', '>', 'reorder_level')->count();
+        $outStockCount = SupplyItem::where('quantity_in_stock', 0)->count();
 
-        return view('supply_items.index', compact('supplyItems', 'lowStockCount'));
+        return view('supply_items.index', compact('supplyItems', 'lowStockCount', 'inStockCount', 'outStockCount'));
     }
 
     /**

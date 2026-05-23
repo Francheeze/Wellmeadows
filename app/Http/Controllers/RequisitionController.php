@@ -34,7 +34,11 @@ class RequisitionController extends Controller
 
         $requisitions = $query->orderBy('date_ordered', 'desc')->paginate(15)->withQueryString();
 
-        return view('requisitions.index', compact('requisitions'));
+        $todayCount       = Requisition::whereDate('date_ordered', today())->count();
+        $drugItemsCount   = \Illuminate\Support\Facades\DB::table('requisition_drug_items')->count();
+        $supplyItemsCount = \Illuminate\Support\Facades\DB::table('requisition_supply_items')->count();
+
+        return view('requisitions.index', compact('requisitions', 'todayCount', 'drugItemsCount', 'supplyItemsCount'));
     }
 
     /**
