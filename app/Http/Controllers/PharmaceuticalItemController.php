@@ -32,7 +32,7 @@ class PharmaceuticalItemController extends Controller
             'drug_number' => ['drug_number', 'asc'],
             'cost'        => ['cost_per_unit', 'desc'],
             'stock'       => ['quantity_in_stock', 'asc'],
-            default       => ['drug_name', 'asc'],
+            default       => ['drug_number', 'asc'],
         };
         $query->orderBy(...$sort);
 
