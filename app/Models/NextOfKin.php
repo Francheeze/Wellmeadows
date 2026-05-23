@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NextOfKin extends Model
 {
+    protected $table = 'next_of_kins';
     protected $primaryKey = 'next_of_kin_id';
     public $incrementing  = false;
     protected $keyType    = 'string';

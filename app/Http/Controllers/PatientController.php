@@ -44,6 +44,9 @@ class PatientController extends Controller
 
     // ──────────────────────────────────────────────
     // SHOW create form
+    // FIX: removed the erroneous `Patient $patient`
+    // parameter — create() is for new records and has
+    // no patient to resolve from the URL.
     // ──────────────────────────────────────────────
     public function create()
     {
