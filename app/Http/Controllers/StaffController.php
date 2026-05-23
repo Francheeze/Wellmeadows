@@ -22,11 +22,20 @@ class StaffController extends Controller
         }
 
         if ($search) {
-            // Use ILIKE for case-insensitive search, which is crucial for PostgreSQL on production.
-            $query->where(function($q) use ($search) {
-                $q->where('firstName', 'ilike', "%{$search}%")
-                  ->orWhere('lastName', 'ilike', "%{$search}%");
-            });
+            // Split the search string by spaces to handle multi-word names.
+            $searchTerms = explode(' ', $search);
+
+            // Chain where clauses for each term, ensuring all terms are matched.
+            foreach ($searchTerms as $term) {
+                $term = trim($term);
+                if ($term) {
+                    // For each term, search in both firstName and lastName.
+                    $query->where(function ($q) use ($term) {
+                        $q->where('firstName', 'ilike', '%' . $term . '%')
+                          ->orWhere('lastName', 'ilike', '%' . $term . '%');
+                    });
+                }
+            }
         }
 
         // Paginate the results first for efficiency.
