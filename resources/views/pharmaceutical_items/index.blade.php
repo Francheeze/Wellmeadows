@@ -71,7 +71,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-white leading-none">
-                    {{ $pharmaceuticalItems->getCollection()->filter(fn($i) => $i->quantity_in_stock > $i->reorder_level)->count() }}
+                    {{ $inStockCount }}
                 </p>
                 <p class="text-[11px] text-slate-400 font-medium mt-1">In Stock</p>
             </div>
@@ -86,7 +86,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-white leading-none">
-                    {{ $pharmaceuticalItems->getCollection()->filter(fn($i) => $i->quantity_in_stock <= $i->reorder_level && $i->quantity_in_stock > 0)->count() }}
+                    {{ $lowStockCount }}
                 </p>
                 <p class="text-[11px] text-slate-400 font-medium mt-1">Low Stock</p>
             </div>
@@ -101,7 +101,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-white leading-none">
-                    {{ $pharmaceuticalItems->getCollection()->filter(fn($i) => $i->quantity_in_stock === 0)->count() }}
+                    {{ $outStockCount }}
                 </p>
                 <p class="text-[11px] text-slate-400 font-medium mt-1">Out of Stock</p>
             </div>

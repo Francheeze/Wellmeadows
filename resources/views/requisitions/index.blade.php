@@ -80,7 +80,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-[#f0f7f8]">
-                    {{ $requisitions->getCollection()->filter(fn($r) => \Carbon\Carbon::parse($r->date_ordered)->isToday())->count() }}
+                    {{ $todayCount }}
                 </p>
                 <p class="text-xs text-[#CCECEE]/50 font-medium mt-0.5">Today</p>
             </div>
@@ -94,7 +94,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-[#f0f7f8]">
-                    {{ $requisitions->getCollection()->sum(fn($r) => $r->requisitionDrugItems->count()) }}
+                    {{ $drugItemsCount }}
                 </p>
                 <p class="text-xs text-[#CCECEE]/50 font-medium mt-0.5">Drug Line Items</p>
             </div>
@@ -108,7 +108,7 @@
             </div>
             <div>
                 <p class="text-2xl font-bold text-[#f0f7f8]">
-                    {{ $requisitions->getCollection()->sum(fn($r) => $r->requisitionSupplyItems->count()) }}
+                    {{ $supplyItemsCount }}
                 </p>
                 <p class="text-xs text-[#CCECEE]/50 font-medium mt-0.5">Supply Line Items</p>
             </div>

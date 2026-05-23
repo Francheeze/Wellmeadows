@@ -37,9 +37,12 @@ class PharmaceuticalItemController extends Controller
         $query->orderBy(...$sort);
 
         $pharmaceuticalItems = $query->paginate(15)->withQueryString();
-        $lowStockCount = PharmaceuticalItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')->count();
+        $lowStockCount = PharmaceuticalItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')
+        ->where('quantity_in_stock', '>', 0)->count();
+        $inStockCount   = PharmaceuticalItem::whereColumn('quantity_in_stock', '>', 'reorder_level')->count();
+        $outStockCount  = PharmaceuticalItem::where('quantity_in_stock', 0)->count();
 
-        return view('pharmaceutical_items.index', compact('pharmaceuticalItems', 'lowStockCount'));
+        return view('pharmaceutical_items.index', compact('pharmaceuticalItems', 'lowStockCount', 'inStockCount', 'outStockCount'));
     }
 
     /**
