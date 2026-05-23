@@ -14,14 +14,27 @@ class StaffController extends Controller
     {
         $query = Staff::with(['qualifications', 'workExperiences']);
         $department = $request->query('department');
+        $search = $request->query('search');
 
         if ($department) {
             $query->where('department', $department);
         }
 
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('firstName', 'like', "%{$search}%")
+                  ->orWhere('lastName', 'like', "%{$search}%");
+            });
+        }
+
         $staff = $query->get();
 
-        return view('staffs.index', compact('staff', 'department'));
+        // If the search returns exactly one result, redirect to the show page
+        if ($search && $staff->count() === 1) {
+            return redirect()->route('staff.show', $staff->first());
+        }
+
+        return view('staffs.index', compact('staff', 'department', 'search'));
     }
     
     // Show create form
@@ -172,5 +185,17 @@ $staff->save();
     {
         $staff->load(['qualifications', 'workExperiences']);
         return view('staffs.show', compact('staff'));
+    }
+
+    // Autocomplete for staff search
+    public function autocomplete(Request $request)
+    {
+        $search = $request->query('term');
+        $staff = Staff::where('firstName', 'like', "%{$search}%")
+                      ->orWhere('lastName', 'like', "%{$search}%")
+                      ->limit(10)
+                      ->get(['firstName', 'lastName']);
+
+        return response()->json($staff);
     }
 }

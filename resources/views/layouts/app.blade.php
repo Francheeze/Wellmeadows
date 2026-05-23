@@ -45,7 +45,7 @@
         .main-scroll::-webkit-scrollbar-thumb:hover { background: rgba(3,65,110,0.35); }
     </style>
 
-    @stack('styles')
+    @yield('styles')
 </head>
 
 @php
@@ -266,15 +266,6 @@
                 <h1 class="text-2xl font-bold text-wm-navy tracking-tight mb-5">
                     {{ $moduleTitle }}
                 </h1>
-
-                {{-- Search Bar --}}
-                @if ($isStaffDept)
-                <div class="relative">
-                    <input type="text" id="search-input" placeholder="Search staff or Department"
-                           class="px-3 py-1 rounded text-black text-sm w-64" />
-                    <div id="search-results" class="absolute top-full mt-2 w-64 bg-white rounded-lg shadow-lg z-50 hidden" style="right: 0;"></div>
-                </div>
-                @endif
             </div>
 
             @if (count($activeTabs) > 0)
@@ -299,7 +290,7 @@
         </div>
 
         {{-- Page content — all blade files yield here --}}
-        <div class="flex-1 overflow-y-auto main-scroll bg-wm-dark">
+        <div class="flex-1 overflow-y-auto main-scroll @yield('content-bg', 'bg-wm-dark')">
             @yield('content')
         </div>
 
@@ -352,7 +343,7 @@
     </script>
 @endif
 
-@stack('scripts')
+@yield('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search-input');
@@ -412,5 +403,6 @@
         });
     });
 </script>
+    @stack('scripts')
 </body>
 </html>

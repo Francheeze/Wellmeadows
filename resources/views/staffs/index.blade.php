@@ -2,8 +2,12 @@
 
 @section('title', 'All Staff')
 
+@section('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+@endsection
+
 @section('content')
-<div class="p-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-white">
             @if(isset($department))
@@ -12,54 +16,59 @@
                 All Staff Members
             @endif
         </h1>
-        <a href="{{ route('staff.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            + Add New Staff
-        </a>
+        <div class="flex items-center space-x-4">
+            <form action="{{ route('staff.index') }}" method="GET" class="flex items-center">
+                <input type="text" name="search" id="staff-search" class="w-full md:w-64 px-4 py-2 bg-gray-800 text-white border border-gray-600 rounded-l-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500" placeholder="Search staff by name..." value="{{ request('search') }}">
+                <button type="submit" class="bg-cyan-300 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-4 rounded-r-md">Search</button>
+            </form>
+            <a href="{{ route('staff.create') }}" class="bg-wm-cyan hover:bg-wm-cyan-dim text-wm-dark font-bold py-2 px-4 rounded-lg transition-colors">
+                    + Add New Staff
+                </a>
+        </div>
     </div>
+    <div class="bg-wm-card border border-wm-navy/60 rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,.4)]">
+        <div class="overflow-x-auto px-8 pb-8 pt-8">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded m-6" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-300">
-                <thead class="bg-gray-50">
+            <table class="min-w-full">
+                <thead class="bg-gray-800/50">
                     <tr>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff No</th>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telephone</th>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary</th>
-                        <th class="px-4 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract</th>
-                        <th class="px-4 py-3 border text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Staff No</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Full Name</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Position</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Telephone</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Salary</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Contract</th>
+                        <th class="text-center py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="text-gray-300">
                     @forelse($staff as $member)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 border text-center">{{ $member->staffNumber }}</td>
-                            <td class="px-4 py-3 border">{{ $member->firstName }} {{ $member->lastName }}</td>
-                            <td class="px-4 py-3 border">{{ $member->position }}</td>
-                            <td class="px-4 py-3 border">{{ $member->telephoneNumber }}</td>
-                            <td class="px-4 py-3 border text-right">₱{{ number_format($member->currentSalary, 2) }}</td>
-                            <td class="px-4 py-3 border">{{ $member->contractType }}</td>
-                            <td class="px-4 py-3 border">
+                        <tr class="hover:bg-wm-dark border-b border-gray-800/50">
+                            <td class="py-3 px-4 text-center">{{ $member->staffNumber }}</td>
+                            <td class="py-3 px-4">{{ $member->firstName }} {{ $member->lastName }}</td>
+                            <td class="py-3 px-4">{{ $member->position }}</td>
+                            <td class="py-3 px-4">{{ $member->telephoneNumber }}</td>
+                            <td class="py-3 px-4 text-right">₱{{ number_format($member->currentSalary, 2) }}</td>
+                            <td class="py-3 px-4">{{ $member->contractType }}</td>
+                            <td class="py-3 px-4">
                                 <div class="flex gap-2 justify-center">
-                                    <a href="{{ route('staff.edit', $member->staffNumber) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                                    <a href="{{ route('staff.edit', $member->staffNumber) }}" class="text-blue-400 hover:text-blue-300 font-semibold">Edit</a>
                                     <form action="{{ route('staff.destroy', $member->staffNumber) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                        <button type="submit" class="text-red-500 hover:text-red-400 font-semibold ml-4">Delete</button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-6 text-gray-500">
+                            <td colspan="7" class="text-center py-16 text-gray-400">
                                 No staff members found.
                             </td>
                         </tr>
@@ -69,4 +78,33 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var searchInput = document.getElementById('staff-search');
+            var awesomplete = new Awesomplete(searchInput, {
+                minChars: 2,
+                list: [],
+                data: function (item, input) {
+                    return {
+                        label: item.firstName + ' ' + item.lastName,
+                        value: item.firstName + ' ' + item.lastName
+                    };
+                }
+            });
+
+            searchInput.addEventListener('keyup', function () {
+                if (this.value.length < 2) return;
+
+                fetch('{{ route('staff.autocomplete') }}?term=' + this.value)
+                    .then(response => response.json())
+                    .then(data => {
+                        awesomplete.list = data;
+                    });
+            });
+        });
+    </script>
 @endsection

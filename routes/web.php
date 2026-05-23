@@ -118,9 +118,11 @@ Route::middleware(['auth'])->group(function () {
     // 7. SHOW STAFF - Shows a single staff member's details
     Route::get('/staff/{staff}', [StaffController::class, 'show'])->name('staff.show');
 
+    // 8. STAFF AUTOCOMPLETE - Provides search suggestions
+    Route::get('/staff/autocomplete', [StaffController::class, 'autocomplete'])->name('staff.autocomplete');
+
     // Department routes
-    Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
-    Route::get('/department/{name}', [DepartmentController::class, 'show'])->name('department.show');
+    Route::resource('department', DepartmentController::class);
 
     // Schedule routes
     Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index');
