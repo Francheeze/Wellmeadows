@@ -9,23 +9,13 @@ use Illuminate\Http\Request;
 class NextOfKinController extends Controller
 {
     // ──────────────────────────────────────────────
-    // LIST all next-of-kin for a specific patient
-    // Route: GET /patients/{patient}/next_of_kins
-    // ──────────────────────────────────────────────
-    public function index(Patient $patient)
-    {
-        $nextOfKins = $patient->nextOfKins()->orderBy('full_name')->paginate(10);
-
-        return view('next_of_kins.index', compact('patient', 'nextOfKins'));
-    }
-
-    // ──────────────────────────────────────────────
     // SHOW create form
     // Route: GET /patients/{patient}/next_of_kins/create
     // ──────────────────────────────────────────────
     public function create(Patient $patient)
     {
-        return view('next_of_kins.create', compact('patient'));
+        // FIX: view path updated to match patients/next_of_kins/ folder
+        return view('patients.next_of_kins.create', compact('patient'));
     }
 
     // ──────────────────────────────────────────────
@@ -42,23 +32,13 @@ class NextOfKinController extends Controller
             'telephone_number' => 'required|string|max:20',
         ]);
 
-        // Attach to the patient resolved from the route
         $patient->nextOfKins()->create($validated);
 
+        // FIX: redirect to patient profile — the next-of-kin table is already there
+        // FIX: pass $patient model directly instead of $patient->patient_number
         return redirect()
-            ->route('patients.next_of_kins.index', $patient->patient_number)
+            ->route('patients.show', $patient)
             ->with('success', 'Next-of-kin record added successfully.');
-    }
-
-    // ──────────────────────────────────────────────
-    // SHOW single next-of-kin record
-    // Route: GET /patients/{patient}/next_of_kins/{next_of_kin}
-    // ──────────────────────────────────────────────
-    public function show(Patient $patient, NextOfKin $nextOfKin)
-    {
-        $this->authorizeRelationship($patient, $nextOfKin);
-
-        return view('next_of_kins.show', compact('patient', 'nextOfKin'));
     }
 
     // ──────────────────────────────────────────────
@@ -69,7 +49,8 @@ class NextOfKinController extends Controller
     {
         $this->authorizeRelationship($patient, $nextOfKin);
 
-        return view('next_of_kins.edit', compact('patient', 'nextOfKin'));
+        // FIX: view path updated to match patients/next_of_kins/ folder
+        return view('patients.next_of_kins.edit', compact('patient', 'nextOfKin'));
     }
 
     // ──────────────────────────────────────────────
@@ -90,8 +71,10 @@ class NextOfKinController extends Controller
 
         $nextOfKin->update($validated);
 
+        // FIX: redirect to patient profile
+        // FIX: pass $patient model directly
         return redirect()
-            ->route('patients.next_of_kins.index', $patient->patient_number)
+            ->route('patients.show', $patient)
             ->with('success', 'Next-of-kin record updated successfully.');
     }
 
@@ -105,8 +88,10 @@ class NextOfKinController extends Controller
 
         $nextOfKin->delete();
 
+        // FIX: redirect to patient profile
+        // FIX: pass $patient model directly
         return redirect()
-            ->route('patients.next_of_kins.index', $patient->patient_number)
+            ->route('patients.show', $patient)
             ->with('success', 'Next-of-kin record deleted successfully.');
     }
 
