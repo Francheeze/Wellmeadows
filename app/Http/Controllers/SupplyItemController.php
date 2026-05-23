@@ -34,7 +34,7 @@ class SupplyItemController extends Controller
             'item_number' => ['item_number', 'asc'],
             'cost'        => ['cost_per_unit', 'desc'],
             'stock'       => ['quantity_in_stock', 'asc'],
-            default       => ['item_name', 'asc'],
+            default       => ['item_number', 'asc'],
         };
         $query->orderBy(...$sort);
 
