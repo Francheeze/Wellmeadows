@@ -1,228 +1,369 @@
 @extends('layouts.app')
 
-@section('title', 'Exam Result — ' . $examResult->appointment_number)
+@section('title', 'Exam Result — Appointment #' . $examResult->appointment_number)
 
 @push('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .anim-fade-up { animation: fadeUp .35s ease both; }
+    body { background-color: #021829; font-family: 'DM Sans', sans-serif; }
+    .gradient-text {
+        background: linear-gradient(135deg, #f0f7f8 30%, #CCECEE);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    @keyframes fadeSlideIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeSlideIn .4s ease both; }
 </style>
 @endpush
 
 @section('content')
-<div class="max-w-4xl mx-auto px-6 py-8">
 
-    {{-- Breadcrumb --}}
-    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6 anim-fade-up">
-        <a href="{{ route('exam_results.index') }}" class="hover:text-wm-cyan transition-colors">Exam Results</a>
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+@php
+    $isAdmitted   = $examResult->isAdmitted();
+    $appointment  = $examResult->appointment;
+    $patient      = $appointment?->patient;
+    $inPatient    = $appointment?->inPatient;
+    $outPatient   = $appointment?->outPatient;
+@endphp
+
+<div class="min-h-screen bg-[#021829] text-[#f0f7f8]">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    {{-- Back Link --}}
+    <a href="{{ route('exam_results.index') }}"
+       class="inline-flex items-center gap-1.5 text-[#CCECEE]/50 hover:text-[#CCECEE] text-sm font-medium mb-8 transition-colors no-underline">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7-7l-7 7 7 7"/>
         </svg>
-        <span class="text-slate-400">{{ $examResult->appointment_number }}</span>
-    </nav>
+        Back to Exam Results
+    </a>
+
+    {{-- Page Header --}}
+    <div class="flex items-start justify-between gap-4 mb-8 flex-wrap">
+        <div>
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-[#CCECEE] mb-1">
+                Wellmeadows Hospital
+            </p>
+            <h1 class="text-3xl font-bold gradient-text leading-tight">Exam Result</h1>
+            <p class="text-[#CCECEE]/40 text-sm mt-1">
+                Appointment #{{ $examResult->appointment_number }}
+                &mdash;
+                {{ $patient?->first_name }} {{ $patient?->last_name }}
+            </p>
+        </div>
+
+        {{-- Result badge --}}
+        @if ($isAdmitted)
+            <span class="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/25 text-violet-300 text-sm font-semibold px-4 py-2 rounded-full mt-1">
+                <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+                Waiting List
+            </span>
+        @else
+            <span class="inline-flex items-center gap-2 bg-sky-500/10 border border-sky-500/25 text-sky-300 text-sm font-semibold px-4 py-2 rounded-full mt-1">
+                <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                Out-patient
+            </span>
+        @endif
+    </div>
 
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl px-5 py-4 mb-6 anim-fade-up">
-            <p class="text-sm font-semibold text-emerald-400">{{ session('success') }}</p>
+        <div class="fade-in flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-medium px-4 py-3 rounded-xl mb-6">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ session('success') }}
         </div>
     @endif
     @if (session('error'))
-        <div class="bg-red-500/10 border border-red-500/30 rounded-2xl px-5 py-4 mb-6 anim-fade-up">
-            <p class="text-sm font-semibold text-red-400">{{ session('error') }}</p>
+        <div class="fade-in flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-medium px-4 py-3 rounded-xl mb-6">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ session('error') }}
         </div>
     @endif
 
-    {{-- ── Hero Card ── --}}
-    <div class="bg-wm-card border border-wm-navy/60 rounded-2xl px-6 py-6 mb-6
-                shadow-[0_8px_40px_rgba(0,0,0,.4)] anim-fade-up" style="animation-delay:.03s">
-        <div class="flex flex-wrap items-start justify-between gap-4">
+    {{-- ── Card 1: Exam Result Details ── --}}
+    <div class="bg-[#032d4f] border border-[#CCECEE]/15 rounded-2xl overflow-hidden shadow-2xl mb-5 fade-in">
 
-            {{-- Result Info --}}
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0
-                            {{ $examResult->result === 'Out-patient' ? 'bg-green-500/10 border border-green-500/20' : 'bg-purple-500/10 border border-purple-500/20' }}">
-                    @if ($examResult->result === 'Out-patient')
-                        <svg class="w-7 h-7 text-green-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-[#CCECEE]/10
+             {{ $isAdmitted ? 'bg-violet-500/5' : 'bg-sky-500/5' }}">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+                 {{ $isAdmitted ? 'bg-violet-500/15 border border-violet-500/20 text-violet-400' : 'bg-sky-500/15 border border-sky-500/20 text-sky-400' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs font-semibold tracking-widest uppercase text-[#CCECEE]/50">Examination</p>
+                <h2 class="text-sm font-bold text-[#f0f7f8]">Result Details</h2>
+            </div>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Appointment No.</p>
+                <p class="text-[#f0f7f8] font-mono font-bold text-lg leading-none mt-1">
+                    {{ $examResult->appointment_number }}
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Result</p>
+                <div class="mt-1">
+                    @if ($isAdmitted)
+                        <span class="inline-flex items-center gap-1.5 bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold px-2.5 py-1 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                            Waiting List
+                        </span>
                     @else
-                        <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                        </svg>
+                        <span class="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold px-2.5 py-1 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                            Out-patient
+                        </span>
                     @endif
                 </div>
-                <div>
-                    <div class="flex items-center gap-3 flex-wrap">
-                        <span class="inline-block bg-wm-cyan/10 text-wm-cyan text-xs font-bold
-                                     font-mono px-2.5 py-1 rounded-md tracking-wide">
-                            {{ $examResult->appointment_number }}
-                        </span>
-                        @if ($examResult->result === 'Out-patient')
-                            <span class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400
-                                         text-xs font-semibold px-2.5 py-1 rounded-md">
-                                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>Out-patient
-                            </span>
-                        @else
-                            <span class="inline-flex items-center gap-1.5 bg-purple-500/10 text-purple-400
-                                         text-xs font-semibold px-2.5 py-1 rounded-md">
-                                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>Waiting List
-                            </span>
-                        @endif
-                    </div>
-                    <p class="text-xl font-bold text-white mt-1">
-                        Examined on {{ $examResult->examined_date->format('D, M j, Y') }}
-                    </p>
-                    <p class="text-sm text-slate-400">
-                        Appointment: {{ $examResult->appointment->date_time->format('M j, Y g:i A') }}
-                        &middot; {{ $examResult->appointment->examination_room }}
-                    </p>
-                </div>
             </div>
 
-            {{-- Actions --}}
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="{{ route('exam_results.edit', $examResult->appointment_number) }}"
-                   class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/25
-                          text-amber-400 text-sm font-semibold px-4 py-2.5 rounded-xl
-                          hover:bg-amber-500/20 hover:border-amber-500/50 transition-all duration-150">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Edit
-                </a>
-                <a href="{{ route('exam_results.index') }}"
-                   class="inline-flex items-center gap-2 bg-wm-navy/60 border border-wm-navy
-                          text-slate-400 text-sm font-semibold px-4 py-2.5 rounded-xl
-                          hover:text-white hover:border-slate-600 transition-all duration-150">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                    Back
-                </a>
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Examined Date</p>
+                <p class="text-[#f0f7f8] font-semibold text-sm mt-1">
+                    {{ $examResult->examined_date->format('d M Y') }}
+                </p>
+                <p class="text-[#CCECEE]/30 text-xs">{{ $examResult->examined_date->format('l') }}</p>
             </div>
 
         </div>
+
     </div>
 
-    {{-- ── Patient Card ── --}}
-    <div class="bg-wm-card border border-wm-navy/60 rounded-2xl px-6 py-5 mb-6
-                shadow-[0_8px_40px_rgba(0,0,0,.4)] anim-fade-up" style="animation-delay:.05s">
-        <h2 class="text-xs font-semibold tracking-widest uppercase text-wm-cyan mb-4">Patient</h2>
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-                <p class="text-lg font-bold text-white">
-                    {{ $examResult->appointment->patient->full_name }}
+    {{-- ── Card 2: Patient Information ── --}}
+    <div class="bg-[#032d4f] border border-[#CCECEE]/15 rounded-2xl overflow-hidden shadow-2xl mb-5 fade-in">
+
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-[#CCECEE]/10 bg-[#03416E]/20">
+            <div class="w-9 h-9 rounded-xl bg-[#CCECEE]/8 border border-[#CCECEE]/15 flex items-center justify-center text-[#CCECEE]/70 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <p class="text-xs font-semibold tracking-widest uppercase text-[#CCECEE]/50">Identity</p>
+                <h2 class="text-sm font-bold text-[#f0f7f8]">Patient Information</h2>
+            </div>
+            @if ($patient)
+                <a href="{{ route('patients.show', $patient->patient_number) }}"
+                   class="text-xs font-semibold text-[#CCECEE]/50 hover:text-[#CCECEE] transition no-underline">
+                    View Profile →
+                </a>
+            @endif
+        </div>
+
+        <div class="p-6 grid grid-cols-2 sm:grid-cols-3 gap-6">
+
+            <div class="flex flex-col gap-1 sm:col-span-2">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Full Name</p>
+                <p class="text-[#f0f7f8] font-semibold text-lg mt-1">
+                    {{ $patient?->first_name ?? '—' }} {{ $patient?->last_name ?? '' }}
                 </p>
-                <div class="flex flex-wrap items-center gap-3 mt-1.5">
-                    <span class="inline-block bg-wm-cyan/10 text-wm-cyan text-xs font-bold
-                                 font-mono px-2.5 py-1 rounded-md">
-                        {{ $examResult->appointment->patient->patient_number }}
-                    </span>
-                    <span class="text-slate-400 text-sm">
-                        {{ $examResult->appointment->patient->age }} yrs
-                        &middot; {{ $examResult->appointment->patient->sex }}
-                    </span>
-                </div>
-                @if ($examResult->appointment->patient->localDoctor)
-                    <p class="text-xs text-slate-500 mt-1.5">
-                        Referred by
-                        <span class="text-wm-cyan">{{ $examResult->appointment->patient->localDoctor->full_name }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Patient No.</p>
+                <p class="text-[#f0f7f8] font-mono font-bold mt-1">
+                    {{ $appointment?->patient_number ?? '—' }}
+                </p>
+            </div>
+
+            @if ($patient)
+                <div class="flex flex-col gap-1">
+                    <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Date of Birth</p>
+                    <p class="text-[#CCECEE]/70 text-sm mt-1">
+                        {{ $patient->date_of_birth->format('d M Y') }}
                     </p>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Telephone</p>
+                    <p class="text-[#CCECEE]/70 text-sm mt-1">{{ $patient->telephone_number }}</p>
+                </div>
+
+                @if ($patient->localDoctor)
+                    <div class="flex flex-col gap-1">
+                        <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Referred By</p>
+                        <p class="text-[#CCECEE]/70 text-sm mt-1">
+                            {{ $patient->localDoctor->full_name }}
+                        </p>
+                    </div>
+                @endif
+            @endif
+
+        </div>
+
+    </div>
+
+    {{-- ── Card 3: Appointment Details ── --}}
+    @if ($appointment)
+    <div class="bg-[#032d4f] border border-[#CCECEE]/15 rounded-2xl overflow-hidden shadow-2xl mb-5 fade-in">
+
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-[#CCECEE]/10 bg-[#03416E]/30">
+            <div class="w-9 h-9 rounded-xl bg-[#CCECEE]/10 border border-[#CCECEE]/20 flex items-center justify-center text-[#CCECEE] shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <p class="text-xs font-semibold tracking-widest uppercase text-[#CCECEE]/50">Linked</p>
+                <h2 class="text-sm font-bold text-[#f0f7f8]">Appointment Details</h2>
+            </div>
+            <a href="{{ route('appointments.show', $appointment->appointment_number) }}"
+               class="text-xs font-semibold text-[#CCECEE]/50 hover:text-[#CCECEE] transition no-underline">
+                View Appointment →
+            </a>
+        </div>
+
+        <div class="p-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Date</p>
+                <p class="text-[#f0f7f8] font-semibold text-sm mt-1">
+                    {{ $appointment->date_time->format('d M Y') }}
+                </p>
+                <p class="text-[#CCECEE]/30 text-xs">{{ $appointment->date_time->format('h:i A') }}</p>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Room</p>
+                <span class="inline-block bg-[#03416E]/60 text-[#CCECEE]/80 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-[#CCECEE]/15 mt-1 w-fit">
+                    {{ $appointment->examination_room }}
+                </span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Staff No.</p>
+                <p class="text-[#CCECEE]/70 font-mono text-sm mt-1">{{ $appointment->staff_number }}</p>
+            </div>
+
+        </div>
+
+    </div>
+    @endif
+
+    {{-- ── Card 4: Admission Record (if exists) ── --}}
+    @if ($inPatient || $outPatient)
+    <div class="bg-[#032d4f] border border-[#CCECEE]/15 rounded-2xl overflow-hidden shadow-2xl mb-5 fade-in">
+
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-[#CCECEE]/10
+             {{ $inPatient ? 'bg-violet-500/5' : 'bg-sky-500/5' }}">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+                 {{ $inPatient ? 'bg-violet-500/15 border border-violet-500/20 text-violet-400' : 'bg-sky-500/15 border border-sky-500/20 text-sky-400' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <p class="text-xs font-semibold tracking-widest uppercase text-[#CCECEE]/50">Admission</p>
+                <h2 class="text-sm font-bold text-[#f0f7f8]">
+                    {{ $inPatient ? 'In-Patient Record' : 'Out-Patient Record' }}
+                </h2>
+            </div>
+            @if ($inPatient)
+                <a href="{{ route('in_patients.show', $inPatient->appointment_number) }}"
+                   class="text-xs font-semibold text-[#CCECEE]/50 hover:text-[#CCECEE] transition no-underline">
+                    View Record →
+                </a>
+            @elseif ($outPatient)
+                <a href="{{ route('out_patients.show', $outPatient->appointment_number) }}"
+                   class="text-xs font-semibold text-[#CCECEE]/50 hover:text-[#CCECEE] transition no-underline">
+                    View Record →
+                </a>
+            @endif
+        </div>
+
+        @if ($inPatient)
+        <div class="p-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Ward</p>
+                <p class="text-[#f0f7f8] font-semibold text-sm mt-1">{{ $inPatient->ward_number }}</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Bed</p>
+                <p class="text-[#f0f7f8] font-semibold text-sm mt-1">{{ $inPatient->bed_number }}</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Date Placed</p>
+                <p class="text-[#CCECEE]/70 text-sm mt-1">{{ $inPatient->date_placed->format('d M Y') }}</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Status</p>
+                @if ($inPatient->isCurrentlyAdmitted())
+                    <span class="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-full mt-1 w-fit">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Still Admitted
+                    </span>
+                @else
+                    <span class="inline-flex items-center gap-1.5 bg-[#CCECEE]/5 border border-[#CCECEE]/15 text-[#CCECEE]/40 text-xs font-semibold px-2.5 py-1 rounded-full mt-1 w-fit">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#CCECEE]/30"></span>
+                        Discharged
+                    </span>
                 @endif
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="{{ route('appointments.show', $examResult->appointment_number) }}"
-                   class="inline-flex items-center gap-2 bg-wm-navy/60 border border-wm-navy
-                          text-slate-400 text-sm font-semibold px-4 py-2.5 rounded-xl
-                          hover:text-white hover:border-slate-600 transition-all duration-150">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    View Appointment
-                </a>
-                <a href="{{ route('patients.show', $examResult->appointment->patient->patient_number) }}"
-                   class="inline-flex items-center gap-2 bg-wm-navy/60 border border-wm-navy
-                          text-slate-400 text-sm font-semibold px-4 py-2.5 rounded-xl
-                          hover:text-white hover:border-slate-600 transition-all duration-150">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    View Profile
-                </a>
+        </div>
+        @endif
+
+        @if ($outPatient)
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Patient No.</p>
+                <p class="text-[#f0f7f8] font-mono font-bold mt-1">{{ $outPatient->patient_number }}</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/40">Appointment Date</p>
+                <p class="text-[#f0f7f8] font-semibold text-sm mt-1">
+                    {{ $outPatient->appointment_date_time->format('d M Y, h:i A') }}
+                </p>
             </div>
         </div>
+        @endif
+
+    </div>
+    @endif
+
+    {{-- ── Action Footer ── --}}
+    <div class="flex items-center justify-between gap-3 flex-wrap fade-in">
+
+        {{-- Delete --}}
+        <form action="{{ route('exam_results.destroy', $examResult->appointment_number) }}"
+              method="POST"
+              onsubmit="return confirm('Delete this exam result?\n\nAppointment #{{ $examResult->appointment_number }}\n\nThis cannot be undone.')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="inline-flex items-center gap-2 bg-transparent border border-red-400/20 text-red-400/60 hover:bg-red-400/10 hover:border-red-400/40 hover:text-red-400 text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Delete
+            </button>
+        </form>
+
+        {{-- Edit --}}
+        <a href="{{ route('exam_results.edit', $examResult->appointment_number) }}"
+           class="inline-flex items-center gap-2 bg-[#03416E] hover:bg-[#CCECEE] hover:text-[#021829] text-[#CCECEE] border border-[#CCECEE]/30 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#CCECEE]/10 no-underline">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Edit Result
+        </a>
+
     </div>
 
-    {{-- ── Out-Patient Record ── --}}
-    @if ($examResult->appointment->outPatient)
-        <div class="bg-wm-card border border-wm-navy/60 rounded-2xl px-6 py-5 mb-6
-                    shadow-[0_8px_40px_rgba(0,0,0,.4)] anim-fade-up" style="animation-delay:.07s">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xs font-semibold tracking-widest uppercase text-wm-cyan">Out-Patient Record</h2>
-                <a href="{{ route('out_patients.index') }}"
-                   class="text-xs font-semibold text-wm-cyan hover:text-wm-cyan-dim transition-colors">
-                    View all →
-                </a>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Classification</p>
-                    <span class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400
-                                 text-xs font-semibold px-2.5 py-1 rounded-md">
-                        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>Out-patient
-                    </span>
-                </div>
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Appointment Date</p>
-                    <p class="text-sm font-semibold text-white">
-                        {{ \Carbon\Carbon::parse($examResult->appointment->outPatient->appointment_date_time)->format('M j, Y g:i A') }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    {{-- ── In-Patient Record ── --}}
-    @if ($examResult->appointment->inPatient)
-        <div class="bg-wm-card border border-wm-navy/60 rounded-2xl px-6 py-5 anim-fade-up"
-             style="animation-delay:.07s">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xs font-semibold tracking-widest uppercase text-wm-cyan">In-Patient Admission</h2>
-                <a href="{{ route('in_patients.index') }}"
-                   class="text-xs font-semibold text-wm-cyan hover:text-wm-cyan-dim transition-colors">
-                    View all →
-                </a>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Ward</p>
-                    <p class="text-sm font-semibold text-white">{{ $examResult->appointment->inPatient->ward ?? '—' }}</p>
-                </div>
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Bed</p>
-                    <p class="text-sm font-semibold text-white">{{ $examResult->appointment->inPatient->bed_number ?? '—' }}</p>
-                </div>
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Date Placed</p>
-                    <p class="text-sm font-semibold text-white">
-                        {{ isset($examResult->appointment->inPatient->date_placed)
-                            ? \Carbon\Carbon::parse($examResult->appointment->inPatient->date_placed)->format('M j, Y')
-                            : '—' }}
-                    </p>
-                </div>
-                <div class="bg-wm-navy/30 rounded-xl px-4 py-3">
-                    <p class="text-xs text-slate-500 mb-1">Expected Leave</p>
-                    <p class="text-sm font-semibold text-white">
-                        {{ isset($examResult->appointment->inPatient->date_leave)
-                            ? \Carbon\Carbon::parse($examResult->appointment->inPatient->date_leave)->format('M j, Y')
-                            : '—' }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endif
-
+</div>
 </div>
 @endsection
