@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('requisitions', function (Blueprint $table) {
             $table->integer('requisition_number')->primary();
             $table->integer('staff_number');
-            $table->string('ward_number');
+            $table->integer('ward_number');
             $table->date('date_ordered');
             $table->timestamps();
 
@@ -28,7 +28,7 @@ return new class extends Migration
                    ->onDelete('restrict');
 
              $table->foreign('ward_number')
-                   ->references('wardnumber')
+                   ->references('ward_number')
                    ->on('wards')
                    ->onUpdate('cascade')
                    ->onDelete('restrict');

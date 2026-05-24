@@ -44,12 +44,12 @@ class InPatient extends Model
 
     public function ward(): BelongsTo
         {
-            return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
+            return $this->belongsTo(Ward::class, 'ward_number', 'ward_number');
         }
 
     public function bed(): BelongsTo
         {
-            return $this->belongsTo(Bed::class, 'bednumber', 'bednumber');
+            return $this->belongsTo(Bed::class, 'bed_number', 'bed_number');
         }
 
     // Helper: check if patient is currently admitted

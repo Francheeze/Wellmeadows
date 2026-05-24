@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('beds', function (Blueprint $table) {
-            $table->string('bed_number')->primary();
-            $table->string('ward_number');
+            $table->integer('bed_number')->primary();
+            $table->integer('ward_number');
             $table->enum('status', ['available', 'occupied'])->default('available');
             $table->timestamps();
 
