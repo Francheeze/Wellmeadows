@@ -18,16 +18,25 @@ class SupplyItemController extends Controller
         $query = SupplyItem::with('supplier');
 
         if ($request->filled('search')) {
-            $query->where('item_name', 'ilike', "%{$request->search}%")
-                  ->orWhere('item_number', 'ilike', "%{$request->search}%");
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('item_name', 'ilike', "%{$search}%");
+
+                if (is_numeric($search)) {
+                    $q->orWhere('item_number', (int) $search);
+                }
+            });
         }
 
-        if ($request->stock_filter === 'low') {
-            $query->whereColumn('quantity_in_stock', '<=', 'reorder_level');
-        } elseif ($request->stock_filter === 'out') {
-            $query->where('quantity_in_stock', 0);
-        } elseif ($request->stock_filter === 'ok') {
-            $query->whereColumn('quantity_in_stock', '>', 'reorder_level');
+        if ($request->filled('stock_filter')) {
+            if ($request->stock_filter === 'low') {
+                $query->whereColumn('quantity_in_stock', '<=', 'reorder_level')
+                    ->where('quantity_in_stock', '>', 0);
+            } elseif ($request->stock_filter === 'out') {
+                $query->where('quantity_in_stock', 0);
+            } elseif ($request->stock_filter === 'ok') {
+                $query->whereColumn('quantity_in_stock', '>', 'reorder_level');
+            }
         }
 
         $sort = match($request->sort) {
@@ -40,11 +49,16 @@ class SupplyItemController extends Controller
 
         $supplyItems   = $query->paginate(15)->withQueryString();
         $lowStockCount = SupplyItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')
-        ->where('quantity_in_stock', '>', 0)->count();
+                            ->where('quantity_in_stock', '>', 0)->count();
         $inStockCount  = SupplyItem::whereColumn('quantity_in_stock', '>', 'reorder_level')->count();
         $outStockCount = SupplyItem::where('quantity_in_stock', 0)->count();
 
-        return view('supply_items.index', compact('supplyItems', 'lowStockCount', 'inStockCount', 'outStockCount'));
+        return view('supply_items.index', compact(
+            'supplyItems',
+            'lowStockCount',
+            'inStockCount',
+            'outStockCount'
+        ));
     }
 
     /**

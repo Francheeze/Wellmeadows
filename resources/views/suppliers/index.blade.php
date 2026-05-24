@@ -62,19 +62,28 @@
 
     {{-- Toolbar --}}
     <div class="flex items-center gap-3 mb-5 flex-wrap">
-        <div class="relative flex-1 min-w-[200px]">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#CCECEE]/50 pointer-events-none"
-                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input
-                type="text"
-                id="supplierSearch"
-                onkeyup="filterTable()"
-                placeholder="Search by name, address, or phone…"
-                class="w-full bg-[#032d4f] border border-[#CCECEE]/20 text-[#f0f7f8] placeholder-[#CCECEE]/40 text-sm rounded-xl pl-9 pr-4 py-2.5 outline-none focus:border-[#CCECEE]/60 focus:ring-2 focus:ring-[#CCECEE]/10 transition"
-            >
-        </div>
+        <form method="GET" action="{{ route('suppliers.index') }}"
+            class="relative flex-1 min-w-[200px] flex items-center gap-2">
+            <div class="relative flex-1">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#CCECEE]/50 pointer-events-none"
+                    fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search by name, address, or phone…"
+                    class="w-full bg-[#032d4f] border border-[#CCECEE]/20 text-[#f0f7f8] placeholder-[#CCECEE]/40 text-sm rounded-xl pl-9 pr-4 py-2.5 outline-none focus:border-[#CCECEE]/60 focus:ring-2 focus:ring-[#CCECEE]/10 transition"
+                >
+            </div>
+            @if (request('search'))
+                <a href="{{ route('suppliers.index') }}"
+                class="text-xs text-[#CCECEE]/50 hover:text-[#CCECEE] transition whitespace-nowrap">
+                    Clear
+                </a>
+            @endif
+        </form>
         <div class="bg-[#032d4f] border border-[#CCECEE]/20 rounded-xl px-4 py-2.5 text-sm font-semibold text-[#CCECEE]/60 whitespace-nowrap">
             Total: <span class="text-[#CCECEE]">{{ $suppliers->total() }}</span>
         </div>

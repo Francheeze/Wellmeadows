@@ -18,10 +18,12 @@ class RequisitionController extends Controller
     {
         $query = Requisition::with(['requisitionDrugItems', 'requisitionSupplyItems']);
 
-        if ($request->filled('search')) {
-            $query->where('requisition_number', 'ilike', "%{$request->search}%")
-                  ->orWhere('staff_number', 'ilike', "%{$request->search}%")
-                  ->orWhere('ward_number', 'ilike', "%{$request->search}%");
+        if ($request->filled('search') && is_numeric($request->search)) {
+            $query->where(function ($q) use ($request) {
+                $q->where('requisition_number', (int) $request->search)
+                ->orWhere('staff_number',      (int) $request->search)
+                ->orWhere('ward_number',       (int) $request->search);
+            });
         }
 
         if ($request->filled('date_from')) {

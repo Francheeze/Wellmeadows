@@ -17,15 +17,17 @@ class OutPatientController extends Controller
         $query = OutPatient::with(['patient', 'appointment.examResult']);
 
         // Search by patient number, name, or appointment number
-        if ($request->filled('search')) {
+        if ($request->filled('search')) {   
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('out_patients.patient_number',    'ilike', "%{$search}%")
-                  ->orWhere('out_patients.appointment_number', 'ilike', "%{$search}%")
                   ->orWhereHas('patient', fn($q2) =>
                       $q2->where('first_name',      'ilike', "%{$search}%")
                          ->orWhere('last_name',      'ilike', "%{$search}%")
                   );
+                if (is_numeric($search)) {
+                    $q->orWhere('out_patients.appointment_number', (int) $search);
+                }
             });
         }
 
