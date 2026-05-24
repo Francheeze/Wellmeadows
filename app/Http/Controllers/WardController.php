@@ -37,7 +37,7 @@ class WardController extends Controller
             'location'            => 'nullable',
             'total_beds'          => 'nullable|integer',
             'telephone_extention' => 'nullable',
-            'charge_nurse_number' => 'nullable|exists:staff,staffNumber',
+            'charge_nurse_number' => 'nullable|exists:staff,staff_number',
         ]);
 
         Ward::create($request->all());
@@ -61,7 +61,7 @@ class WardController extends Controller
             'location'            => 'nullable',
             'total_beds'          => 'nullable|integer',
             'telephone_extention' => 'nullable',
-            'charge_nurse_number' => 'nullable|exists:staff,staffNumber',
+            'charge_nurse_number' => 'nullable|exists:staff,staff_number',
         ]);
 
         $ward->update($request->only([

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Ward extends Model
 {
     protected $primaryKey = 'ward_number';
-    public $incrementing = false;  
-    protected $keyType = 'int';   
+    public $incrementing = false;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'ward_number', 'ward_name', 'location',
@@ -17,7 +17,7 @@ class Ward extends Model
 
     public function chargeNurse()
     {
-        return $this->belongsTo(Staff::class, 'charge_nurse_number', 'staffNumber');
+        return $this->belongsTo(Staff::class, 'charge_nurse_number', 'staff_number');
     }
 
     public function beds()
