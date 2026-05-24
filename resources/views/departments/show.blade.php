@@ -45,7 +45,7 @@
                                     {{ $staffMember->position }}
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-600 text-sm">
-                                    {{ $staffMember->department }}
+                                    {{ $staffMember->department->name ?? 'N/A' }}
                                 </td>
                             </tr>
                         @endforeach

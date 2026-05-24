@@ -35,11 +35,6 @@ class Staff extends Model
         'date_of_birth' => 'date',
     ];
 
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
-
     // Relationship with Qualifications
     public function qualifications()
     {
@@ -56,9 +51,15 @@ class Staff extends Model
     {
         return $this->hasMany(Requisition::class, 'staff_number', 'staff_number');
     }
-    
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class, 'staff_number', 'staff_number');
+    }
+
+    // Relationship with Department
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }
