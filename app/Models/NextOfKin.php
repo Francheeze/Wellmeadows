@@ -9,11 +9,8 @@ class NextOfKin extends Model
 {
     protected $table = 'next_of_kins';
     protected $primaryKey = 'next_of_kin_id';
-    public $incrementing  = false;
-    protected $keyType    = 'string';
 
     protected $fillable = [
-        'next_of_kin_id',
         'patient_number',
         'full_name',
         'relationship',

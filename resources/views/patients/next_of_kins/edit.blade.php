@@ -123,7 +123,7 @@
                         class="w-full bg-wm-dark/60 border border-wm-navy/40 rounded-xl
                                text-slate-500 text-sm px-4 py-2.5 focus:outline-none"
                     >
-                    <p class="text-xs text-slate-600">ID cannot be changed after creation.</p>
+                    <p class="text-xs text-slate-600">System-assigned ID — cannot be changed.</p>
                 </div>
 
                 {{-- Full Name --}}

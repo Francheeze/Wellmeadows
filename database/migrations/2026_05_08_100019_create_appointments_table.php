@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->string('appointment_number')->primary();
+            $table->unsignedInteger('appointment_number')->primary();
             $table->string('patient_number');
             $table->integer('staff_number');   // FK → staff table (another module)
             $table->dateTime('date_time');

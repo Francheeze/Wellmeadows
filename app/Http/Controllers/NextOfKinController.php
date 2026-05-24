@@ -25,7 +25,6 @@ class NextOfKinController extends Controller
     public function store(Request $request, Patient $patient)
     {
         $validated = $request->validate([
-            'next_of_kin_id'   => 'required|string|max:20|unique:next_of_kins,next_of_kin_id',
             'full_name'        => 'required|string|max:100',
             'relationship'     => 'required|string|max:50',
             'address'          => 'required|string|max:255',

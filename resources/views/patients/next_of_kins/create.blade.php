@@ -97,39 +97,6 @@
             {{-- Card Body --}}
             <div class="px-6 py-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-                {{-- Next of Kin ID --}}
-                <div class="flex flex-col gap-1.5 sm:col-span-2">
-                    <label for="next_of_kin_id"
-                           class="text-xs font-semibold tracking-wide uppercase text-slate-400">
-                        Next-of-Kin ID <span class="text-wm-cyan">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="next_of_kin_id"
-                        name="next_of_kin_id"
-                        value="{{ old('next_of_kin_id') }}"
-                        placeholder="e.g. NOK-001"
-                        maxlength="20"
-                        class="w-full bg-wm-dark border rounded-xl text-white text-sm placeholder-slate-600
-                               px-4 py-2.5 focus:outline-none transition-all duration-200
-                               {{ $errors->has('next_of_kin_id')
-                                    ? 'border-red-500/60 focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
-                                    : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}"
-                    >
-                    <p class="text-xs text-slate-500">Unique identifier — cannot be changed after saving.</p>
-                    @error('next_of_kin_id')
-                        <p class="flex items-center gap-1.5 text-xs text-red-400">
-                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor"
-                                 stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="12" y1="8" x2="12" y2="12"/>
-                                <line x1="12" y1="16" x2="12.01" y2="16"/>
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
-
                 {{-- Full Name --}}
                 <div class="flex flex-col gap-1.5">
                     <label for="full_name"
