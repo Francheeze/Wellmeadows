@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('in_patients', function (Blueprint $table) {
-            $table->string('appointment_number')->primary();
+            $table->integer('appointment_number')->primary();
             $table->string('patient_number');
             $table->string('ward_number');   // FK → wards table (another module)
             $table->string('bed_number');    // FK → beds table (another module)

@@ -10,12 +10,12 @@ class Appointment extends Model
 {
     protected $primaryKey = 'appointment_number';
     public $incrementing  = false;
-    protected $keyType    = 'string';
+    protected $keyType    = 'int';
 
     protected $fillable = [
         'appointment_number',
         'patient_number',
-        'staffNumber',
+        'staff_number',
         'date_time',
         'examination_room',
     ];
@@ -32,7 +32,7 @@ class Appointment extends Model
 
      public function staff(): BelongsTo
      {
-         return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+         return $this->belongsTo(Staff::class, 'staffNumber', 'staff_number');
      }
 
     // An appointment has one exam result

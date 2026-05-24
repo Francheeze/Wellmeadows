@@ -10,7 +10,7 @@ class ExamResult extends Model
     // appointment_number is both PK and FK (1-to-1 with Appointment)
     protected $primaryKey = 'appointment_number';
     public $incrementing  = false;
-    protected $keyType    = 'string';
+    protected $keyType    = 'integer';
 
     protected $fillable = [
         'appointment_number',

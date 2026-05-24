@@ -10,7 +10,7 @@ class OutPatient extends Model
     // appointment_number is both PK and FK
     protected $primaryKey = 'appointment_number';
     public $incrementing  = false;
-    protected $keyType    = 'string';
+    protected $keyType    = 'integer';
 
     protected $fillable = [
         'appointment_number',

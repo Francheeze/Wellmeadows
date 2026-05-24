@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('exam_results', function (Blueprint $table) {
-            $table->string('appointment_number')->primary();
+            $table->integer('appointment_number')->primary();
             $table->enum('result', ['Out-patient', 'WaitingList']);
             $table->date('examined_date');
             $table->timestamps();

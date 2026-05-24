@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\ExamResult;
+use App\Models\Staff;           // ← added
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -16,18 +17,23 @@ class AppointmentController extends Controller
     {
         $query = Appointment::with(['patient', 'examResult']);
 
-        // Search by appointment number, patient name, or room
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('appointment_number', 'ilike', "%{$search}%")
-                  ->orWhere('examination_room', 'ilike', "%{$search}%")
-                  ->orWhere('staff_number',     'ilike', "%{$search}%")
+
+                // String columns — safe to use ilike
+                $q->where('examination_room', 'ilike', "%{$search}%")
                   ->orWhereHas('patient', fn($q2) =>
-                      $q2->where('first_name', 'ilike', "%{$search}%")
-                         ->orWhere('last_name',  'ilike', "%{$search}%")
+                      $q2->where('first_name',      'ilike', "%{$search}%")
+                         ->orWhere('last_name',      'ilike', "%{$search}%")
                          ->orWhere('patient_number', 'ilike', "%{$search}%")
                   );
+
+                // Integer columns — only match when the search term is numeric
+                if (is_numeric($search)) {
+                    $q->orWhere('appointment_number', (int) $search)
+                      ->orWhere('staff_number',       (int) $search);
+                }
             });
         }
 
@@ -57,11 +63,10 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('last_name')
             ->get(['patient_number', 'first_name', 'last_name']);
 
-        // staff list will come from another module — pass empty for now
-        // Once Staff model is available replace with:
-        // $staff = Staff::orderBy('last_name')->get(['staff_number', 'first_name', 'last_name']);
+        $staff = Staff::orderBy('lastName')
+            ->get(['staffNumber', 'firstName', 'lastName']);
 
-        return view('appointments.create', compact('patients'));
+        return view('appointments.create', compact('patients', 'staff'));
     }
 
     // ──────────────────────────────────────────────
@@ -70,9 +75,10 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'appointment_number' => 'required|string|max:20|unique:appointments,appointment_number',
+            'appointment_number' => 'required|integer|min:1|unique:appointments,appointment_number',
             'patient_number'     => 'required|string|exists:patients,patient_number',
-            'staff_number'       => 'required|string|max:20',
+            // staffNumber is the PK column name on the staff table
+            'staff_number'       => 'required|integer|exists:staff,staffNumber',
             'date_time'          => 'required|date|after:now',
             'examination_room'   => 'required|string|max:50',
         ]);
@@ -108,7 +114,10 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('last_name')
             ->get(['patient_number', 'first_name', 'last_name']);
 
-        return view('appointments.edit', compact('appointment', 'patients'));
+        $staff = Staff::orderBy('lastName')
+            ->get(['staffNumber', 'firstName', 'lastName']);
+
+        return view('appointments.edit', compact('appointment', 'patients', 'staff'));
     }
 
     // ──────────────────────────────────────────────
@@ -119,7 +128,7 @@ class AppointmentController extends Controller
     {
         $validated = $request->validate([
             'patient_number'   => 'required|string|exists:patients,patient_number',
-            'staff_number'     => 'required|string|max:20',
+            'staff_number'     => 'required|integer|min:1|exists:staff,staffNumber',
             'date_time'        => 'required|date',
             'examination_room' => 'required|string|max:50',
         ]);
@@ -133,7 +142,6 @@ class AppointmentController extends Controller
 
     // ──────────────────────────────────────────────
     // DELETE appointment
-    // Guards against deletion if an exam result exists
     // ──────────────────────────────────────────────
     public function destroy(Appointment $appointment)
     {
@@ -153,9 +161,7 @@ class AppointmentController extends Controller
     }
 
     // ──────────────────────────────────────────────
-    // RECORD EXAM RESULT — convenience action
-    // Called via POST from the appointment show page
-    // Creates or updates the ExamResult for this appointment
+    // RECORD EXAM RESULT
     // ──────────────────────────────────────────────
     public function recordResult(Request $request, Appointment $appointment)
     {
@@ -168,14 +174,12 @@ class AppointmentController extends Controller
             'examined_date' => 'required|date',
         ]);
 
-        // Create the exam result
         ExamResult::create([
             'appointment_number' => $appointment->appointment_number,
             'result'             => $validated['result'],
             'examined_date'      => $validated['examined_date'],
         ]);
 
-        // Automatically create an out-patient record if result is Out-patient
         if ($validated['result'] === 'Out-patient') {
             $appointment->outPatient()->create([
                 'patient_number'        => $appointment->patient_number,
@@ -187,7 +191,6 @@ class AppointmentController extends Controller
                 ->with('success', 'Exam result recorded. Patient classified as Out-patient.');
         }
 
-        // If WaitingList, redirect to create in-patient record
         return redirect()
             ->route('in_patients.create', ['appointment_number' => $appointment->appointment_number])
             ->with('success', 'Exam result recorded. Please complete the in-patient admission details.');
