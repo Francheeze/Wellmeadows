@@ -81,8 +81,8 @@ class StaffController extends Controller
 
             'workExperiences.*.position' => 'required|string|max:255',
             'workExperiences.*.organization' => 'required|string|max:255',
-            'workExperiences.*.startDate' => 'required|date',
-            'workExperiences.*.finishDate' => 'nullable|date',
+            'workExperiences.*.start_date' => 'required|date',
+            'workExperiences.*.finish_date' => 'nullable|date',
         ]);
 
         $staff = Staff::create($validated);
@@ -189,8 +189,8 @@ class StaffController extends Controller
     public function autocomplete(Request $request)
     {
         $search = $request->query('term');
-        $staff = Staff::where('first_name', 'like', "%{$search}%")
-                      ->orWhere('last_name', 'like', "%{$search}%")
+        $staff = Staff::where('first_name', 'ilike', "%{$search}%")
+                      ->orWhere('last_name', 'ilike', "%{$search}%")
                       ->limit(10)
                       ->get(['first_name', 'last_name']);
 
