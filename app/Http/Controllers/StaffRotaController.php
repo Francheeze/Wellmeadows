@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\StaffRota;
 use App\Models\Ward;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 
 class StaffRotaController extends Controller
 {
     public function index()
     {
-        $staffRotas = StaffRota::with('ward')->orderBy('wardnumber')->get();
+        $staffRotas = StaffRota::with('ward', 'staff')->orderBy('ward_number')->get();
         $wards      = Ward::all();
 
         return view('staff_rota.index', compact('staffRotas', 'wards'));
@@ -18,17 +19,18 @@ class StaffRotaController extends Controller
 
     public function create()
     {
-        $wards = Ward::all();
-        return view('staff_rota.create', compact('wards'));
+        $wards     = Ward::all();
+        $staffList = Staff::all();
+        return view('staff_rota.create', compact('wards', 'staffList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'wardnumber'    => 'required|exists:wards,wardnumber',
-            'staffnumber'   => 'required',
-            'shift'         => 'required|in:Early,Late,Night',
-            'weekstartdate' => 'required|date',
+            'ward_number'    => 'required|exists:wards,ward_number',
+            'staff_number'   => 'required|exists:staff,staffNumber',
+            'shift'          => 'required|in:Early,Late,Night',
+            'week_start_date'=> 'required|date',
         ]);
 
         StaffRota::create($request->all());
@@ -40,7 +42,8 @@ class StaffRotaController extends Controller
     {
         $staffRota = StaffRota::findOrFail($id);
         $wards     = Ward::all();
-        return view('staff_rota.edit', compact('staffRota', 'wards'));
+        $staffList = Staff::all();
+        return view('staff_rota.edit', compact('staffRota', 'wards', 'staffList'));
     }
 
     public function update(Request $request, $id)
@@ -48,14 +51,14 @@ class StaffRotaController extends Controller
         $staffRota = StaffRota::findOrFail($id);
 
         $request->validate([
-            'wardnumber'    => 'required|exists:wards,wardnumber',
-            'staffnumber'   => 'required',
-            'shift'         => 'required|in:Early,Late,Night',
-            'weekstartdate' => 'required|date',
+            'ward_number'    => 'required|exists:wards,ward_number',
+            'staff_number'   => 'required|exists:staff,staffNumber',
+            'shift'          => 'required|in:Early,Late,Night',
+            'week_start_date'=> 'required|date',
         ]);
 
         $staffRota->update($request->only([
-            'wardnumber', 'staffnumber', 'shift', 'weekstartdate'
+            'ward_number', 'staff_number', 'shift', 'week_start_date'
         ]));
 
         return redirect()->route('staff-rota.index')->with('success', 'Staff rota updated!');

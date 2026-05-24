@@ -6,25 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('wards', function (Blueprint $table) {
-            $table->string('wardnumber')->primary();
-            $table->string('wardname');
+            $table->string('ward_number')->primary();
+            $table->string('ward_name');
             $table->string('location')->nullable();
-            $table->integer('totalbeds')->default(0);
-            $table->string('telephoneextention')->nullable();
-            $table->string('chargenursenumber')->nullable();
+            $table->integer('total_beds')->default(0);
+            $table->string('telephone_extention')->nullable();
+            $table->unsignedBigInteger('charge_nurse_number')->nullable();
             $table->timestamps();
+
+            $table->foreign('charge_nurse_number')
+                  ->references('staffNumber')
+                  ->on('staff')
+                  ->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('wards');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ward;
 use App\Models\Bed;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 
 class WardController extends Controller
@@ -13,7 +14,7 @@ class WardController extends Controller
         $wards         = Ward::all();
         $beds          = Bed::all();
         $totalWards    = $wards->count();
-        $totalBeds     = $wards->sum('totalbeds');
+        $totalBeds     = $wards->sum('total_beds');
         $occupiedBeds  = $beds->where('status', 'occupied')->count();
         $availableBeds = $beds->where('status', 'available')->count();
 
@@ -24,18 +25,19 @@ class WardController extends Controller
 
     public function create()
     {
-        return view('wards.create');
+        $staffList = Staff::where('position', 'Charge Nurse')->get();
+        return view('wards.create', compact('staffList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'wardnumber'         => 'required|unique:wards,wardnumber',
-            'wardname'           => 'required',
-            'location'           => 'nullable',
-            'totalbeds'          => 'nullable|integer',
-            'telephoneextention' => 'nullable',
-            'chargenursenumber'  => 'nullable',
+            'ward_number'         => 'required|unique:wards,ward_number',
+            'ward_name'           => 'required',
+            'location'            => 'nullable',
+            'total_beds'          => 'nullable|integer',
+            'telephone_extention' => 'nullable',
+            'charge_nurse_number' => 'nullable|exists:staff,staffNumber',
         ]);
 
         Ward::create($request->all());
@@ -43,35 +45,36 @@ class WardController extends Controller
         return redirect()->route('wards.index')->with('success', 'Ward added successfully!');
     }
 
-    public function edit($id)
+    public function edit($ward_number)
     {
-        $ward = Ward::findOrFail($id);
-        return view('wards.edit', compact('ward'));
+        $ward      = Ward::findOrFail($ward_number);
+        $staffList = Staff::where('position', 'Charge Nurse')->get();
+        return view('wards.edit', compact('ward', 'staffList'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $ward_number)
     {
-        $ward = Ward::findOrFail($id);
+        $ward = Ward::findOrFail($ward_number);
 
         $request->validate([
-            'wardname'           => 'required',
-            'location'           => 'nullable',
-            'totalbeds'          => 'nullable|integer',
-            'telephoneextention' => 'nullable',
-            'chargenursenumber'  => 'nullable',
+            'ward_name'           => 'required',
+            'location'            => 'nullable',
+            'total_beds'          => 'nullable|integer',
+            'telephone_extention' => 'nullable',
+            'charge_nurse_number' => 'nullable|exists:staff,staffNumber',
         ]);
 
         $ward->update($request->only([
-            'wardname', 'location', 'totalbeds',
-            'telephoneextention', 'chargenursenumber'
+            'ward_name', 'location', 'total_beds',
+            'telephone_extention', 'charge_nurse_number'
         ]));
 
         return redirect()->route('wards.index')->with('success', 'Ward updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy($ward_number)
     {
-        $ward = Ward::findOrFail($id);
+        $ward = Ward::findOrFail($ward_number);
         $ward->delete();
 
         return redirect()->route('wards.index')->with('success', 'Ward deleted successfully!');
