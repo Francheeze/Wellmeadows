@@ -23,14 +23,11 @@ class StaffController extends Controller
         }
 
         if ($search) {
-            // Split the search string by spaces to handle multi-word names.
             $searchTerms = explode(' ', $search);
 
-            // Chain where clauses for each term, ensuring all terms are matched.
             foreach ($searchTerms as $term) {
                 $term = trim($term);
                 if ($term) {
-                    // For each term, search in both firstName and lastName.
                     $query->where(function ($q) use ($term) {
                         $q->where('firstName', 'ilike', '%' . $term . '%')
                           ->orWhere('lastName', 'ilike', '%' . $term . '%');
@@ -39,12 +36,9 @@ class StaffController extends Controller
             }
         }
 
-        // Paginate the results first for efficiency.
         $staff = $query->paginate(10);
 
-        // If the search found exactly one result, redirect to that staff member's page.
         if ($search && $staff->total() === 1) {
-            // Use the first item from the paginator's collection for the redirect.
             return redirect()->route('staff.show', $staff->items()[0]);
         }
 
@@ -187,7 +181,7 @@ class StaffController extends Controller
     // Show a single staff member
     public function show(Staff $staff)
     {
-        $staff->load(['qualifications', 'workExperiences']);
+        $staff->load(['qualifications', 'workExperiences', 'department']);
         return view('staffs.show', compact('staff'));
     }
 

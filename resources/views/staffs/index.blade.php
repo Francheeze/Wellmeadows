@@ -40,6 +40,7 @@
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Staff No</th>
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Full Name</th>
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Position</th>
+                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Department</th>
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Telephone</th>
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Salary</th>
                         <th class="text-left py-3 px-4 uppercase font-semibold text-sm text-cyan-300">Contract</th>
@@ -52,6 +53,7 @@
                             <td class="py-3 px-4 text-center">{{ $member->staffNumber }}</td>
                             <td class="py-3 px-4">{{ $member->firstName }} {{ $member->lastName }}</td>
                             <td class="py-3 px-4">{{ $member->position }}</td>
+                            <td class="py-3 px-4">{{ $member->department->name ?? 'N/A' }}</td>
                             <td class="py-3 px-4">{{ $member->telephoneNumber }}</td>
                             <td class="py-3 px-4 text-right">₱{{ number_format($member->currentSalary, 2) }}</td>
                             <td class="py-3 px-4">{{ $member->contractType }}</td>

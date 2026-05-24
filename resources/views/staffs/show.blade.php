@@ -26,7 +26,7 @@
                 <div>
                     <h2 class="text-xl font-semibold text-white mb-4">Employment Details</h2>
                     <div class="space-y-3 text-gray-300">
-                        <p><strong class="font-medium text-gray-100">Department:</strong> {{ $staff->department }}</p>
+                        <p><strong class="font-medium text-gray-100">Department:</strong> {{ $staff->department->name ?? 'N/A' }}</p>
                         <p><strong class="font-medium text-gray-100">Position:</strong> {{ $staff->position }}</p>
                         <p><strong class="font-medium text-gray-100">Current Salary:</strong> ₱ {{ number_format($staff->currentSalary, 2) }}</p>
                         <p><strong class="font-medium text-gray-100">Salary Scale:</strong> {{ $staff->salaryScale }}</p>
