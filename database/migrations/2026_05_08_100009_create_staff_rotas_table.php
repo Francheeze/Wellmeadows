@@ -6,27 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('staff_rotas', function (Blueprint $table) {
-        $table->string('wardnumber');
-        $table->string('staffnumber');
-        $table->enum('shift', ['Early', 'Late', 'Night']);
-        $table->date('weekstartdate');
-        $table->timestamps();
+    {
+        Schema::create('staff_rotas', function (Blueprint $table) {
+            $table->string('ward_number');
+            $table->unsignedBigInteger('staff_number');
+            $table->enum('shift', ['Early', 'Late', 'Night']);
+            $table->date('week_start_date');
+            $table->timestamps();
 
-        $table->foreign('wardnumber')
-              ->references('wardnumber')
-              ->on('wards')
-              ->onDelete('cascade');
-    });
-}
-    /**
-     * Reverse the migrations.
-     */
+            $table->foreign('ward_number')
+                  ->references('ward_number')
+                  ->on('wards')
+                  ->onDelete('cascade');
+
+            $table->foreign('staff_number')
+                  ->references('staffNumber')
+                  ->on('staff')
+                  ->onDelete('cascade');
+        });
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('staff_rotas');

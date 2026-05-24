@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class StaffRota extends Model
 {
     protected $fillable = [
-        'wardnumber', 'staffnumber', 'shift', 'weekstartdate'
+        'ward_number', 'staff_number', 'shift', 'week_start_date'
     ];
 
     public function ward()
     {
-        return $this->belongsTo(Ward::class, 'wardnumber', 'wardnumber');
+        return $this->belongsTo(Ward::class, 'ward_number', 'ward_number');
     }
 
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+        return $this->belongsTo(Staff::class, 'staff_number', 'staffNumber');
     }
 }
