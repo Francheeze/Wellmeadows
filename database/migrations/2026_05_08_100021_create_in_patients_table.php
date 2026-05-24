@@ -39,18 +39,18 @@ return new class extends Migration
                   ->onDelete('restrict');
 
             // FK to wards — uncomment once ward table exists:
-            // $table->foreign('ward_number')
-            //       ->references('ward_number')
-            //       ->on('wards')
-            //       ->onUpdate('cascade')
-            //       ->onDelete('restrict');
+            $table->foreign('ward_number')
+                   ->references('wardnumber')
+                   ->on('wards')
+                   ->onUpdate('cascade')
+                   ->onDelete('restrict');
 
             // FK to beds — uncomment once bed table exists:
-            // $table->foreign('bed_number')
-            //       ->references('bed_number')
-            //       ->on('beds')
-            //       ->onUpdate('cascade')
-            //       ->onDelete('restrict');
+            $table->foreign('bed_number')
+                   ->references('bednumber')
+                   ->on('beds')
+                   ->onUpdate('cascade')
+                   ->onDelete('restrict');
         });
     }
 
