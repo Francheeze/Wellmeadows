@@ -105,60 +105,31 @@
 
             <div class="px-6 py-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-                {{-- Appointment Number (+/- buttons) --}}
+                {{-- Appointment Number --}}
                 <div class="flex flex-col gap-1.5 sm:col-span-2">
                     <label for="appointment_number"
-                           class="text-xs font-semibold tracking-wide uppercase text-slate-400">
+                        class="text-xs font-semibold tracking-wide uppercase text-slate-400">
                         Appointment Number <span class="text-wm-cyan">*</span>
                     </label>
-                    <div class="flex rounded-xl overflow-hidden border transition-all duration-200
-                                {{ $errors->has('appointment_number')
-                                    ? 'border-red-500/60 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/15'
-                                    : 'border-wm-navy/70 focus-within:border-wm-cyan/60 focus-within:ring-2 focus-within:ring-wm-cyan/15' }}">
-
-                        {{-- Decrement --}}
-                        <button type="button"
-                                onclick="stepInput('appointment_number', -1)"
-                                class="flex items-center justify-center px-4 bg-wm-navy/40
-                                       border-r border-wm-navy/70 text-slate-400
-                                       hover:text-white hover:bg-wm-navy/70 transition-colors duration-150">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                 stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/>
-                            </svg>
-                        </button>
-
-                        <input
-                            type="number"
-                            id="appointment_number"
-                            name="appointment_number"
-                            value="{{ old('appointment_number', 1) }}"
-                            min="1"
-                            class="flex-1 min-w-0 bg-wm-dark text-white text-sm text-center
-                                   placeholder-slate-600 px-3 py-2.5 focus:outline-none
-                                   [appearance:textfield]
-                                   [&::-webkit-outer-spin-button]:appearance-none
-                                   [&::-webkit-inner-spin-button]:appearance-none"
-                        >
-
-                        {{-- Increment --}}
-                        <button type="button"
-                                onclick="stepInput('appointment_number', 1)"
-                                class="flex items-center justify-center px-4 bg-wm-navy/40
-                                       border-l border-wm-navy/70 text-slate-400
-                                       hover:text-white hover:bg-wm-navy/70 transition-colors duration-150">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                 stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                            </svg>
-                        </button>
-
-                    </div>
+                    <input
+                        type="number"
+                        id="appointment_number"
+                        name="appointment_number"
+                        value="{{ old('appointment_number', 1) }}"
+                        min="1"
+                        placeholder="e.g. 1001"
+                        class="bg-wm-dark border transition-all duration-200
+                            {{ $errors->has('appointment_number')
+                                ? 'border-red-500/60 focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
+                                : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}
+                            text-white text-sm placeholder-slate-600
+                            rounded-xl px-4 py-2.5 w-full outline-none"
+                    >
                     <p class="text-xs text-slate-500">Unique number for this appointment.</p>
                     @error('appointment_number')
                         <p class="flex items-center gap-1.5 text-xs text-red-400">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor"
-                                 stroke-width="2" viewBox="0 0 24 24">
+                                stroke-width="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10"/>
                                 <line x1="12" y1="8" x2="12" y2="12"/>
                                 <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -297,68 +268,38 @@
                     @enderror
                 </div>
 
-                {{-- Staff Number (+/- buttons) --}}
+                {{-- Staff Number --}}
                 <div class="flex flex-col gap-1.5">
                     <label for="staff_number"
-                           class="text-xs font-semibold tracking-wide uppercase text-slate-400">
+                        class="text-xs font-semibold tracking-wide uppercase text-slate-400">
                         Staff Number <span class="text-wm-cyan">*</span>
                     </label>
-                    <div class="flex rounded-xl overflow-hidden border transition-all duration-200
-                                {{ $errors->has('staff_number')
-                                    ? 'border-red-500/60 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/15'
-                                    : 'border-wm-navy/70 focus-within:border-wm-cyan/60 focus-within:ring-2 focus-within:ring-wm-cyan/15' }}">
-
-                        {{-- Decrement --}}
-                        <button type="button"
-                                onclick="stepInput('staff_number', -1)"
-                                class="flex items-center justify-center px-4 bg-wm-navy/40
-                                       border-r border-wm-navy/70 text-slate-400
-                                       hover:text-white hover:bg-wm-navy/70 transition-colors duration-150">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                 stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/>
-                            </svg>
-                        </button>
-
-                        <input
-                            type="number"
-                            id="staff_number"
-                            name="staff_number"
-                            value="{{ old('staff_number', 1) }}"
-                            min="1"
-                            class="flex-1 min-w-0 bg-wm-dark text-white text-sm text-center
-                                   placeholder-slate-600 px-3 py-2.5 focus:outline-none
-                                   [appearance:textfield]
-                                   [&::-webkit-outer-spin-button]:appearance-none
-                                   [&::-webkit-inner-spin-button]:appearance-none"
-                        >
-
-                        {{-- Increment --}}
-                        <button type="button"
-                                onclick="stepInput('staff_number', 1)"
-                                class="flex items-center justify-center px-4 bg-wm-navy/40
-                                       border-l border-wm-navy/70 text-slate-400
-                                       hover:text-white hover:bg-wm-navy/70 transition-colors duration-150">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                 stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                            </svg>
-                        </button>
-
-                    </div>
+                    <input
+                        type="text"
+                        id="staff_number"
+                        name="staff_number"
+                        value="{{ old('staff_number') }}"
+                        placeholder="e.g. S001"
+                        class="bg-wm-dark border transition-all duration-200
+                            {{ $errors->has('staff_number') }}
+                                ? 'border-red-500/60 focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
+                                : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}
+                            text-white text-sm placeholder-slate-600
+                            rounded-xl px-4 py-2.5 w-full outline-none"
+                    >
                     <p class="text-xs text-slate-500">Enter the attending staff member's number.</p>
                     @error('staff_number')
                         <p class="flex items-center gap-1.5 text-xs text-red-400">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor"
-                                 stroke-width="2" viewBox="0 0 24 24">
+                                stroke-width="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10"/>
                                 <line x1="12" y1="8" x2="12" y2="12"/>
                                 <line x1="12" y1="16" x2="12.01" y2="16"/>
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
+            </svg>
+            {{ $message }}
+        </p>
+    @enderror
+</div>
 
             </div>
 

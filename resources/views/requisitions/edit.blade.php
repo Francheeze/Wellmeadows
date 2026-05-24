@@ -127,8 +127,8 @@
                     <label for="staff_number" class="text-xs font-semibold tracking-wider uppercase text-[#CCECEE]/60">
                         Staff Number <span class="text-[#CCECEE]">*</span>
                     </label>
-                    <input type="number" id="staff_number" name="staff_number"
-                           value="{{ old('staff_number', $requisition->staff_number) }}" placeholder="e.g. 101" min="1"
+                    <input type="text" id="staff_number" name="staff_number"
+                           value="{{ old('staff_number', $requisition->staff_number) }}" placeholder="e.g. S001"
                            class="bg-[#021829] border {{ $errors->has('staff_number') ? 'border-red-400/60 ring-2 ring-red-400/10' : 'border-[#CCECEE]/20 focus:border-[#CCECEE]/60 focus:ring-2 focus:ring-[#CCECEE]/10' }} text-[#f0f7f8] placeholder-[#CCECEE]/30 text-sm rounded-xl px-4 py-2.5 w-full outline-none transition">
                     @error('staff_number')
                         <p class="flex items-center gap-1 text-xs text-red-400">

@@ -59,7 +59,7 @@ class RequisitionController extends Controller
     {
         $validated = $request->validate([
             'requisition_number' => ['required', 'integer', 'unique:requisitions,requisition_number'],
-            'staff_number'       => ['required', 'string', 'max:50', 'exists:staff,staffNumber'],
+            'staff_number'       => ['required', 'string', 'max:50', 'exists:staff,staff_number'],
             'ward_number'        => ['required', 'integer', 'exists:wards,ward_number'],
             'date_ordered'       => ['required', 'date'],
 
@@ -151,7 +151,7 @@ class RequisitionController extends Controller
     public function update(Request $request, Requisition $requisition): RedirectResponse
     {
         $validated = $request->validate([
-            'staff_number'  => ['required', 'string', 'max:50', 'exists:staff,staffNumber'],
+            'staff_number'  => ['required', 'string', 'max:50', 'exists:staff,staff_number'],
             'ward_number'   => ['required', 'integer', 'exists:wards,ward_number'],
             'date_ordered'  => ['required', 'date'],
 
