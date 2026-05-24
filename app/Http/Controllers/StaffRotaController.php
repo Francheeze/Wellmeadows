@@ -27,10 +27,10 @@ class StaffRotaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ward_number'    => 'required|exists:wards,ward_number',
-            'staff_number'   => 'required|exists:staff,staffNumber',
-            'shift'          => 'required|in:Early,Late,Night',
-            'week_start_date'=> 'required|date',
+            'ward_number'     => 'required|exists:wards,ward_number',
+            'staff_number'    => 'required|exists:staff,staff_number',
+            'shift'           => 'required|in:Early,Late,Night',
+            'week_start_date' => 'required|date',
         ]);
 
         StaffRota::create($request->all());
@@ -51,10 +51,10 @@ class StaffRotaController extends Controller
         $staffRota = StaffRota::findOrFail($id);
 
         $request->validate([
-            'ward_number'    => 'required|exists:wards,ward_number',
-            'staff_number'   => 'required|exists:staff,staffNumber',
-            'shift'          => 'required|in:Early,Late,Night',
-            'week_start_date'=> 'required|date',
+            'ward_number'     => 'required|exists:wards,ward_number',
+            'staff_number'    => 'required|exists:staff,staff_number',
+            'shift'           => 'required|in:Early,Late,Night',
+            'week_start_date' => 'required|date',
         ]);
 
         $staffRota->update($request->only([
