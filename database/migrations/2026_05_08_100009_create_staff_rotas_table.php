@@ -9,6 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('staff_rotas', function (Blueprint $table) {
+            $table->id();
             $table->integer('ward_number');
             $table->unsignedBigInteger('staff_number');
             $table->enum('shift', ['Early', 'Late', 'Night']);

@@ -129,32 +129,39 @@
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <input type="text" name="wardnumber" value="{{ old('wardnumber') }}" required placeholder="e.g. 16">
+                <input type="number" name="ward_number" value="{{ old('ward_number') }}" required placeholder="e.g. 16">
             </div>
 
             <div class="form-group">
                 <label>Ward Name</label>
-                <input type="text" name="wardname" value="{{ old('wardname') }}" required placeholder="e.g. Orthopaedic">
+                <input type="text" name="ward_name" value="{{ old('ward_name') }}" required placeholder="e.g. Orthopaedic">
             </div>
 
             <div class="form-group">
                 <label>Location</label>
-                <input type="text" name="location" value="{{ old('location') }}" required placeholder="e.g. Block A">
+                <input type="text" name="location" value="{{ old('location') }}" placeholder="e.g. Block A">
             </div>
 
             <div class="form-group">
                 <label>Total Beds</label>
-                <input type="number" name="totalbeds" value="{{ old('totalbeds') }}" required placeholder="e.g. 20">
+                <input type="number" name="total_beds" value="{{ old('total_beds') }}" placeholder="e.g. 20">
             </div>
 
             <div class="form-group">
                 <label>Telephone Extension</label>
-                <input type="text" name="telephoneextention" value="{{ old('telephoneextention') }}" placeholder="e.g. 1234">
+                <input type="text" name="telephone_extention" value="{{ old('telephone_extention') }}" placeholder="e.g. 1234">
             </div>
 
             <div class="form-group">
                 <label>Charge Nurse Number</label>
-                <input type="text" name="chargenursenumber" value="{{ old('chargenursenumber') }}" placeholder="e.g. S016">
+                <select name="charge_nurse_number">
+                    <option value="">-- Select Charge Nurse --</option>
+                    @foreach($staffList as $staff)
+                        <option value="{{ $staff->staffNumber }}" {{ old('charge_nurse_number') == $staff->staffNumber ? 'selected' : '' }}>
+                            {{ $staff->staffNumber }} - {{ $staff->firstName }} {{ $staff->lastName }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-actions">

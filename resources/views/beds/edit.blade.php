@@ -156,23 +156,23 @@
             </div>
         @endif
 
-        <form action="{{ route('beds.update', $bed->bednumber) }}" method="POST">
+        <form action="{{ route('beds.update', $bed->bed_number) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
                 <label>Bed Number</label>
-                <input type="text" value="{{ $bed->bednumber }}" disabled>
+                <input type="text" value="{{ $bed->bed_number }}" disabled>
             </div>
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <select name="wardnumber" required>
+                <select name="ward_number" required>
                     <option value="">-- Select Ward --</option>
                     @foreach($wards as $ward)
-                        <option value="{{ $ward->wardnumber }}"
-                            {{ $bed->wardnumber == $ward->wardnumber ? 'selected' : '' }}>
-                            {{ $ward->wardnumber }}{{ $ward->wardname ? ' — '.$ward->wardname : '' }}
+                        <option value="{{ $ward->ward_number }}"
+                            {{ $bed->ward_number == $ward->ward_number ? 'selected' : '' }}>
+                            {{ $ward->ward_number }}{{ $ward->ward_name ? ' — '.$ward->ward_name : '' }}
                         </option>
                     @endforeach
                 </select>

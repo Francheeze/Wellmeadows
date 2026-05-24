@@ -138,16 +138,16 @@
 
             <div class="form-group">
                 <label>Bed Number</label>
-                <input type="text" name="bednumber" value="{{ old('bednumber') }}" required placeholder="e.g. 91">
+                <input type="text" name="bed_number" value="{{ old('bed_number') }}" required placeholder="e.g. 91">
             </div>
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <select name="wardnumber" required>
+                <select name="ward_number" required>
                     <option value="">-- Select Ward --</option>
                     @foreach($wards as $ward)
-                        <option value="{{ $ward->wardnumber }}" {{ old('wardnumber') == $ward->wardnumber ? 'selected' : '' }}>
-                            {{ $ward->wardnumber }} — {{ $ward->wardname }}
+                        <option value="{{ $ward->ward_number }}" {{ old('ward_number') == $ward->wardnumber ? 'selected' : '' }}>
+                            {{ $ward->ward_number }} — {{ $ward->ward_name }}
                         </option>
                     @endforeach
                 </select>

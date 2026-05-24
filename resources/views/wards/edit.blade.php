@@ -161,18 +161,18 @@
             </div>
         @endif
 
-        <form action="{{ route('wards.update', $ward->wardnumber) }}" method="POST">
+        <form action="{{ route('wards.update', $ward->ward_number) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <input type="text" value="{{ $ward->wardnumber }}" disabled>
+                <input type="number" value="{{ $ward->ward_number }}" disabled>
             </div>
 
             <div class="form-group">
                 <label>Ward Name</label>
-                <input type="text" name="wardname" value="{{ old('wardname', $ward->wardname) }}" required>
+                <input type="text" name="ward_name" value="{{ old('ward_name', $ward->ward_name) }}" required>
             </div>
 
             <div class="form-group">
@@ -182,17 +182,17 @@
 
             <div class="form-group">
                 <label>Total Beds</label>
-                <input type="number" name="totalbeds" value="{{ old('totalbeds', $ward->totalbeds) }}">
+                <input type="number" name="total_beds" value="{{ old('total_beds', $ward->total_beds) }}">
             </div>
 
             <div class="form-group">
                 <label>Telephone Extension</label>
-                <input type="text" name="telephoneextention" value="{{ old('telephoneextention', $ward->telephoneextention) }}">
+                <input type="text" name="telephone_extention" value="{{ old('telephone_extention', $ward->telephone_extention) }}">
             </div>
 
             <div class="form-group">
                 <label>Charge Nurse Number</label>
-                <input type="text" name="chargenursenumber" value="{{ old('chargenursenumber', $ward->chargenursenumber) }}">
+                <input type="number" name="charge_nurse_number" value="{{ old('charge_nurse_number', $ward->charge_nurse_number) }}">
             </div>
 
             <div class="form-actions">

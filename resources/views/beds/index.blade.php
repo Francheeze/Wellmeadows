@@ -228,7 +228,7 @@
             <div class="tc-right">
                 <select class="tc-select" id="wardFilter" onchange="filterBeds()">
                     <option value="all">All wards</option>
-                    @foreach($beds->pluck('wardnumber')->unique() as $w)
+                    @foreach($beds->pluck('ward_number')->unique() as $w)
                         <option value="{{ $w }}">Ward {{ $w }}</option>
                     @endforeach
                 </select>
@@ -252,9 +252,9 @@
             </thead>
             <tbody id="bed-tbody">
                 @forelse($beds as $bed)
-                <tr class="bed-row" data-ward="{{ $bed->wardnumber }}" data-status="{{ $bed->status }}">
-                    <td><span class="num-pill">{{ $bed->bednumber }}</span></td>
-                    <td><span class="ward-badge">Ward {{ $bed->wardnumber }}</span></td>
+                <tr class="bed-row" data-ward="{{ $bed->ward_number }}" data-status="{{ $bed->status }}">
+                    <td><span class="num-pill">{{ $bed->bed_number }}</span></td>
+                    <td><span class="ward-badge">Ward {{ $bed->ward_number }}</span></td>
                     <td>
                         @if($bed->status === 'available')
                             <span class="status-avail">Available</span>
@@ -264,8 +264,8 @@
                     </td>
                     <td>
                         <div class="action-row">
-                            <a href="{{ route('beds.edit', $bed->bednumber) }}" class="btn-edit">Edit</a>
-                            <form action="{{ route('beds.destroy', $bed->bednumber) }}" method="POST"
+                            <a href="{{ route('beds.edit', $bed->bed_number) }}" class="btn-edit">Edit</a>
+                            <form action="{{ route('beds.destroy', $bed->bed_number) }}" method="POST"
                                   style="display:inline" onsubmit="return confirm('Delete this bed?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn-del">Delete</button>
