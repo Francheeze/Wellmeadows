@@ -65,7 +65,7 @@ class ExamResultController extends Controller
         $validated = $request->validate([
             'appointment_number' => [
                 'required',
-                'string',
+                'integer',
                 'exists:appointments,appointment_number',
                 'unique:exam_results,appointment_number',
             ],
