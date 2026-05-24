@@ -36,10 +36,10 @@
                         @foreach ($staff as $staffMember)
                             <tr class="hover:bg-gray-700">
                                 <td class="px-5 py-5 border-b border-gray-600 text-sm">
-                                    {{ $staffMember->staffNumber }}
+                                    {{ $staffMember->staff_number }}
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-600 text-sm">
-                                    {{ $staffMember->firstName }} {{ $staffMember->lastName }}
+                                    {{ $staffMember->first_name }} {{ $staffMember->last_name }}
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-600 text-sm">
                                     {{ $staffMember->position }}

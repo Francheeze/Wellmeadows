@@ -10,14 +10,13 @@ return new class extends Migration
     {
         Schema::create('work_experiences', function (Blueprint $table) {
             $table->id('work_experience_id');
-            $table->string('staff_number');
+            $table->unsignedBigInteger('staff_number');
             $table->string('position');
             $table->string('organization');
             $table->date('start_date');
-            $table->date('finish_date')->nullable(); // Nullable for current job
+            $table->date('finish_date')->nullable();
             $table->timestamps();
-            
-            // Foreign key constraint
+
             $table->foreign('staff_number')
                   ->references('staff_number')
                   ->on('staff')

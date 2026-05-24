@@ -38,7 +38,7 @@
                 <tbody class="text-gray-300">
                     @forelse($schedules as $schedule)
                         <tr class="hover:bg-wm-dark border-b border-gray-800/50">
-                            <td class="py-3 px-4">{{ $schedule->staff->firstName ?? 'N/A' }} {{ $schedule->staff->lastName ?? '' }}</td>
+                            <td class="py-3 px-4">{{ $schedule->staff->first_name ?? 'N/A' }} {{ $schedule->staff->last_name ?? '' }}</td>
                             <td class="py-3 px-4">{{ $schedule->department }}</td>
                             <td class="py-3 px-4">{{ \Carbon\Carbon::parse($schedule->start_time)->format('M d, Y, g:i A') }}</td>
                             <td class="py-3 px-4">{{ \Carbon\Carbon::parse($schedule->end_time)->format('M d, Y, g:i A') }}</td>

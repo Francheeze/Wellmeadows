@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->string('staff_id');   // FK → staff table (another module)
+            $table->unsignedBigInteger('staff_id');   // FK → staff table (another module)
             $table->foreign('staff_id')->references('staff_number')->on('staff')->onDelete('cascade');
+            $table->string('incident_type');
             $table->text('description');
             $table->date('incident_date');
             $table->timestamps();

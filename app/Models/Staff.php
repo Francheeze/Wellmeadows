@@ -12,7 +12,8 @@ class Staff extends Model
     use HasFactory;
 
     protected $primaryKey = 'staff_number';
-    protected $keyType = 'string';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'first_name',
@@ -60,6 +61,6 @@ class Staff extends Model
     // Relationship with Department
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 }

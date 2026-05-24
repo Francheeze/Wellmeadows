@@ -36,24 +36,24 @@
                 <h3 class="text-lg font-semibold text-white mb-4">Basic Information</h3>
                 <div class="space-y-4">
                     <div>
-                        <label for="firstName" class="block text-sm font-medium text-gray-300">First Name *</label>
-                        <input type="text" name="firstName" id="firstName" value="{{ old('firstName') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="first_name" class="block text-sm font-medium text-gray-300">First Name *</label>
+                        <input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                     <div>
-                        <label for="lastName" class="block text-sm font-medium text-gray-300">Last Name *</label>
-                        <input type="text" name="lastName" id="lastName" value="{{ old('lastName') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="last_name" class="block text-sm font-medium text-gray-300">Last Name *</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                     <div>
                         <label for="address" class="block text-sm font-medium text-gray-300">Address *</label>
                         <textarea name="address" id="address" rows="2" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">{{ old('address') }}</textarea>
                     </div>
                     <div>
-                        <label for="telephoneNumber" class="block text-sm font-medium text-gray-300">Telephone Number *</label>
-                        <input type="text" name="telephoneNumber" id="telephoneNumber" value="{{ old('telephoneNumber') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="telephone_number" class="block text-sm font-medium text-gray-300">Telephone Number *</label>
+                        <input type="text" name="telephone_number" id="telephone_number" value="{{ old('telephone_number') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                     <div>
-                        <label for="dateOfBirth" class="block text-sm font-medium text-gray-300">Date of Birth *</label>
-                        <input type="date" name="dateOfBirth" id="dateOfBirth" value="{{ old('dateOfBirth') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3" style="color-scheme: dark;">
+                        <label for="date_of_birth" class="block text-sm font-medium text-gray-300">Date of Birth *</label>
+                        <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3" style="color-scheme: dark;">
                     </div>
                     <div>
                         <label for="sex" class="block text-sm font-medium text-gray-300">Sex *</label>
@@ -64,8 +64,8 @@
                         </select>
                     </div>
                     <div>
-                        <label for="NIN" class="block text-sm font-medium text-gray-300">National Insurance Number *</label>
-                        <input type="text" name="NIN" id="NIN" value="{{ old('NIN') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="nin" class="block text-sm font-medium text-gray-300">National Insurance Number *</label>
+                        <input type="text" name="nin" id="nin" value="{{ old('nin') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                 </div>
             </div>
@@ -88,37 +88,37 @@
                         </select>
                     </div>
                     <div>
-                        <label for="currentSalary" class="block text-sm font-medium text-gray-300">Current Salary (₱) *</label>
-                        <input type="number" name="currentSalary" id="currentSalary" value="{{ old('currentSalary') }}" required step="0.01" class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="current_salary" class="block text-sm font-medium text-gray-300">Current Salary (₱) *</label>
+                        <input type="number" name="current_salary" id="current_salary" value="{{ old('current_salary') }}" required step="0.01" class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                     <div>
-                        <label for="salaryScale" class="block text-sm font-medium text-gray-300">Salary Scale *</label>
-                        <select name="salaryScale" id="salaryScale" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="salary_scale" class="block text-sm font-medium text-gray-300">Salary Scale *</label>
+                        <select name="salary_scale" id="salary_scale" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                             <option value="">Select Salary Scale</option>
                             @foreach($salaryScales as $scale)
-                                <option value="{{ $scale }}" @if(old('salaryScale') == $scale) selected @endif>{{ $scale }}</option>
+                                <option value="{{ $scale }}" @if(old('salary_scale') == $scale) selected @endif>{{ $scale }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label for="hoursPerWeek" class="block text-sm font-medium text-gray-300">Hours Per Week *</label>
-                        <input type="number" name="hoursPerWeek" id="hoursPerWeek" value="{{ old('hoursPerWeek') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="hours_per_week" class="block text-sm font-medium text-gray-300">Hours Per Week *</label>
+                        <input type="number" name="hours_per_week" id="hours_per_week" value="{{ old('hours_per_week') }}" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                     </div>
                     <div>
-                        <label for="contractType" class="block text-sm font-medium text-gray-300">Contract Type *</label>
-                        <select name="contractType" id="contractType" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="contract_type" class="block text-sm font-medium text-gray-300">Contract Type *</label>
+                        <select name="contract_type" id="contract_type" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                             <option value="">Select Contract Type</option>
                             @foreach($contractTypes as $type)
-                                <option value="{{ $type }}" @if(old('contractType') == $type) selected @endif>{{ $type }}</option>
+                                <option value="{{ $type }}" @if(old('contract_type') == $type) selected @endif>{{ $type }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label for="paymentType" class="block text-sm font-medium text-gray-300">Payment Type *</label>
-                        <select name="paymentType" id="paymentType" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
+                        <label for="payment_type" class="block text-sm font-medium text-gray-300">Payment Type *</label>
+                        <select name="payment_type" id="payment_type" required class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3">
                             <option value="">Select Payment Type</option>
                             @foreach($paymentTypes as $type)
-                                <option value="{{ $type }}" @if(old('paymentType') == $type) selected @endif>{{ $type }}</option>
+                                <option value="{{ $type }}" @if(old('payment_type') == $type) selected @endif>{{ $type }}</option>
                             @endforeach
                         </select>
                     </div>

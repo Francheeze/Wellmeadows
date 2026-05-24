@@ -16,7 +16,7 @@ class StaffController extends Controller
         $department = $request->query('department');
         $search = $request->query('search');
 
-        $query = Staff::with(['qualifications', 'workExperiences']);
+        $query = Staff::with(['qualifications', 'workExperiences', 'department']);
 
         if ($department) {
             $query->where('department_id', $department);
@@ -29,8 +29,8 @@ class StaffController extends Controller
                 $term = trim($term);
                 if ($term) {
                     $query->where(function ($q) use ($term) {
-                        $q->where('firstName', 'ilike', '%' . $term . '%')
-                          ->orWhere('lastName', 'ilike', '%' . $term . '%');
+                        $q->where('first_name', 'ilike', '%' . $term . '%')
+                          ->orWhere('last_name', 'ilike', '%' . $term . '%');
                     });
                 }
             }
@@ -79,10 +79,10 @@ class StaffController extends Controller
             'qualifications.*.date' => 'required|date',
             'qualifications.*.institution' => 'required|string|max:255',
 
-            'work_experiences.*.position' => 'required|string|max:255',
-            'work_experiences.*.organization' => 'required|string|max:255',
-            'work_experiences.*.start_date' => 'required|date',
-            'work_experiences.*.finish_date' => 'nullable|date',
+            'workExperiences.*.position' => 'required|string|max:255',
+            'workExperiences.*.organization' => 'required|string|max:255',
+            'workExperiences.*.startDate' => 'required|date',
+            'workExperiences.*.finishDate' => 'nullable|date',
         ]);
 
         $staff = Staff::create($validated);
@@ -104,8 +104,8 @@ class StaffController extends Controller
                 $staff->workExperiences()->create([
                     'position' => $experience['position'],
                     'organization' => $experience['organization'],
-                    'startDate' => $experience['startDate'],
-                    'finishDate' => $experience['finishDate'] ?? null
+                    'start_date' => $experience['startDate'],
+                    'finish_date' => $experience['finishDate'] ?? null
                 ]);
             }
         }
@@ -137,7 +137,7 @@ class StaffController extends Controller
             'telephone_number' => 'required|string|max:20',
             'date_of_birth' => 'required|date',
             'sex' => 'required|in:M,F',
-            'nin' => 'required|string|unique:staff,nin,' . $staff->staff_number . ',staff_number',
+            'nin' => 'required|string|unique:staff,nin,' . $staff->staff_number . ',staff_number|max:20',
             'department_id' => 'required|exists:departments,id',
             'position' => 'required|string|max:255',
             'current_salary' => 'required|numeric|min:0',

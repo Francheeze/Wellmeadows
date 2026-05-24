@@ -11,7 +11,7 @@ class StaffQualification extends Model
 
     protected $primaryKey = 'qualification_id';
     protected $table = 'qualifications';
-    
+
     protected $fillable = [
         'staff_number',
         'type',
