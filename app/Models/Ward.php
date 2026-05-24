@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Ward extends Model
 {
     protected $primaryKey = 'ward_number';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    public $incrementing = false;  
+    protected $keyType = 'int';   
 
     protected $fillable = [
         'ward_number', 'ward_name', 'location',

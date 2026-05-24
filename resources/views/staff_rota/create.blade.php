@@ -159,12 +159,12 @@
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <select name="wardnumber" required>
+                <select name="ward_number" required>
                     <option value="">-- Select Ward --</option>
                     @foreach($wards as $ward)
-                        <option value="{{ $ward->wardnumber }}"
-                            {{ old('wardnumber') == $ward->wardnumber ? 'selected' : '' }}>
-                            {{ $ward->wardnumber }}{{ $ward->wardname ? ' — '.$ward->wardname : '' }}
+                        <option value="{{ $ward->ward_number }}"
+                            {{ old('ward_number') == $ward->ward_number ? 'selected' : '' }}>
+                            {{ $ward->ward_number }}{{ $ward->ward_name ? ' — '.$ward->ward_name : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -172,8 +172,8 @@
 
             <div class="form-group">
                 <label>Staff Number</label>
-                <input type="text" name="staffnumber"
-                       value="{{ old('staffnumber') }}"
+                <input type="text" name="staff_number"
+                       value="{{ old('staff_number') }}"
                        required placeholder="e.g. S011">
             </div>
 
@@ -189,8 +189,8 @@
 
             <div class="form-group">
                 <label>Week Start Date</label>
-                <input type="date" name="weekstartdate"
-                       value="{{ old('weekstartdate') }}" required>
+                <input type="date" name="week_start_date"
+                       value="{{ old('week_start_date') }}" required>
             </div>
 
             <div class="form-actions">

@@ -260,15 +260,15 @@
                     else                               $bc = 'loc-default';
                 @endphp
                 <tr class="ward-row" data-location="{{ $loc }}">
-                    <td><span class="num-pill">{{ $ward->wardnumber }}</span></td>
-                    <td>{{ $ward->wardname }}</td>
+                    <td><span class="num-pill">{{ $ward->ward_number }}</span></td>
+                    <td>{{ $ward->ward_name }}</td>
                     <td><span class="loc-badge {{ $bc }}">{{ $loc }}</span></td>
-                    <td>{{ $ward->totalbeds }}</td>
-                    <td><span class="nurse-badge">{{ $ward->chargenursenumber ?? 'N/A' }}</span></td>
+                    <td>{{ $ward->total_beds }}</td>
+                    <td><span class="nurse-badge">{{ $ward->charge_nurse_number ?? 'N/A' }}</span></td>
                     <td>
                         <div class="action-row">
-                            <a href="{{ route('wards.edit', $ward->wardnumber) }}" class="btn-edit">Edit</a>
-                            <form action="{{ route('wards.destroy', $ward->wardnumber) }}" method="POST"
+                            <a href="{{ route('wards.edit', $ward->ward_number) }}" class="btn-edit">Edit</a>
+                            <form action="{{ route('wards.destroy', $ward->ward_number) }}" method="POST"
                                   style="display:inline" onsubmit="return confirm('Delete this ward?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn-del">Delete</button>

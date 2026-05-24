@@ -25,10 +25,6 @@ use App\Http\Controllers\WardController;
 use App\Http\Controllers\BedController;
 use App\Http\Controllers\StaffRotaController;
 
-Route::resource('beds', BedController::class);
-Route::resource('staff-rota', StaffRotaController::class);
-Route::resource('wards', WardController::class);
-
 // Public routes
 use App\Http\Controllers\SearchController;
 
@@ -43,7 +39,14 @@ require __DIR__.'/auth.php';
 
 // Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
-    
+
+    // ==========================
+    // WARD MODULE ROUTES
+    // ==========================
+    Route::resource('wards', WardController::class)->except(['show']);
+    Route::resource('beds', BedController::class)->except(['show']);
+    Route::resource('staff-rota', StaffRotaController::class)->except(['show']);
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     

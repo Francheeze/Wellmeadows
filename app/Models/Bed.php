@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Bed extends Model
 {
     protected $primaryKey = 'bed_number';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    public $incrementing = false;  
+    protected $keyType = 'int';  
 
     protected $fillable = ['bed_number', 'ward_number', 'status'];
 

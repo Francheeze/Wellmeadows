@@ -162,17 +162,17 @@
 
             <div class="form-group">
                 <label>Staff Number</label>
-                <input type="text" value="{{ $staffRota->staffnumber }}" disabled>
+                <input type="text" value="{{ $staffRota->staff_number }}" disabled>
             </div>
 
             <div class="form-group">
                 <label>Ward Number</label>
-                <select name="wardnumber" required>
+                <select name="ward_number" required>
                     <option value="">-- Select Ward --</option>
                     @foreach($wards as $ward)
-                        <option value="{{ $ward->wardnumber }}"
-                            {{ $staffRota->wardnumber == $ward->wardnumber ? 'selected' : '' }}>
-                            {{ $ward->wardnumber }}{{ $ward->wardname ? ' — '.$ward->wardname : '' }}
+                        <option value="{{ $ward->ward_number }}"
+                            {{ $staffRota->ward_number == $ward->ward_number ? 'selected' : '' }}>
+                            {{ $ward->ward_number }}{{ $ward->ward_name ? ' — '.$ward->ward_name : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -189,7 +189,7 @@
 
             <div class="form-group">
                 <label>Week Start Date</label>
-                <input type="date" name="weekstartdate"
+                <input type="date" name="week_start_date"
                        value="{{ \Carbon\Carbon::parse($staffRota->weekstartdate)->format('Y-m-d') }}"
                        required>
             </div>

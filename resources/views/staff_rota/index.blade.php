@@ -222,8 +222,8 @@
                 <select class="tc-select" id="wardFilter" onchange="filterRota()">
                     <option value="all">All wards</option>
                     @foreach($wards as $ward)
-                        <option value="{{ $ward->wardnumber }}">
-                            Ward {{ $ward->wardnumber }}{{ $ward->wardname ? ' — '.$ward->wardname : '' }}
+                        <option value="{{ $ward->ward_number }}">
+                            Ward {{ $ward->ward_number }}{{ $ward->ward_name ? ' — '.$ward->ward_name : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -249,11 +249,11 @@
             </thead>
             <tbody id="rota-tbody">
                 @forelse($staffRotas as $rota)
-                <tr class="rota-row" data-ward="{{ $rota->wardnumber }}" data-shift="{{ $rota->shift }}">
-                    <td><span class="num-pill">{{ $rota->staffnumber }}</span></td>
-                    <td><span class="ward-badge">Ward {{ $rota->wardnumber }}</span></td>
+                <tr class="rota-row" data-ward="{{ $rota->ward_number }}" data-shift="{{ $rota->shift }}">
+                    <td><span class="num-pill">{{ $rota->staff_number }}</span></td>
+                    <td><span class="ward-badge">Ward {{ $rota->ward_number }}</span></td>
                     <td><span class="shift-badge shift-{{ $rota->shift }}">{{ $rota->shift }}</span></td>
-                    <td style="color:#8aabb8;">{{ \Carbon\Carbon::parse($rota->weekstartdate)->format('d-M-y') }}</td>
+                    <td style="color:#8aabb8;">{{ \Carbon\Carbon::parse($rota->week_start_date)->format('d-M-y') }}</td>
                     <td>
                         <div class="action-row">
                             <a href="{{ route('staff-rota.edit', $rota->id) }}" class="btn-edit">Edit</a>
