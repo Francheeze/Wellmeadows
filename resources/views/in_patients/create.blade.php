@@ -150,12 +150,12 @@
                     <label for="ward_number" class="text-xs font-semibold tracking-wide uppercase text-slate-400">
                         Ward Number <span class="text-wm-cyan">*</span>
                     </label>
-                    <input type="text" id="ward_number" name="ward_number"
-                           value="{{ old('ward_number') }}" placeholder="e.g. Ward A"
-                           maxlength="20"
-                           class="w-full bg-wm-dark border rounded-xl text-white text-sm placeholder-slate-600
-                                  px-4 py-2.5 focus:outline-none transition-all duration-200
-                                  {{ $errors->has('ward_number') ? 'border-red-500/60' : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}">
+                    <input type="number" id="ward_number" name="ward_number" 
+                        value="{{ old('ward_number') }}" placeholder="e.g. 1"
+                        min="1"
+                        class="w-full bg-wm-dark border rounded-xl text-white text-sm placeholder-slate-600
+                                px-4 py-2.5 focus:outline-none transition-all duration-200
+                                {{ $errors->has('ward_number') ? 'border-red-500/60' : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}">
                     @error('ward_number')
                         <p class="flex items-center gap-1.5 text-xs text-red-400">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -169,12 +169,12 @@
                     <label for="bed_number" class="text-xs font-semibold tracking-wide uppercase text-slate-400">
                         Bed Number <span class="text-wm-cyan">*</span>
                     </label>
-                    <input type="text" id="bed_number" name="bed_number"
-                           value="{{ old('bed_number') }}" placeholder="e.g. B-12"
-                           maxlength="20"
-                           class="w-full bg-wm-dark border rounded-xl text-white text-sm placeholder-slate-600
-                                  px-4 py-2.5 focus:outline-none transition-all duration-200
-                                  {{ $errors->has('bed_number') ? 'border-red-500/60' : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}">
+                    <input type="number" id="bed_number" name="bed_number"
+                        value="{{ old('bed_number', 1) }}" placeholder="e.g. 12"
+                        min="1"
+                        class="w-full bg-wm-dark border rounded-xl text-white text-sm placeholder-slate-600
+                                px-4 py-2.5 focus:outline-none transition-all duration-200
+                                {{ $errors->has('bed_number') ? 'border-red-500/60' : 'border-wm-navy/70 focus:border-wm-cyan/60 focus:ring-2 focus:ring-wm-cyan/15' }}">
                     @error('bed_number')
                         <p class="flex items-center gap-1.5 text-xs text-red-400">
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
