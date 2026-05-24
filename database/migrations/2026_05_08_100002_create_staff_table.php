@@ -20,6 +20,10 @@ return new class extends Migration
     $table->date('dateOfBirth');
     $table->char('sex', 1);
     $table->string('NIN')->unique(); // National Insurance Number
+
+    $table->unsignedBigInteger('department_id'); // Foreign key for department
+    $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+
     $table->string('position');
     $table->decimal('currentSalary', 10, 2);
     $table->string('salaryScale');

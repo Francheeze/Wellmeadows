@@ -14,27 +14,17 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Department::query();
+        $query = Department::withCount('staff');
 
         if ($request->has('search') && $request->input('search')) {
             $query->where('name', 'ILIKE', '%' . $request->input('search') . '%');
         }
 
         $departments = $query->paginate(10);
-        $all_departments = Department::all();
+        $all_departments = Department::withCount('staff')->get();
         $totalStaff = Staff::count();
 
-        // Group by department name string column
-        $countByDepartment = Staff::query()
-            ->select('department', DB::raw('count(*) as count'))
-            ->groupBy('department')
-            ->get()
-            ->pluck('count', 'department');
-
-        // Map department name -> count so the view can look up by name
-        $departmentCounts = Department::all()->mapWithKeys(function ($dept) use ($countByDepartment) {
-            return [$dept->name => $countByDepartment->get($dept->name, 0)];
-        });
+        $departmentCounts = $all_departments->pluck('staff_count', 'name');
 
         $departmentIcons = [
             'Cardiology' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />',
@@ -84,8 +74,8 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        // Filter staff by department name string column
-        $staff = Staff::where('department', $department->name)->paginate(10);
+        // Filter staff by department_id
+        $staff = Staff::where('department_id', $department->id)->paginate(10);
         return view('departments.show', compact('department', 'staff'));
     }
 

@@ -13,6 +13,6 @@ class Department extends Model
 
     public function staff()
     {
-        return $this->hasMany(Staff::class);
+        return $this->hasMany(Staff::class, 'department_id');
     }
 }
