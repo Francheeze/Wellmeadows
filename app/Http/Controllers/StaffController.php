@@ -16,7 +16,7 @@ class StaffController extends Controller
         $department = $request->query('department');
         $search = $request->query('search');
 
-        $query = Staff::with(['qualifications', 'workExperiences', 'department']);
+        $query = Staff::with(['qualifications', 'workExperiences'])->orderBy('staff_number', 'asc');
 
         if ($department) {
             $query->where('department_id', $department);
@@ -37,6 +37,7 @@ class StaffController extends Controller
         }
 
         $staff = $query->paginate(10);
+        $staff->load('department');
 
         if ($search && $staff->total() === 1) {
             return redirect()->route('staff.show', $staff->items()[0]);
@@ -81,11 +82,14 @@ class StaffController extends Controller
 
             'workExperiences.*.position' => 'required|string|max:255',
             'workExperiences.*.organization' => 'required|string|max:255',
-            'workExperiences.*.start_date' => 'required|date',
-            'workExperiences.*.finish_date' => 'nullable|date',
+            'workExperiences.*.startDate' => 'required|date',
+            'workExperiences.*.finishDate' => 'nullable|date',
         ]);
 
         $staff = Staff::create($validated);
+        // Force save department_id to ensure it's stored
+        $staff->department_id = $request->department_id;
+        $staff->save();
 
         // Save qualifications
         if ($request->has('qualifications')) {
@@ -147,6 +151,9 @@ class StaffController extends Controller
             'payment_type' => 'required|string|max:50'
         ]);
 
+        $staff->update($validated);
+        // Force save department_id to ensure it's stored
+        $staff->department_id = $request->department_id;
         $staff->update($validated);
 
         // Sync qualifications

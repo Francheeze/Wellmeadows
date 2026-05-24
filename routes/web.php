@@ -141,3 +141,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('reports', [\App\Http\Controllers\IncidentController::class, 'store'])->name('reports.store');
     Route::delete('reports/{incident}', [\App\Http\Controllers\IncidentController::class, 'destroy'])->name('reports.destroy');
 });
+
+
+
+Route::get('/debug-staff/{staff_number}', function($staff_number) {
+    $staff = App\Models\Staff::with('department')->find($staff_number);
+    echo "Staff attributes:\n";
+    print_r($staff->attributes);
+    echo "\n\nDepartment relation:\n";
+    print_r($staff->department);
+    exit;
+});

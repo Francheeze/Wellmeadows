@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('qualifications', function (Blueprint $table) {
             $table->id('qualification_id');
-            $table->unsignedBigInteger('staff_number');
+            $table->string('staff_number');
             $table->string('type');
             $table->date('date');
             $table->string('institution');
