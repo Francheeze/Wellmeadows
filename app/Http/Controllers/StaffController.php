@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Staff;
 use App\Models\StaffQualification;
 use App\Models\WorkExperience;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
@@ -18,7 +19,7 @@ class StaffController extends Controller
         $query = Staff::with(['qualifications', 'workExperiences']);
 
         if ($department) {
-            $query->where('department', $department);
+            $query->where('department_id', $department);
         }
 
         if ($search) {
@@ -53,15 +54,7 @@ class StaffController extends Controller
     // Show create form
     public function create()
     {
-        $departments = [
-            'Cardiology',
-            'Neurology',
-            'Pediatrics',
-            'Orthopedics',
-            'Emergency',
-            'Radiology'
-        ];
-
+        $departments = Department::all();
         $salaryScales = ['Band 1', 'Band 2', 'Band 3', 'Band 4', 'Band 5'];
         $paymentTypes = ['Monthly', 'Weekly', 'Bi-Weekly'];
         $contractTypes = ['Full-time', 'Part-time'];
@@ -80,7 +73,7 @@ class StaffController extends Controller
             'dateOfBirth' => 'required|date',
             'sex' => 'required|in:M,F',
             'NIN' => 'required|string|unique:staff,NIN|max:20',
-            'department' => 'required|string|in:Cardiology,Neurology,Pediatrics,Orthopedics,Emergency,Radiology',
+            'department_id' => 'required|exists:departments,id',
             'position' => 'required|string|max:255',
             'currentSalary' => 'required|numeric|min:0',
             'salaryScale' => 'required|string|in:Band 1,Band 2,Band 3,Band 4,Band 5',
@@ -132,7 +125,7 @@ class StaffController extends Controller
     {
         $staff->load(['qualifications', 'workExperiences']);
 
-        $departments = ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'Emergency', 'Radiology'];
+        $departments = Department::all();
         $salaryScales = ['Band 1', 'Band 2', 'Band 3', 'Band 4', 'Band 5'];
         $paymentTypes = ['Monthly', 'Weekly', 'Bi-Weekly'];
         $contractTypes = ['Full-time', 'Part-time', 'Temporary', 'Contractor'];
@@ -151,7 +144,7 @@ class StaffController extends Controller
             'dateOfBirth' => 'required|date',
             'sex' => 'required|in:M,F',
             'NIN' => 'required|string|unique:staff,NIN,' . $staff->staffNumber . ',staffNumber|max:20',
-            'department' => 'required|string|in:Cardiology,Neurology,Pediatrics,Orthopedics,Emergency,Radiology',
+            'department_id' => 'required|exists:departments,id',
             'position' => 'required|string|max:255',
             'currentSalary' => 'required|numeric|min:0',
             'salaryScale' => 'required|string|max:50',
@@ -161,8 +154,6 @@ class StaffController extends Controller
         ]);
 
         $staff->update($validated);
-        $staff->department = $request->input('department');
-        $staff->save();
 
         // Sync qualifications
         $staff->qualifications()->delete();

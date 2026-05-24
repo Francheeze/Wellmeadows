@@ -26,10 +26,10 @@ class DepartmentController extends Controller
 
         // FIX: Group by department ID, then key the result by department name
         $countById = Staff::query()
-            ->select('department', DB::raw('count(*) as count'))
-            ->groupBy('department')
+            ->select('department_id', DB::raw('count(*) as count'))
+            ->groupBy('department_id')
             ->get()
-            ->pluck('count', 'department');
+            ->pluck('count', 'department_id');
 
         // Map department ID -> name so the view can look up by name
         $departmentCounts = Department::all()->mapWithKeys(function ($dept) use ($countById) {
@@ -62,7 +62,14 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:departments,name',
+            'name' => [
+                'required', 'string', 'max:255',
+                function ($attribute, $value, $fail) {
+                    if (Department::whereRaw('LOWER(name) = ?', [strtolower($value)])->exists()) {
+                        $fail('The ' . $attribute . ' has already been taken.');
+                    }
+                },
+            ],
             'address' => 'required|string|max:255',
         ]);
 
@@ -96,7 +103,14 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:departments,name,' . $department->id,
+            'name' => [
+                'required', 'string', 'max:255',
+                function ($attribute, $value, $fail) use ($department) {
+                    if (Department::where('id', '!=', $department->id)->whereRaw('LOWER(name) = ?', [strtolower($value)])->exists()) {
+                        $fail('The ' . $attribute . ' has already been taken.');
+                    }
+                },
+            ],
             'address' => 'required|string|max:255',
         ]);
 
