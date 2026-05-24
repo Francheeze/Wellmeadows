@@ -57,6 +57,12 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="bg-red-500 bg-opacity-25 border border-red-500 text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
+
             <!-- Departments Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full leading-normal">

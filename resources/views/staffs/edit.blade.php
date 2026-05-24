@@ -72,10 +72,10 @@
                         <input type="text" name="position" id="position" value="{{ old('position', $staff->position) }}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                     </div>
                     <div>
-                        <label for="department" class="block text-sm font-medium text-gray-700">Department *</label>
-                        <select name="department" id="department" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm">
+                        <label for="department_id" class="block text-sm font-medium text-gray-700">Department *</label>
+                        <select name="department_id" id="department_id" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm">
                             @foreach($departments as $department)
-                                <option value="{{ $department }}" @if(old('department', $staff->department) == $department) selected @endif>{{ $department }}</option>
+                                <option value="{{ $department->id }}" @if(old('department_id', $staff->department_id) == $department->id) selected @endif>{{ $department->name }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -10,4 +10,9 @@ class Department extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'address'];
+
+    public function staff()
+    {
+        return $this->hasMany(Staff::class);
+    }
 }

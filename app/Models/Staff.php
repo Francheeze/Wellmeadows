@@ -23,7 +23,7 @@ class Staff extends Model
         'dateOfBirth',
         'sex',
         'NIN',
-        'department',
+        'department_id',
         'position',
         'currentSalary',
         'salaryScale',
@@ -35,6 +35,11 @@ class Staff extends Model
     protected $casts = [
         'dateOfBirth' => 'date',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 
     // Relationship with Qualifications
     public function qualifications()
