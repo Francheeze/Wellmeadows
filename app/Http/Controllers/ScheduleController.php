@@ -25,7 +25,7 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'staff_id' => 'required|exists:staff,staffNumber',
+            'staff_id' => 'required|exists:staff,staff_number',
             'department' => 'required|string',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',

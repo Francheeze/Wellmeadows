@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->unsignedInteger('appointment_number')->primary();
             $table->string('patient_number');
-            $table->integer('staff_number');   // FK → staff table (another module)
+            $table->string('staff_number');   // FK → staff table (another module)
             $table->dateTime('date_time');
             $table->string('examination_room');
             $table->timestamps();
@@ -28,7 +28,7 @@ return new class extends Migration
 
             // Uncomment once the staff table exists:
             $table->foreign('staff_number')
-                ->references('staffNumber')
+                ->references('staff_number')
                 ->on('staff')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');

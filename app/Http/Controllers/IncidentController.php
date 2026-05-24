@@ -32,7 +32,7 @@ class IncidentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'staff_id' => 'required|exists:staff,staffNumber',
+            'staff_id' => 'required|exists:staff,staff_number',
             'incident_date' => 'required|date',
             'incident_type' => 'required|string|max:255',
             'description' => 'required|string',

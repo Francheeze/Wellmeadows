@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('requisitions', function (Blueprint $table) {
             $table->integer('requisition_number')->primary();
-            $table->integer('staff_number');
+            $table->string('staff_number');
             $table->integer('ward_number');
             $table->date('date_ordered');
             $table->timestamps();
 
             // FKs to other modules — uncomment once those tables exist:
             $table->foreign('staff_number')
-            ->references('staffNumber')
+                   ->references('staff_number')
                    ->on('staff')
                    ->onUpdate('cascade')
                    ->onDelete('restrict');

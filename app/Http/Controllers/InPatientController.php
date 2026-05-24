@@ -69,8 +69,8 @@ class InPatientController extends Controller
         $validated = $request->validate([
             'appointment_number' => 'required|string|max:20|unique:in_patients,appointment_number|exists:appointments,appointment_number',
             'patient_number'     => 'required|string|exists:patients,patient_number',
-            'ward_number'        => 'required|string|max:20',
-            'bed_number'         => 'required|string|max:20',
+            'ward_number'        => 'required|integer|exists:wards,ward_number',
+            'bed_number'         => 'required|integer|exists:beds,bed_number',
             'expected_stay'      => 'required|integer|min:1',
             'date_placed'        => 'required|date',
             'date_leave'         => 'nullable|date|after_or_equal:date_placed',
@@ -113,8 +113,8 @@ class InPatientController extends Controller
     public function update(Request $request, InPatient $inPatient)
     {
         $validated = $request->validate([
-            'ward_number'   => 'required|string|max:20',
-            'bed_number'    => 'required|string|max:20',
+            'ward_number'   => 'required|integer|exists:wards,ward_number',
+            'bed_number'    => 'required|integer|exists:beds,bed_number',
             'expected_stay' => 'required|integer|min:1',
             'date_placed'   => 'required|date',
             'date_leave'    => 'nullable|date|after_or_equal:date_placed',

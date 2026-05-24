@@ -17,9 +17,9 @@ class SearchController extends Controller
         ];
 
         // Search staff
-        $staff = Staff::where('firstName', 'like', "%{$query}%")
-                      ->orWhere('lastName', 'like', "%{$query}%")
-                      ->get(['staffNumber', 'firstName', 'lastName', 'department']);
+        $staff = Staff::where('first_name', 'like', "%{$query}%")
+                      ->orWhere('last_name', 'like', "%{$query}%")
+                      ->get(['staff_number', 'first_name', 'last_name', 'department']);
 
         // Filter the master list of departments based on the query
         $filteredDepartments = collect($allDepartments)

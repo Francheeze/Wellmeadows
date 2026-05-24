@@ -32,7 +32,7 @@ class Appointment extends Model
 
      public function staff(): BelongsTo
      {
-         return $this->belongsTo(Staff::class, 'staffNumber', 'staff_number');
+         return $this->belongsTo(Staff::class, 'staff_number', 'staff_number');
      }
 
     // An appointment has one exam result

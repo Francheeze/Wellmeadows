@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('staff_id')->constrained('staff', 'staffNumber')->onDelete('cascade');
+            $table->string('staff_id');   // FK → staff table (another module)
+            $table->foreign('staff_id')->references('staff_number')->on('staff')->onDelete('cascade');
             $table->text('description');
             $table->date('incident_date');
             $table->timestamps();
