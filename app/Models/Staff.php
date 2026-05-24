@@ -12,10 +12,11 @@ class Staff extends Model
     use HasFactory;
 
     protected $primaryKey = 'staff_number';
-    public $incrementing = true;
-    protected $keyType = 'int';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
+        'staff_number',
         'first_name',
         'last_name',
         'address',
@@ -29,11 +30,34 @@ class Staff extends Model
         'salary_scale',
         'hours_per_week',
         'contract_type',
-        'payment_type'
+        'payment_type',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($staff) {
+            // If no staff_number is provided, generate the next one
+            if (empty($staff->staff_number)) {
+                $lastStaff = static::orderBy('staff_number', 'desc')->first();
+                
+                if (!$lastStaff) {
+                    // First staff member: s001
+                    $nextNumber = 1;
+                } else {
+                    // Extract the numeric part and increment
+                    $lastNumber = intval(substr($lastStaff->staff_number, 1));
+                    $nextNumber = $lastNumber + 1;
+                }
+                
+                // Format with leading zeros: S001, S002, etc.
+                $staff->staff_number = 'S' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            }
+        });
+    }
 
     protected $casts = [
         'date_of_birth' => 'date',
+         'department_id' => 'integer', 
     ];
 
     // Relationship with Qualifications

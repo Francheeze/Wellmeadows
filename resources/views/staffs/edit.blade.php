@@ -3,10 +3,7 @@
 @section('title', 'Edit Staff: ' . $staff->first_name . ' ' . $staff->last_name)
 
 @section('content')
-    <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto my-12" x-data="{
-        qualifications: {{ json_encode(old('qualifications', $staff->qualifications->map(fn($q) => ['type' => $q->type, 'date' => $q->date, 'institution' => $q->institution]))) }},
-        workExperiences: {{ json_encode(old('workExperiences', $staff->workExperiences->map(fn($w) => ['position' => $w->position, 'organization' => $w->organization, 'start_date' => $w->start_date, 'finish_date' => $w->finish_date]))) }}
-    }">
+    <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto my-12">
         <h1 class="text-2xl font-bold text-[#1f3b5c] mb-8">Edit Staff Member: {{ $staff->first_name }} {{ $staff->last_name }}</h1>
 
         @if ($errors->any())
@@ -111,6 +108,24 @@
                             @endforeach
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC FIELDS WRAPPER -->
+            <div x-data="{
+                qualifications: {{ json_encode(old('qualifications', $staff->qualifications->map(fn($q) => ['type' => $q->type, 'date' => $q->date, 'institution' => $q->institution]))) }},
+                workExperiences: {{ json_encode(old('workExperiences', $staff->workExperiences->map(fn($w) => ['position' => $w->position, 'organization' => $w->organization, 'start_date' => $w->start_date, 'finish_date' => $w->finish_date]))) }}
+            }">
+                <!-- QUALIFICATIONS -->
+                <div class="border-b border-gray-200 pb-8 mb-8">
+                    <h3 class="text-lg font-semibold text-[#1f3b5c] mb-6">Qualifications</h3>
+                    <!-- ... qualifications content ... -->
+                </div>
+
+                <!-- WORK EXPERIENCE -->
+                <div class="border-b border-gray-200 pb-8 mb-8">
+                    <h3 class="text-lg font-semibold text-[#1f3b5c] mb-6">Work Experience</h3>
+                    <!-- ... work experience content ... -->
                 </div>
             </div>
 

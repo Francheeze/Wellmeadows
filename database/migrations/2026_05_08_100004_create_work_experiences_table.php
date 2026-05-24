@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('work_experiences', function (Blueprint $table) {
             $table->id('work_experience_id');
-            $table->unsignedBigInteger('staff_number');
+            $table->string('staff_number');
             $table->string('position');
             $table->string('organization');
             $table->date('start_date');
