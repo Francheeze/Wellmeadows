@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('in_patients', function (Blueprint $table) {
             $table->integer('appointment_number')->primary();
             $table->string('patient_number');
-            $table->string('ward_number');   // FK → wards table (another module)
-            $table->string('bed_number');    // FK → beds table (another module)
+            $table->integer('ward_number');   // FK → wards table (another module)
+            $table->integer('bed_number');    // FK → beds table (another module)
             $table->integer('expected_stay'); // in days
             $table->date('date_placed');
             $table->date('date_leave')->nullable();
@@ -40,14 +40,14 @@ return new class extends Migration
 
             // FK to wards — uncomment once ward table exists:
             $table->foreign('ward_number')
-                   ->references('wardnumber')
+                   ->references('ward_number')
                    ->on('wards')
                    ->onUpdate('cascade')
                    ->onDelete('restrict');
 
             // FK to beds — uncomment once bed table exists:
             $table->foreign('bed_number')
-                   ->references('bednumber')
+                   ->references('bed_number')
                    ->on('beds')
                    ->onUpdate('cascade')
                    ->onDelete('restrict');

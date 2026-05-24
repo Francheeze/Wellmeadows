@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('staff_rotas', function (Blueprint $table) {
-            $table->string('ward_number');
+            $table->integer('ward_number');
             $table->unsignedBigInteger('staff_number');
             $table->enum('shift', ['Early', 'Late', 'Night']);
             $table->date('week_start_date');

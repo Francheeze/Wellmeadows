@@ -30,7 +30,7 @@ class Requisition extends Model
 
     public function ward(): BelongsTo
         {
-            return $this->belongsTo(Ward::class, 'wardnumber', 'ward_number');
+            return $this->belongsTo(Ward::class, 'ward_number', 'ward_number');
         }
 
     // This requisition includes many surgical/non-medical items
