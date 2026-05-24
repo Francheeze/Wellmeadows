@@ -33,7 +33,7 @@
                     <select id="staff_id" name="staff_id" class="mt-1 block w-full bg-gray-800 border border-gray-600 text-white rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm px-4 py-3" required>
                         <option value="">Select a staff member</option>
                         @foreach($staff as $member)
-                            <option value="{{ $member->staffNumber }}">{{ $member->firstName }} {{ $member->lastName }}</option>
+                            <option value="{{ $member->staff_number }}">{{ $member->first_name }} {{ $member->last_name }}</option>
                         @endforeach
                     </select>
                 </div>

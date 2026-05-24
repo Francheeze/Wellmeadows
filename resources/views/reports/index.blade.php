@@ -41,7 +41,7 @@
                     @forelse($incidents as $incident)
                         <tr class="hover:bg-wm-dark border-b border-gray-800/50">
                             <td class="py-3 px-4">{{ $incident->id }}</td>
-                            <td class="py-3 px-4">{{ $incident->staff->firstName }} {{ $incident->staff->lastName }}</td>
+                            <td class="py-3 px-4">{{ $incident->staff->first_name ?? 'N/A' }} {{ $incident->staff->last_name ?? '' }}</td>
                             <td class="py-3 px-4">{{ \Carbon\Carbon::parse($incident->incident_date)->format('F d, Y') }}</td>
                             <td class="py-3 px-4">{{ $incident->incident_type }}</td>
                             <td class="py-3 px-4">{{ Str::limit($incident->description, 70) }}</td>

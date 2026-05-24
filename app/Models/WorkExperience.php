@@ -9,25 +9,25 @@ class WorkExperience extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'workExperienceID';
+    protected $primaryKey = 'work_experience_id';
     protected $table = 'work_experiences';
-    
+
     protected $fillable = [
-        'staffNumber',
+        'staff_number',
         'position',
         'organization',
-        'startDate',
-        'finishDate'
+        'start_date',
+        'finish_date'
     ];
 
     protected $casts = [
-        'startDate' => 'date',
-        'finishDate' => 'date',
+        'start_date' => 'date',
+        'finish_date' => 'date',
     ];
 
     // Relationship with Staff
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+        return $this->belongsTo(Staff::class, 'staff_number', 'staff_number');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Schedule;
 use App\Models\Staff;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
@@ -18,7 +19,7 @@ class ScheduleController extends Controller
     public function create()
     {
         $staff = Staff::all();
-        $departments = ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'Emergency', 'Radiology'];
+        $departments = Department::pluck('name')->toArray();
         return view('schedules.create', compact('staff', 'departments'));
     }
 

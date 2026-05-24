@@ -22,8 +22,8 @@
                 <button type="submit" class="bg-cyan-300 hover:bg-cyan-400 text-gray-900 font-bold py-2 px-4 rounded-r-md">Search</button>
             </form>
             <a href="{{ route('staff.create') }}" class="bg-wm-cyan hover:bg-wm-cyan-dim text-wm-dark font-bold py-2 px-4 rounded-lg transition-colors">
-                    + Add New Staff
-                </a>
+                + Add New Staff
+            </a>
         </div>
     </div>
     <div class="bg-wm-card border border-wm-navy/60 rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,.4)]">
@@ -50,17 +50,17 @@
                 <tbody class="text-gray-300">
                     @forelse($staff as $member)
                         <tr class="hover:bg-wm-dark border-b border-gray-800/50">
-                            <td class="py-3 px-4 text-center">{{ $member->staffNumber }}</td>
-                            <td class="py-3 px-4">{{ $member->firstName }} {{ $member->lastName }}</td>
+                            <td class="py-3 px-4 text-center">{{ $member->staff_number }}</td>
+                            <td class="py-3 px-4">{{ $member->first_name }} {{ $member->last_name }}</td>
                             <td class="py-3 px-4">{{ $member->position }}</td>
                             <td class="py-3 px-4">{{ $member->department->name ?? 'N/A' }}</td>
-                            <td class="py-3 px-4">{{ $member->telephoneNumber }}</td>
-                            <td class="py-3 px-4 text-right">₱{{ number_format($member->currentSalary, 2) }}</td>
-                            <td class="py-3 px-4">{{ $member->contractType }}</td>
+                            <td class="py-3 px-4">{{ $member->telephone_number }}</td>
+                            <td class="py-3 px-4 text-right">₱{{ number_format($member->current_salary, 2) }}</td>
+                            <td class="py-3 px-4">{{ $member->contract_type }}</td>
                             <td class="py-3 px-4">
                                 <div class="flex gap-2 justify-center">
-                                    <a href="{{ route('staff.edit', $member->staffNumber) }}" class="text-blue-400 hover:text-blue-300 font-semibold">Edit</a>
-                                    <form action="{{ route('staff.destroy', $member->staffNumber) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?')">
+                                    <a href="{{ route('staff.edit', $member->staff_number) }}" class="text-blue-400 hover:text-blue-300 font-semibold">Edit</a>
+                                    <form action="{{ route('staff.destroy', $member->staff_number) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-500 hover:text-red-400 font-semibold ml-4">Delete</button>
@@ -70,7 +70,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-16 text-gray-400">
+                            <td colspan="8" class="text-center py-16 text-gray-400">
                                 No staff members found.
                             </td>
                         </tr>
@@ -79,6 +79,7 @@
             </table>
             <div class="mt-6">
                 {{ $staff->appends(request()->query())->links() }}
+            </div>
         </div>
     </div>
 </div>
@@ -94,8 +95,8 @@
                 list: [],
                 data: function (item, input) {
                     return {
-                        label: item.firstName + ' ' + item.lastName,
-                        value: item.firstName + ' ' + item.lastName
+                        label: item.first_name + ' ' + item.last_name,
+                        value: item.first_name + ' ' + item.last_name
                     };
                 }
             });

@@ -26,6 +26,6 @@ class Schedule extends Model
      */
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'staff_id', 'staffNumber');
+        return $this->belongsTo(Staff::class, 'staff_id', 'staff_number');
     }
 }

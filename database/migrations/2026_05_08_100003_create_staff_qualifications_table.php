@@ -10,13 +10,12 @@ return new class extends Migration
     {
         Schema::create('qualifications', function (Blueprint $table) {
             $table->id('qualification_id');
-            $table->string('staff_number');
-            $table->string('type'); // Degree, Diploma, Certificate, etc.
-            $table->date('date'); // Date awarded/completed
+            $table->unsignedBigInteger('staff_number');
+            $table->string('type');
+            $table->date('date');
             $table->string('institution');
             $table->timestamps();
-            
-            // Foreign key constraint
+
             $table->foreign('staff_number')
                   ->references('staff_number')
                   ->on('staff')

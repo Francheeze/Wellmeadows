@@ -45,7 +45,7 @@
                 <select name="staff_id" id="staff_id" class="bg-gray-800 border border-gray-600 text-white rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-cyan-500 focus:border-cyan-500">
                     <option value="">Select a staff member</option>
                     @foreach($staff as $staffMember)
-                        <option value="{{ $staffMember->staffNumber }}" data-department="{{ $staffMember->department }}">{{ $staffMember->firstName }} {{ $staffMember->lastName }}</option>
+                        <option value="{{ $staffMember->staff_number }}" data-department="{{ $staffMember->department->name ?? '' }}">{{ $staffMember->first_name }} {{ $staffMember->last_name }}</option>
                     @endforeach
                 </select>
             </div>
