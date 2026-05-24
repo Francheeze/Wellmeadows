@@ -9,11 +9,11 @@ class StaffQualification extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'qualificationID';
+    protected $primaryKey = 'qualification_id';
     protected $table = 'qualifications';
     
     protected $fillable = [
-        'staffNumber',
+        'staff_number',
         'type',
         'date',
         'institution'
@@ -26,6 +26,6 @@ class StaffQualification extends Model
     // Relationship with Staff
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'staffNumber', 'staffNumber');
+        return $this->belongsTo(Staff::class, 'staff_number', 'staff_number');
     }
 }

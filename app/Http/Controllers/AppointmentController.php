@@ -63,8 +63,8 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('last_name')
             ->get(['patient_number', 'first_name', 'last_name']);
 
-        $staff = Staff::orderBy('lastName')
-            ->get(['staffNumber', 'firstName', 'lastName']);
+        $staff = Staff::orderBy('last_name')
+            ->get(['staff_number', 'first_name', 'last_name']);
 
         return view('appointments.create', compact('patients', 'staff'));
     }
@@ -77,8 +77,8 @@ class AppointmentController extends Controller
         $validated = $request->validate([
             'appointment_number' => 'required|integer|min:1|unique:appointments,appointment_number',
             'patient_number'     => 'required|string|exists:patients,patient_number',
-            // staffNumber is the PK column name on the staff table
-            'staff_number'       => 'required|integer|exists:staff,staffNumber',
+            // staff_number is the PK column name on the staff table
+            'staff_number'       => 'required|string|exists:staff,staff_number',
             'date_time'          => 'required|date|after:now',
             'examination_room'   => 'required|string|max:50',
         ]);
@@ -128,7 +128,7 @@ class AppointmentController extends Controller
     {
         $validated = $request->validate([
             'patient_number'   => 'required|string|exists:patients,patient_number',
-            'staff_number'     => 'required|integer|min:1|exists:staff,staffNumber',
+            'staff_number'     => 'required|string|exists:staff,staff_number',
             'date_time'        => 'required|date',
             'examination_room' => 'required|string|max:50',
         ]);

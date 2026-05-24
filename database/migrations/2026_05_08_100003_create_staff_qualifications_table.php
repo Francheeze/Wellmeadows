@@ -9,16 +9,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('qualifications', function (Blueprint $table) {
-            $table->id('qualificationID');
-            $table->unsignedBigInteger('staffNumber');
+            $table->id('qualification_id');
+            $table->string('staff_number');
             $table->string('type'); // Degree, Diploma, Certificate, etc.
             $table->date('date'); // Date awarded/completed
             $table->string('institution');
             $table->timestamps();
             
             // Foreign key constraint
-            $table->foreign('staffNumber')
-                  ->references('staffNumber')
+            $table->foreign('staff_number')
+                  ->references('staff_number')
                   ->on('staff')
                   ->onDelete('cascade');
         });

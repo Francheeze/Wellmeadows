@@ -60,29 +60,29 @@ class StaffController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'address' => 'required|string',
-            'telephoneNumber' => 'required|string|max:20',
-            'dateOfBirth' => 'required|date',
+            'telephone_number' => 'required|string|max:20',
+            'date_of_birth' => 'required|date',
             'sex' => 'required|in:M,F',
-            'NIN' => 'required|string|unique:staff,NIN|max:20',
+            'nin' => 'required|string|unique:staff,nin|max:20',
             'department_id' => 'required|exists:departments,id',
             'position' => 'required|string|max:255',
-            'currentSalary' => 'required|numeric|min:0',
-            'salaryScale' => 'required|string|in:Band 1,Band 2,Band 3,Band 4,Band 5',
-            'hoursPerWeek' => 'required|integer|min:1|max:168',
-            'contractType' => 'required|string|in:Full-time,Part-time,Temporary,Contractor',
-            'paymentType' => 'required|string|in:Monthly,Weekly,Bi-Weekly',
+            'current_salary' => 'required|numeric|min:0',
+            'salary_scale' => 'required|string|in:Band 1,Band 2,Band 3,Band 4,Band 5',
+            'hours_per_week' => 'required|integer|min:1|max:168',
+            'contract_type' => 'required|string|in:Full-time,Part-time,Temporary,Contractor',
+            'payment_type' => 'required|string|in:Monthly,Weekly,Bi-Weekly',
 
             'qualifications.*.type' => 'required|string|max:255',
             'qualifications.*.date' => 'required|date',
             'qualifications.*.institution' => 'required|string|max:255',
 
-            'workExperiences.*.position' => 'required|string|max:255',
-            'workExperiences.*.organization' => 'required|string|max:255',
-            'workExperiences.*.startDate' => 'required|date',
-            'workExperiences.*.finishDate' => 'nullable|date',
+            'work_experiences.*.position' => 'required|string|max:255',
+            'work_experiences.*.organization' => 'required|string|max:255',
+            'work_experiences.*.start_date' => 'required|date',
+            'work_experiences.*.finish_date' => 'nullable|date',
         ]);
 
         $staff = Staff::create($validated);
@@ -131,20 +131,20 @@ class StaffController extends Controller
     public function update(Request $request, Staff $staff)
     {
         $validated = $request->validate([
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'address' => 'required|string',
-            'telephoneNumber' => 'required|string|max:20',
-            'dateOfBirth' => 'required|date',
+            'telephone_number' => 'required|string|max:20',
+            'date_of_birth' => 'required|date',
             'sex' => 'required|in:M,F',
-            'NIN' => 'required|string|unique:staff,NIN,' . $staff->staffNumber . ',staffNumber|max:20',
+            'nin' => 'required|string|unique:staff,nin,' . $staff->staff_number . ',staff_number',
             'department_id' => 'required|exists:departments,id',
             'position' => 'required|string|max:255',
-            'currentSalary' => 'required|numeric|min:0',
-            'salaryScale' => 'required|string|max:50',
-            'hoursPerWeek' => 'required|integer|min:1|max:168',
-            'contractType' => 'required|string|max:50',
-            'paymentType' => 'required|string|max:50'
+            'current_salary' => 'required|numeric|min:0',
+            'salary_scale' => 'required|string|max:50',
+            'hours_per_week' => 'required|integer|min:1|max:168',
+            'contract_type' => 'required|string|max:50',
+            'payment_type' => 'required|string|max:50'
         ]);
 
         $staff->update($validated);
@@ -189,10 +189,10 @@ class StaffController extends Controller
     public function autocomplete(Request $request)
     {
         $search = $request->query('term');
-        $staff = Staff::where('firstName', 'like', "%{$search}%")
-                      ->orWhere('lastName', 'like', "%{$search}%")
+        $staff = Staff::where('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
                       ->limit(10)
-                      ->get(['firstName', 'lastName']);
+                      ->get(['first_name', 'last_name']);
 
         return response()->json($staff);
     }

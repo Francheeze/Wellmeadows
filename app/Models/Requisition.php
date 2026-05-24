@@ -25,7 +25,7 @@ class Requisition extends Model
 
     public function staff(): BelongsTo
         {
-            return $this->belongsTo(Staff::class, 'staffNumber', 'staff_number');
+            return $this->belongsTo(Staff::class, 'staff_number', 'staff_number');
         }
 
     public function ward(): BelongsTo

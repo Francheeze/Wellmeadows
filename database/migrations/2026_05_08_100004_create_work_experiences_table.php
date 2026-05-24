@@ -9,17 +9,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('work_experiences', function (Blueprint $table) {
-            $table->id('workExperienceID');
-            $table->unsignedBigInteger('staffNumber');
+            $table->id('work_experience_id');
+            $table->string('staff_number');
             $table->string('position');
             $table->string('organization');
-            $table->date('startDate');
-            $table->date('finishDate')->nullable(); // Nullable for current job
+            $table->date('start_date');
+            $table->date('finish_date')->nullable(); // Nullable for current job
             $table->timestamps();
             
             // Foreign key constraint
-            $table->foreign('staffNumber')
-                  ->references('staffNumber')
+            $table->foreign('staff_number')
+                  ->references('staff_number')
                   ->on('staff')
                   ->onDelete('cascade');
         });

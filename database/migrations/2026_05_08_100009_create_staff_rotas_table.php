@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('staff_rotas', function (Blueprint $table) {
             $table->integer('ward_number');
-            $table->unsignedBigInteger('staff_number');
+            $table->string('staff_number');
             $table->enum('shift', ['Early', 'Late', 'Night']);
             $table->date('week_start_date');
             $table->timestamps();
@@ -21,7 +21,7 @@ return new class extends Migration
                   ->onDelete('cascade');
 
             $table->foreign('staff_number')
-                  ->references('staffNumber')
+                  ->references('staff_number')
                   ->on('staff')
                   ->onDelete('cascade');
         });

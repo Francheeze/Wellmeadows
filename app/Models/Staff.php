@@ -11,51 +11,50 @@ class Staff extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'staffNumber';
-    public $incrementing = true;
-    protected $keyType = 'int';
+    protected $primaryKey = 'staff_number';
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'firstName',
-        'lastName',
+        'first_name',
+        'last_name',
         'address',
-        'telephoneNumber',
-        'dateOfBirth',
+        'telephone_number',
+        'date_of_birth',
         'sex',
-        'NIN',
+        'nin',
         'department_id',
         'position',
-        'currentSalary',
-        'salaryScale',
-        'hoursPerWeek',
-        'contractType',
-        'paymentType'
+        'current_salary',
+        'salary_scale',
+        'hours_per_week',
+        'contract_type',
+        'payment_type'
     ];
 
     protected $casts = [
-        'dateOfBirth' => 'date',
+        'date_of_birth' => 'date',
     ];
 
     // Relationship with Qualifications
     public function qualifications()
     {
-        return $this->hasMany(StaffQualification::class, 'staffNumber', 'staffNumber');
+        return $this->hasMany(StaffQualification::class, 'staff_number', 'staff_number');
     }
 
     // Relationship with Work Experiences
     public function workExperiences()
     {
-        return $this->hasMany(WorkExperience::class, 'staffNumber', 'staffNumber');
+        return $this->hasMany(WorkExperience::class, 'staff_number', 'staff_number');
     }
 
     public function requisitions()
     {
-        return $this->hasMany(Requisition::class, 'staffNumber', 'staffNumber');
+        return $this->hasMany(Requisition::class, 'staff_number', 'staff_number');
     }
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class, 'staffNumber', 'staffNumber');
+        return $this->hasMany(Appointment::class, 'staff_number', 'staff_number');
     }
 
     // Relationship with Department
