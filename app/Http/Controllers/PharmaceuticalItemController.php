@@ -18,14 +18,26 @@ class PharmaceuticalItemController extends Controller
         $query = PharmaceuticalItem::with('supplier');
 
         if ($request->filled('search')) {
-            $query->where('drug_name', 'ilike', "%{$request->search}%")
-                  ->orWhere('drug_number', 'ilike', "%{$request->search}%");
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('drug_name', 'ilike', "%{$search}%");
+
+                // only add the integer search if the input is actually numeric
+                if ($request->filled('search') && is_numeric($search)) {
+                    $q->orWhere('drug_number', (int) $search);
+                }
+            });
         }
 
-        if ($request->stock_filter === 'low') {
-            $query->whereColumn('quantity_in_stock', '<=', 'reorder_level');
-        } elseif ($request->stock_filter === 'ok') {
-            $query->whereColumn('quantity_in_stock', '>', 'reorder_level');
+        if ($request->filled('stock_filter')) {
+            if ($request->stock_filter === 'low') {
+                $query->whereColumn('quantity_in_stock', '<=', 'reorder_level')
+                      ->where('quantity_in_stock', '>', 0);
+            } elseif ($request->stock_filter === 'out') {
+                $query->where('quantity_in_stock', 0);
+            } elseif ($request->stock_filter === 'ok') {
+                $query->whereColumn('quantity_in_stock', '>', 'reorder_level');
+            }
         }
 
         $sort = match($request->sort) {
@@ -37,12 +49,18 @@ class PharmaceuticalItemController extends Controller
         $query->orderBy(...$sort);
 
         $pharmaceuticalItems = $query->paginate(15)->withQueryString();
-        $lowStockCount = PharmaceuticalItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')
-        ->where('quantity_in_stock', '>', 0)->count();
-        $inStockCount   = PharmaceuticalItem::whereColumn('quantity_in_stock', '>', 'reorder_level')->count();
-        $outStockCount  = PharmaceuticalItem::where('quantity_in_stock', 0)->count();
 
-        return view('pharmaceutical_items.index', compact('pharmaceuticalItems', 'lowStockCount', 'inStockCount', 'outStockCount'));
+        $lowStockCount = PharmaceuticalItem::whereColumn('quantity_in_stock', '<=', 'reorder_level')
+                          ->where('quantity_in_stock', '>', 0)->count();
+        $inStockCount  = PharmaceuticalItem::whereColumn('quantity_in_stock', '>', 'reorder_level')->count();
+        $outStockCount = PharmaceuticalItem::where('quantity_in_stock', 0)->count();
+
+        return view('pharmaceutical_items.index', compact(
+            'pharmaceuticalItems',
+            'lowStockCount',
+            'inStockCount',
+            'outStockCount'
+        ));
     }
 
     /**

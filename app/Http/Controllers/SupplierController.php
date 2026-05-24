@@ -12,9 +12,20 @@ class SupplierController extends Controller
     /**
      * Display a listing of all suppliers.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $suppliers = Supplier::orderBy('supplier_number', 'asc')->paginate(10);
+        $query = Supplier::orderBy('supplier_number', 'asc');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('supplier_name', 'ilike', "%{$search}%")
+                ->orWhere('address',     'ilike', "%{$search}%")
+                ->orWhere('telephone',   'ilike', "%{$search}%");
+            });
+        }
+
+        $suppliers = $query->paginate(10)->withQueryString();
 
         return view('suppliers.index', compact('suppliers'));
     }
