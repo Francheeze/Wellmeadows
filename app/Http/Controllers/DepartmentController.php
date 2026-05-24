@@ -24,16 +24,16 @@ class DepartmentController extends Controller
         $all_departments = Department::all();
         $totalStaff = Staff::count();
 
-        // FIX: Group by department ID, then key the result by department name
-        $countById = Staff::query()
-            ->select('department_id', DB::raw('count(*) as count'))
-            ->groupBy('department_id')
+        // Group by department name string column
+        $countByDepartment = Staff::query()
+            ->select('department', DB::raw('count(*) as count'))
+            ->groupBy('department')
             ->get()
-            ->pluck('count', 'department_id');
+            ->pluck('count', 'department');
 
-        // Map department ID -> name so the view can look up by name
-        $departmentCounts = Department::all()->mapWithKeys(function ($dept) use ($countById) {
-            return [$dept->name => $countById->get($dept->id, 0)];
+        // Map department name -> count so the view can look up by name
+        $departmentCounts = Department::all()->mapWithKeys(function ($dept) use ($countByDepartment) {
+            return [$dept->name => $countByDepartment->get($dept->name, 0)];
         });
 
         $departmentIcons = [
@@ -84,8 +84,8 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        // FIX: filter by department ID not name
-        $staff = Staff::where('department', $department->id)->paginate(10);
+        // Filter staff by department name string column
+        $staff = Staff::where('department', $department->name)->paginate(10);
         return view('departments.show', compact('department', 'staff'));
     }
 
