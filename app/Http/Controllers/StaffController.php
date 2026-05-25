@@ -86,9 +86,9 @@ class StaffController extends Controller
             'qualifications.*.date' => 'required|date',
             'qualifications.*.institution' => 'required|string|max:255',
 
-            'workExperiences.*.position' => 'required|string|max:255',
-            'workExperiences.*.organization' => 'required|string|max:255',
-            'workExperiences.*.startDate' => 'required|date',
+            'workExperiences.*.position' => 'nullable|required_with:workExperiences.*.organization,workExperiences.*.startDate|string|max:255',
+            'workExperiences.*.organization' => 'nullable|required_with:workExperiences.*.position,workExperiences.*.startDate|string|max:255',
+            'workExperiences.*.startDate' => 'nullable|required_with:workExperiences.*.position,workExperiences.*.organization|date',
             'workExperiences.*.finishDate' => 'nullable|date',
         ])->validate();
 

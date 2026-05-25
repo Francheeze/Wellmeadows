@@ -185,16 +185,11 @@
                 Once you have the hospital seal asset, replace this div with:
                 <img src="{{ asset('images/seal.png') }}" alt="Wellmeadows" class="w-14 h-14 rounded-full">
             --}}
-            <div class="w-14 h-14 rounded-full border-2 border-white/25 bg-white/10
-                        flex items-center justify-center relative overflow-hidden">
-                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 56 56" fill="none">
-                    <circle cx="28" cy="28" r="27" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
-                    <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.15)" stroke-width="0.75"/>
-                </svg>
-                <svg class="w-7 h-7 text-white relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/>
-                </svg>
-            </div>
+            <div class="w-35 h-35 rounded-full overflow-hidden">
+    <img src="{{ asset('images/logo.png') }}" 
+         alt="Wellmeadows Hospital" 
+         class="w-full h-full object-cover">
+</div>
         </div>
 
         {{-- Navigation --}}
