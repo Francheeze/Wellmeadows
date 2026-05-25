@@ -114,8 +114,8 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('last_name')
             ->get(['patient_number', 'first_name', 'last_name']);
 
-        $staff = Staff::orderBy('lastName')
-            ->get(['staffNumber', 'firstName', 'lastName']);
+        $staff = Staff::orderBy('last_name')
+            ->get(['staff_number', 'first_name', 'last_name']);
 
         return view('appointments.edit', compact('appointment', 'patients', 'staff'));
     }
