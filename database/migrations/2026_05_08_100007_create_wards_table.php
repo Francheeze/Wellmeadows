@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->integer('total_beds')->default(0);
             $table->string('telephone_extention')->nullable();
-            $table->string('charge_nurse_number')->nullable();
+            $table->string('charge_nurse_number')->nullable();            
             $table->timestamps();
 
             $table->foreign('charge_nurse_number')

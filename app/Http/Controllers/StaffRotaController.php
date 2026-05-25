@@ -17,12 +17,12 @@ class StaffRotaController extends Controller
         return view('staff_rota.index', compact('staffRotas', 'wards'));
     }
 
-    public function create()
-    {
-        $wards     = Ward::all();
-        $staffList = Staff::all();
-        return view('staff_rota.create', compact('wards', 'staffList'));
-    }
+public function create()
+{
+    $staffList = Staff::all(); // or filter by position if needed
+    $wards = Ward::all();
+    return view('staff_rota.create', compact('staffList', 'wards'));
+}
 
     public function store(Request $request)
     {
