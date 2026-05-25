@@ -72,11 +72,11 @@
                     || str_starts_with($route, 'pharmaceutical_items.')
                     || str_starts_with($route, 'supply_items.')
                     || str_starts_with($route, 'patient_medications.')
-                    || str_starts_with($route, 'requisitions.');
+                    || str_starts_with($route, 'requisitions.')
+                    || str_starts_with($route, 'appointments.');   // also covers appointments.record_result
 
     $isPatientMgmt   = str_starts_with($route, 'patients.')      // also covers patients.next_of_kins.*
                     || str_starts_with($route, 'local_doctors.')
-                    || str_starts_with($route, 'appointments.')   // also covers appointments.record_result
                     || str_starts_with($route, 'exam_results.')
                     || str_starts_with($route, 'in_patients.')    // also covers in_patients.discharge
                     || str_starts_with($route, 'out_patients.');
@@ -102,7 +102,7 @@
     |----------------------------------------------------------
     */
     $moduleTitle = $module ?? match(true) {
-        $isApptTreatment => 'Treatment and Requisition',
+        $isApptTreatment => 'Appointment and Requisition',
         $isPatientMgmt   => 'Patient Management',
         $isStaffDept     => 'Staff and Department',
         $isSchedules     => 'Schedules',
@@ -126,13 +126,14 @@
     |----------------------------------------------------------
     */
 
-    // ── Treatment and Requisition ──────────────────────────
+    // ── Appointment and Requisition ──────────────────────────
     $apptTabs = [
         ['label' => 'Supplier',            'route' => 'suppliers.index',            'matches' => 'suppliers.*'],
         ['label' => 'Pharmaceutical Item', 'route' => 'pharmaceutical_items.index', 'matches' => 'pharmaceutical_items.*'],
         ['label' => 'Supply Item',         'route' => 'supply_items.index',         'matches' => 'supply_items.*'],
         ['label' => 'Patient Medication',  'route' => 'patient_medications.index',  'matches' => 'patient_medications.*'],
         ['label' => 'Requisition',         'route' => 'requisitions.index',         'matches' => 'requisitions.*'],
+        ['label' => 'Appointments',  'route' => 'appointments.index',  'matches' => 'appointments.*'],
     ];
 
     // ── Patient Management ────────────────────────────────
@@ -142,7 +143,6 @@
     $patientTabs = [
         ['label' => 'Patients',      'route' => 'patients.index',      'matches' => 'patients.*'],
         ['label' => 'Local Doctors', 'route' => 'local_doctors.index', 'matches' => 'local_doctors.*'],
-        ['label' => 'Appointments',  'route' => 'appointments.index',  'matches' => 'appointments.*'],
         ['label' => 'Exam Results',  'route' => 'exam_results.index',  'matches' => 'exam_results.*'],
         ['label' => 'In-Patients',   'route' => 'in_patients.index',   'matches' => 'in_patients.*'],
         ['label' => 'Out-Patients',  'route' => 'out_patients.index',  'matches' => 'out_patients.*'],
@@ -234,7 +234,7 @@
                class="block text-center text-xs font-semibold px-3 py-2.5 rounded-2xl
                       transition-all duration-200 leading-tight
                       {{ $isApptTreatment ? 'nav-pill-active' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
-                Treatment and Requisition
+                Appointment and Requisition
             </a>
 
         </nav>
