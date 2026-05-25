@@ -2,115 +2,181 @@
 @section('content')
 
 <style>
-    .form-page {
-        padding: 2rem;
-        font-family: 'Segoe UI', sans-serif;
-    }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
-    .form-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 2rem;
-        max-width: 560px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
+.wb-page {
+    padding: 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    background: #021829;
+    min-height: 100vh;
+    color: #f0f7f8;
+}
 
-    .form-card h5 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 1.5rem 0;
-    }
+.page-header {
+    background: #032d4f;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    margin-top: -1.5rem;
+    padding: 1.2rem 1.5rem 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(204,236,238,0.1);
+}
 
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
+.page-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f7f8;
+    margin-bottom: 1rem;
+}
 
-    .form-group label {
-        display: block;
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.4rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
+.tab-bar {
+    display: flex;
+    gap: 2.5rem;
+    border-bottom: 1px solid rgba(204,236,238,0.15);
+}
 
-    .form-group input,
-    .form-group select {
-        width: 100%;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 0.6rem 0.9rem;
-        font-size: 0.9rem;
-        color: #111827;
-        background: #f9fafb;
-        transition: border 0.15s;
-    }
+.tab-link {
+    padding-bottom: 12px;
+    font-size: 0.9rem;
+    color: rgba(204,236,238,0.5);
+    text-decoration: none;
+    position: relative;
+    font-weight: 500;
+    transition: color 0.15s;
+    font-family: 'DM Sans', sans-serif;
+}
 
-    .form-group input:focus {
-        outline: none;
-        border-color: #6366f1;
-        background: #fff;
-    }
+.tab-link:hover { color: #f0f7f8; text-decoration: none; }
+.tab-link.active { color: #f0f7f8; font-weight: 700; }
+.tab-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2.5px;
+    background: #CCECEE;
+    border-radius: 2px 2px 0 0;
+}
 
-    .form-actions {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-    }
+.form-card {
+    background: #032d4f;
+    border: 1px solid rgba(204,236,238,0.12);
+    border-radius: 14px;
+    padding: 2rem;
+    max-width: 560px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
 
-    .btn-save {
-        background: #1e293b;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 0.55rem 1.3rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
+.form-card h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f0f7f8;
+    margin: 0 0 1.5rem 0;
+}
 
-    .btn-save:hover { background: #334155; }
+.form-group { margin-bottom: 1.2rem; }
 
-    .btn-cancel {
-        background: #f3f4f6;
-        color: #374151;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 0.55rem 1.3rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-block;
-        transition: background 0.2s;
-    }
+.form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(204,236,238,0.6);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
 
-    .btn-cancel:hover {
-        background: #e5e7eb;
-        color: #111827;
-        text-decoration: none;
-    }
+.form-group input,
+.form-group select {
+    width: 100%;
+    border: 1px solid rgba(204,236,238,0.15);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+    color: #f0f7f8;
+    background: #021829;
+    transition: border 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    box-sizing: border-box;
+}
 
-    .alert-error {
-        background: #fff1f2;
-        border: 1px solid #fecdd3;
-        color: #be123c;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        margin-bottom: 1.2rem;
-        font-size: 0.875rem;
-    }
+.form-group input::placeholder { color: rgba(204,236,238,0.3); }
 
-    .alert-error ul {
-        margin: 0;
-        padding-left: 1.2rem;
-    }
+.form-group select option {
+    background: #021829;
+    color: #f0f7f8;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #CCECEE;
+    background: #032d4f;
+}
+
+.form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+
+.btn-save {
+    background: #03416E;
+    color: #CCECEE;
+    border: 1px solid rgba(204,236,238,0.3);
+    border-radius: 10px;
+    padding: 0.55rem 1.3rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.btn-save:hover {
+    background: #CCECEE;
+    color: #021829;
+}
+
+.btn-cancel {
+    background: rgba(204,236,238,0.05);
+    color: rgba(204,236,238,0.7);
+    border: 1px solid rgba(204,236,238,0.15);
+    border-radius: 10px;
+    padding: 0.55rem 1.3rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.btn-cancel:hover {
+    background: rgba(204,236,238,0.1);
+    color: #f0f7f8;
+    text-decoration: none;
+}
+
+.alert-error {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: #fca5a5;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.875rem;
+}
+
+.alert-error ul { margin: 0; padding-left: 1.2rem; }
 </style>
 
-<div class="form-page">
+<div class="wb-page">
+
+    <div class="page-header">
+        <div class="page-title">Ward and Bed Management</div>
+        <div class="tab-bar">
+            <a href="{{ route('wards.index') }}"      class="tab-link active">Ward</a>
+            <a href="{{ route('beds.index') }}"       class="tab-link">Bed</a>
+            <a href="{{ route('staff-rota.index') }}" class="tab-link">Staff Allocation</a>
+        </div>
+    </div>
+
     <div class="form-card">
         <h5>Add New Ward</h5>
 
@@ -157,8 +223,8 @@
                 <select name="charge_nurse_number">
                     <option value="">-- Select Charge Nurse --</option>
                     @foreach($staffList as $staff)
-                        <option value="{{ $staff->staffNumber }}" {{ old('charge_nurse_number') == $staff->staffNumber ? 'selected' : '' }}>
-                            {{ $staff->staffNumber }} - {{ $staff->firstName }} {{ $staff->lastName }}
+                        <option value="{{ $staff->staff_number }}" {{ old('charge_nurse_number') == $staff->staff_number ? 'selected' : '' }}>
+                            {{ $staff->staff_number }} - {{ $staff->first_name }} {{ $staff->last_name }}
                         </option>
                     @endforeach
                 </select>

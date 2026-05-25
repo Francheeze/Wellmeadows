@@ -2,55 +2,74 @@
 @section('content')
 
 <style>
-.wb-page { padding: 1.5rem; font-family: 'Segoe UI', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+.wb-page {
+    padding: 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    background: #021829;
+    min-height: 100vh;
+    color: #f0f7f8;
+}
 
 .page-header {
-    background: #fff;
+    background: #032d4f;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     margin-top: -1.5rem;
     padding: 1.2rem 1.5rem 0;
     margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(204,236,238,0.1);
 }
 
-.page-title { font-size: 1.1rem; font-weight: 700; color: #1a2a3a; margin-bottom: 1rem; }
+.page-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f7f8;
+    margin-bottom: 1rem;
+}
 
-.tab-bar { display: flex; gap: 2.5rem; border-bottom: 1px solid #d0e4ed; }
+.tab-bar {
+    display: flex;
+    gap: 2.5rem;
+    border-bottom: 1px solid rgba(204,236,238,0.15);
+}
 
 .tab-link {
     padding-bottom: 12px;
     font-size: 0.9rem;
-    color: #8aabb8;
+    color: rgba(204,236,238,0.5);
     text-decoration: none;
     position: relative;
     font-weight: 500;
     transition: color 0.15s;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.tab-link:hover { color: #1a3a5c; text-decoration: none; }
-.tab-link.active { color: #1a3a5c; font-weight: 700; }
+.tab-link:hover { color: #f0f7f8; text-decoration: none; }
+.tab-link.active { color: #f0f7f8; font-weight: 700; }
 .tab-link.active::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 2.5px;
-    background: #1a3a5c;
+    background: #CCECEE;
     border-radius: 2px 2px 0 0;
 }
 
 .form-card {
-    background: #fff;
-    border: 1px solid #d0e4ed;
+    background: #032d4f;
+    border: 1px solid rgba(204,236,238,0.12);
     border-radius: 14px;
     padding: 2rem;
     max-width: 560px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
 }
 
 .form-card h5 {
     font-size: 1rem;
     font-weight: 700;
-    color: #1a2a3a;
+    color: #f0f7f8;
     margin: 0 0 1.5rem 0;
 }
 
@@ -60,7 +79,7 @@
     display: block;
     font-size: 0.78rem;
     font-weight: 600;
-    color: #374151;
+    color: rgba(204,236,238,0.6);
     margin-bottom: 0.4rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -69,65 +88,80 @@
 .form-group input,
 .form-group select {
     width: 100%;
-    border: 1px solid #d0e4ed;
+    border: 1px solid rgba(204,236,238,0.15);
     border-radius: 8px;
     padding: 0.6rem 0.9rem;
     font-size: 0.9rem;
-    color: #1a2a3a;
-    background: #f8fbfc;
+    color: #f0f7f8;
+    background: #021829;
     transition: border 0.15s;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'DM Sans', sans-serif;
+    box-sizing: border-box;
+}
+
+.form-group select option {
+    background: #021829;
+    color: #f0f7f8;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #1a3a5c;
-    background: #fff;
+    border-color: #CCECEE;
+    background: #032d4f;
 }
 
 .form-group input:disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
+    background: rgba(204,236,238,0.05);
+    color: rgba(204,236,238,0.3);
     cursor: not-allowed;
+    border-color: rgba(204,236,238,0.08);
 }
 
 .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
 
 .btn-save {
-    background: #1a3a5c;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+    background: #03416E;
+    color: #CCECEE;
+    border: 1px solid rgba(204,236,238,0.3);
+    border-radius: 10px;
     padding: 0.55rem 1.3rem;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
-    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.btn-save:hover { background: #2a5a8c; }
+.btn-save:hover {
+    background: #CCECEE;
+    color: #021829;
+}
 
 .btn-cancel {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #d0e4ed;
-    border-radius: 8px;
+    background: rgba(204,236,238,0.05);
+    color: rgba(204,236,238,0.7);
+    border: 1px solid rgba(204,236,238,0.15);
+    border-radius: 10px;
     padding: 0.55rem 1.3rem;
     font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
     display: inline-block;
     transition: background 0.2s;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.btn-cancel:hover { background: #e5e7eb; color: #111827; text-decoration: none; }
+.btn-cancel:hover {
+    background: rgba(204,236,238,0.1);
+    color: #f0f7f8;
+    text-decoration: none;
+}
 
 .alert-error {
-    background: #fff1f2;
-    border: 1px solid #fecdd3;
-    color: #be123c;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: #fca5a5;
     border-radius: 10px;
     padding: 0.75rem 1rem;
     margin-bottom: 1.2rem;
