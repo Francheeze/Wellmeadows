@@ -20,7 +20,7 @@
 
         <form action="{{ route('staff.update', $staff->staff_number) }}" method="POST">
             @csrf
-            @method('PUT')
+            @method('PATCH')
 
             <!-- PERSONAL DETAILS -->
             <div class="border-b border-gray-200 pb-8 mb-8">
@@ -114,18 +114,74 @@
             <!-- DYNAMIC FIELDS WRAPPER -->
             <div x-data="{
                 qualifications: {{ json_encode(old('qualifications', $staff->qualifications->map(fn($q) => ['type' => $q->type, 'date' => $q->date, 'institution' => $q->institution]))) }},
-                workExperiences: {{ json_encode(old('workExperiences', $staff->workExperiences->map(fn($w) => ['position' => $w->position, 'organization' => $w->organization, 'start_date' => $w->start_date, 'finish_date' => $w->finish_date]))) }}
+                workExperiences: {{ json_encode(old('workExperiences', $staff->workExperiences->map(fn($w) => ['position' => $w->position, 'organization' => $w->organization, 'startDate' => $w->start_date?->format('Y-m-d'), 'finishDate' => $w->finish_date?->format('Y-m-d')]))) }}
             }">
                 <!-- QUALIFICATIONS -->
                 <div class="border-b border-gray-200 pb-8 mb-8">
-                    <h3 class="text-lg font-semibold text-[#1f3b5c] mb-6">Qualifications</h3>
-                    <!-- ... qualifications content ... -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-[#1f3b5c]">Qualifications</h3>
+                        <button type="button" @click="qualifications.push({ type: '', date: '', institution: '' })" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-200">
+                            + Add Qualification
+                        </button>
+                    </div>
+                    <template x-for="(qualification, index) in qualifications" :key="index">
+                        <div class="border border-gray-200 rounded p-4 mb-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-medium text-gray-700" x-text="`Qualification ${index + 1}`"></h4>
+                                <button type="button" @click="qualifications.splice(index, 1)" class="text-red-500 hover:text-red-400 text-sm">Remove</button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label :for="`qual_type_${index}`" class="block text-gray-600 text-sm mb-1">Type *</label>
+                                    <input type="text" :name="`qualifications[${index}][type]`" :id="`qual_type_${index}`" x-model="qualification.type" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label :for="`qual_date_${index}`" class="block text-gray-600 text-sm mb-1">Date Awarded *</label>
+                                    <input type="date" :name="`qualifications[${index}][date]`" :id="`qual_date_${index}`" x-model="qualification.date" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label :for="`qual_inst_${index}`" class="block text-gray-600 text-sm mb-1">Institution *</label>
+                                    <input type="text" :name="`qualifications[${index}][institution]`" :id="`qual_inst_${index}`" x-model="qualification.institution" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <!-- WORK EXPERIENCE -->
                 <div class="border-b border-gray-200 pb-8 mb-8">
-                    <h3 class="text-lg font-semibold text-[#1f3b5c] mb-6">Work Experience</h3>
-                    <!-- ... work experience content ... -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-[#1f3b5c]">Work Experience</h3>
+                        <button type="button" @click="workExperiences.push({ position: '', organization: '', startDate: '', finishDate: '' })" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-200">
+                            + Add Work Experience
+                        </button>
+                    </div>
+                    <template x-for="(experience, index) in workExperiences" :key="index">
+                        <div class="border border-gray-200 rounded p-4 mb-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-medium text-gray-700" x-text="`Work Experience ${index + 1}`"></h4>
+                                <button type="button" @click="workExperiences.splice(index, 1)" class="text-red-500 hover:text-red-400 text-sm">Remove</button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label :for="`work_pos_${index}`" class="block text-gray-600 text-sm mb-1">Position *</label>
+                                    <input type="text" :name="`workExperiences[${index}][position]`" :id="`work_pos_${index}`" x-model="experience.position" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label :for="`work_org_${index}`" class="block text-gray-600 text-sm mb-1">Organization *</label>
+                                    <input type="text" :name="`workExperiences[${index}][organization]`" :id="`work_org_${index}`" x-model="experience.organization" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label :for="`work_start_${index}`" class="block text-gray-600 text-sm mb-1">Start Date *</label>
+                                    <input type="date" :name="`workExperiences[${index}][startDate]`" :id="`work_start_${index}`" x-model="experience.startDate" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label :for="`work_finish_${index}`" class="block text-gray-600 text-sm mb-1">Finish Date</label>
+                                    <input type="date" :name="`workExperiences[${index}][finishDate]`" :id="`work_finish_${index}`" x-model="experience.finishDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
 
