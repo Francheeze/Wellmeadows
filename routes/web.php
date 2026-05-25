@@ -81,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/staff/{staff}/edit', [StaffController::class, 'edit'])->name('staff.edit');
     
     // 5. UPDATE STAFF - Saves edited staff
-    Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
+    Route::patch('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
     
     // 6. DELETE STAFF - Removes staff
     Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');

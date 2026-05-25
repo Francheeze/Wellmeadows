@@ -36,20 +36,16 @@ class Staff extends Model
     protected static function booted()
     {
         static::creating(function ($staff) {
-            // If no staff_number is provided, generate the next one
             if (empty($staff->staff_number)) {
                 $lastStaff = static::orderBy('staff_number', 'desc')->first();
-                
+
                 if (!$lastStaff) {
-                    // First staff member: s001
                     $nextNumber = 1;
                 } else {
-                    // Extract the numeric part and increment
                     $lastNumber = intval(substr($lastStaff->staff_number, 1));
                     $nextNumber = $lastNumber + 1;
                 }
-                
-                // Format with leading zeros: S001, S002, etc.
+
                 $staff->staff_number = 'S' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
             }
         });
@@ -57,16 +53,36 @@ class Staff extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
-         'department_id' => 'integer', 
+        'department_id' => 'integer',
     ];
 
-    // Relationship with Qualifications
+    public function getForeignKey()
+    {
+        return 'staff_number';
+    }
+
+    // Manually resolve department via accessor to bypass eager loading bug
+    // with non-incrementing string primary keys in Laravel 12
+    public function getDepartmentAttribute()
+    {
+        if (array_key_exists('department', $this->relations)) {
+            return $this->relations['department'];
+        }
+        $department = Department::find($this->department_id);
+        $this->setRelation('department', $department);
+        return $department;
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+
     public function qualifications()
     {
         return $this->hasMany(StaffQualification::class, 'staff_number', 'staff_number');
     }
 
-    // Relationship with Work Experiences
     public function workExperiences()
     {
         return $this->hasMany(WorkExperience::class, 'staff_number', 'staff_number');
@@ -80,11 +96,5 @@ class Staff extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class, 'staff_number', 'staff_number');
-    }
-
-    // Relationship with Department
-    public function department()
-    {
-        return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 }

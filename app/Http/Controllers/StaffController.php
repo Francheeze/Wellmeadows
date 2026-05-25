@@ -37,7 +37,6 @@ class StaffController extends Controller
         }
 
         $staff = $query->paginate(10);
-        $staff->load('department');
 
         if ($search && $staff->total() === 1) {
             return redirect()->route('staff.show', $staff->items()[0]);
@@ -60,7 +59,14 @@ class StaffController extends Controller
     // Store new staff
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $input = $request->all();
+        array_walk_recursive($input, function (&$value) {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+        });
+
+        $validated = validator($input, [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -84,14 +90,10 @@ class StaffController extends Controller
             'workExperiences.*.organization' => 'required|string|max:255',
             'workExperiences.*.startDate' => 'required|date',
             'workExperiences.*.finishDate' => 'nullable|date',
-        ]);
+        ])->validate();
 
         $staff = Staff::create($validated);
-        // Force save department_id to ensure it's stored
-        $staff->department_id = $request->department_id;
-        $staff->save();
 
-        // Save qualifications
         if ($request->has('qualifications')) {
             foreach ($request->qualifications as $qualification) {
                 $staff->qualifications()->create([
@@ -102,7 +104,6 @@ class StaffController extends Controller
             }
         }
 
-        // Save work experiences
         if ($request->has('workExperiences')) {
             foreach ($request->workExperiences as $experience) {
                 $staff->workExperiences()->create([
@@ -134,7 +135,15 @@ class StaffController extends Controller
     // Update staff
     public function update(Request $request, Staff $staff)
     {
-        $validated = $request->validate([
+        // Trim all input data recursively
+        $input = $request->all();
+        array_walk_recursive($input, function (&$value) {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+        });
+
+        $validated = validator($input, [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'address' => 'required|string',
@@ -149,14 +158,11 @@ class StaffController extends Controller
             'hours_per_week' => 'required|integer|min:1|max:168',
             'contract_type' => 'required|string|max:50',
             'payment_type' => 'required|string|max:50'
-        ]);
+        ])->validate();
 
-        $staff->update($validated);
-        // Force save department_id to ensure it's stored
-        $staff->department_id = $request->department_id;
-        $staff->update($validated);
+        $staff->fill($validated);
+        $staff->save();
 
-        // Sync qualifications
         $staff->qualifications()->delete();
         if ($request->has('qualifications')) {
             foreach ($request->qualifications as $qualification) {
@@ -164,11 +170,15 @@ class StaffController extends Controller
             }
         }
 
-        // Sync work experiences
         $staff->workExperiences()->delete();
         if ($request->has('workExperiences')) {
             foreach ($request->workExperiences as $experience) {
-                $staff->workExperiences()->create($experience);
+                $staff->workExperiences()->create([
+                    'position' => $experience['position'],
+                    'organization' => $experience['organization'],
+                    'start_date' => $experience['startDate'],
+                    'finish_date' => $experience['finishDate'] ?? null
+                ]);
             }
         }
 
@@ -188,7 +198,7 @@ class StaffController extends Controller
     // Show a single staff member
     public function show(Staff $staff)
     {
-        $staff->load(['qualifications', 'workExperiences', 'department']);
+        $staff->load(['qualifications', 'workExperiences']);
         return view('staffs.show', compact('staff'));
     }
 
