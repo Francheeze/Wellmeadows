@@ -128,7 +128,7 @@ Railway PostgreSQL
 | beds | bed registry |
 | work_experiences | staff work history |
 | staff_rotas | staff-- ward allocation |
-| schedules |  |
+| schedules | staff time-in/time-out |
 | qualifications | staff qualifications |
 
 
