@@ -27,7 +27,7 @@
         <!-- FORM -->
         <form action="{{ route('staff.store') }}" method="POST" x-data="{
             qualifications: [{ type: '', date: '', institution: '' }],
-            workExperiences: [{ position: '', organization: '', startDate: '', finishDate: '' }]
+            workExperiences: []
         }">
             @csrf
 
@@ -157,13 +157,16 @@
                 </template>
             </div>
 
-            <!-- WORK EXPERIENCE -->
+            <!-- WORK EXPERIENCE (OPTIONAL) -->
             <div class="pb-4 mb-4">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-white">Work Experience</h3>
+                    <h3 class="text-lg font-semibold text-white">Work Experience <span class="text-sm text-gray-400 font-normal">(Optional)</span></h3>
                     <button type="button" @click="workExperiences.push({ position: '', organization: '', startDate: '', finishDate: '' })" class="bg-cyan-300/10 text-cyan-300 px-3 py-1 rounded text-sm hover:bg-cyan-300/20">
                         + Add Work Experience
                     </button>
+                </div>
+                <div x-show="workExperiences.length === 0" class="text-gray-400 text-sm py-4 text-center border border-dashed border-wm-navy/60 rounded-lg">
+                    No work experience added. Click the button above to add previous employment history if applicable.
                 </div>
                 <template x-for="(experience, index) in workExperiences" :key="index">
                     <div class="border border-wm-navy/60 rounded p-4 mb-4">
